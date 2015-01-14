@@ -1,0 +1,3 @@
+FulgurioSocialNeworkBundle_front_homepage:
+    pattern:  /
+    defaults: { _controller: FulgurioSocialNetworkBundle:FrontPage:homepage }

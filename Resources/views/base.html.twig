@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/bootstrap.min.css') }}" />
+	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/styles.css') }}" />
+	<script src="{{ asset('bundles/fulguriosocialnetwork/js/bootstrap.min.js') }}"></script>
+	<title>{% block title %}{% trans %}fulgurio.socialnetwork.title{% endtrans %}{% endblock %}</title>
+</head>
+<body>
+<div class="container">
+	<header class="clearfix">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="brand" href="{{ path('FulgurioSocialNeworkBundle_front_homepage') }}">{% trans %}fulgurio.socialnetwork.title{% endtrans %}</a>
+				</div>
+			</div>
+		</div>
+	</header>
+{% block content %}{% endblock %}
+	<hr />
+	<footer>
+		&copy;<a href="http://www.fulgurio.net" target="_blank">Fulgurio</a>
+	</footer>
+</div>
+</body>
+</html>

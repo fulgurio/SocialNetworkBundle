@@ -1,0 +1,3 @@
+FulgurioSocialNeworkBundle_front:
+    resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/front.yml"
+    prefix:   /
