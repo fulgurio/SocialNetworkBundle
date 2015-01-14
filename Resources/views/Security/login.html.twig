@@ -1,0 +1,34 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+{% block title %}{% trans %}fulgurio.socialnetwork.signin.title{% endtrans %}{% endblock %}
+{% block content %}
+	<form action="{{ path('fos_user_security_check') }}" method="post" class="form-horizontal">
+		<fieldset>
+			<legend>{% trans %}fulgurio.socialnetwork.signin.legend{% endtrans %}</legend>
+{% if error %}
+			<div class="alert alert-error">{{ error|trans({}, 'FOSUserBundle') }}</div>
+{% endif %}
+			<div class="control-group">
+				<label class="control-label" for="username">{% trans %}fulgurio.socialnetwork.signin.username{% endtrans %}</label>
+				<div class="controls">
+					<input type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="password">{% trans %}fulgurio.socialnetwork.signin.password{% endtrans %}</label>
+				<div class="controls">
+					<input type="password" id="password" name="_password" required="required" />
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<label class="checkbox"><input type="checkbox" name="_remember_me" value="on" />{% trans %}fulgurio.socialnetwork.signin.remember_me{% endtrans %}</label>
+				</div>
+			</div>
+			<div class="form-actions">
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+				<button type="submit" name="_submit" class="btn btn-primary">{% trans %}fulgurio.socialnetwork.signin.submit{% endtrans %}</button>
+				{% trans with {'%tag%': '<a href="' ~ path('fos_user_registration_register') ~ '">', '%endtag%' : '</a>'} %}fulgurio.socialnetwork.signin.link_to_register{% endtrans %}
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}

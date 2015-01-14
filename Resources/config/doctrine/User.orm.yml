@@ -1,0 +1,20 @@
+Fulgurio\SocialNetworkBundle\Entity\User:
+  type: entity
+  repositoryClass: Fulgurio\SocialNetworkBundle\Repository\UserRepository
+  table: member
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    created_at:
+      type: datetime
+      gedmo:
+        timestampable:
+          on: create
+    updated_at:
+      type: datetime
+      gedmo:
+        timestampable:
+          on: update

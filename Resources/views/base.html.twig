@@ -4,6 +4,7 @@
 	<meta charset="utf-8" />
 	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/bootstrap.min.css') }}" />
 	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/styles.css') }}" />
+	<script src="{{ asset('bundles/fulguriosocialnetwork/js/jquery-1.7.2.min.js') }}"></script>
 	<script src="{{ asset('bundles/fulguriosocialnetwork/js/bootstrap.min.js') }}"></script>
 	<title>{% block title %}{% trans %}fulgurio.socialnetwork.title{% endtrans %}{% endblock %}</title>
 </head>
@@ -14,15 +15,59 @@
 			<div class="navbar-inner">
 				<div class="container">
 					<a class="brand" href="{{ path('FulgurioSocialNeworkBundle_front_homepage') }}">{% trans %}fulgurio.socialnetwork.title{% endtrans %}</a>
+					<div class="nav-collapse">
+{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+						<ul class="nav pull-right">
+							<li class="dropdown" id="profil">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans with {'%username%': app.user.username}%}fulgurio.socialnetwork.header_link.logged_as{% endtrans %} <b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><a href="{{ path('fos_user_security_logout') }}">{%trans %}fulgurio.socialnetwork.header_link.disconnect{% endtrans %}</a></li>
+								</ul>
+							</li>
+						</ul>
+{% else %}
+						<ul class="nav pull-right">
+							<li>
+								<a href="{{ path('fos_user_registration_register') }}">{% trans %}fulgurio.socialnetwork.header_link.register{% endtrans %}</a>
+							</li>
+							<li id="connect">
+								<a href="{{ path('fos_user_security_login') }}" class="dropdown-toggle">{% trans %}fulgurio.socialnetwork.header_link.signin{% endtrans %}</a>
+								<form method="post" action="{{ path('fos_user_security_check') }}" class="form-inline">
+									<input type="text" name="_username" class="input-small" value="{{ last_username() }}" placeholder="{% trans %}fulgurio.socialnetwork.login_form.username{% endtrans %}" required="required" />
+									<input type="password" name="_password" class="input-small" placeholder="{% trans %}fulgurio.socialnetwork.login_form.password{% endtrans %}" required="required" />
+									<label class="checkbox">
+										<input type="checkbox" name="_remember_me" value="on" />{% trans %}fulgurio.socialnetwork.login_form.remember_me_link{% endtrans %}
+									</label>
+									<div class="clearfix">
+										<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+										<button type="submit" class="btn btn-primary pull-left">{% trans %}fulgurio.socialnetwork.login_form.signin_button{% endtrans %}</button>
+									</div>
+								</form>
+							</li>
+						</ul>
+{% endif %}
+					</div>
 				</div>
 			</div>
 		</div>
 	</header>
+{% if app.session.hasFlash('notice') or app.session.hasFlash('fos_user_success') %}
+	<div class="alert alert-info">{{ app.session.flash('notice')|trans }}{{ app.session.flash('fos_user_success')|trans }}</div>
+{% endif %}
 {% block content %}{% endblock %}
 	<hr />
 	<footer>
 		&copy;<a href="http://www.fulgurio.net" target="_blank">Fulgurio</a>
 	</footer>
 </div>
+{% block javascriptBottom %}{% endblock %}
+<script>
+$('.dropdown-toggle').dropdown();
+{% if is_granted("IS_AUTHENTICATED_REMEMBERED") == false %}
+$('#connect a').click(function() {
+	$('#connect form').show();
+});
+{% endif %}
+</script>
 </body>
 </html>

@@ -1,3 +1,7 @@
+FulgurioSocialNeworkBundle_user:
+    resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/user.yml"
+    prefix:   /
+
 FulgurioSocialNeworkBundle_front:
     resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/front.yml"
     prefix:   /

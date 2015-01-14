@@ -1,0 +1,14 @@
+services:
+    fulgurio_social_network.twig.extension:
+        class: Fulgurio\SocialNetworkBundle\Twig\Extension\LoginFormExtension
+        tags:
+            -  { name: twig.extension }
+        arguments:
+            session:       "@session"
+            csrf_provider: "@form.csrf_provider"
+
+    fulgurio_social_network.registration.form.type:
+        class: Fulgurio\SocialNetworkBundle\Form\Type\RegistrationFormType
+        arguments: [ %fos_user.model.user.class% ]
+        tags:
+            - { name: form.type, alias: fulgurio_social_network_registration }

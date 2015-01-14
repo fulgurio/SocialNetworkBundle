@@ -14,4 +14,12 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class FulgurioSocialNetworkBundle extends Bundle
 {
+    /**
+     * (non-PHPdoc)
+     * @see Symfony\Component\HttpKernel\Bundle\Bundle::getParent()
+     */
+    public function getParent()
+    {
+        return 'FOSUserBundle';
+    }
 }

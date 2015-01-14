@@ -1,4 +1,39 @@
 fulgurio:
-    socialnetwork:
-        title:    Social network bundle
-        homepage: Homepage
+  socialnetwork:
+    title:    Social network bundle
+    homepage: Homepage
+    header_link:
+      register:                Register
+      signin:                  Sign in
+      logged_as:               Logged as %username%
+      profile:                 Profile
+      disconnect:              Disconnect
+    login_form:
+      username:                Username
+      password:                Password
+      remember_me_link:        Remember me
+      signin_button:           Sign in
+      lost_password_link:      Lost password ?
+    signin:
+      title:                   Sign in
+      legend:                  Sign in
+      username:                Username
+      password:                Password
+      remember_me:             Remember me
+      submit:                  Sign in
+      link_to_register:        Or register by clicking %tag%here%endtag%
+    register:
+      title:                   Register
+      legend:                  Register
+      login_label:             Your login
+      login_placeholder:       Your login
+      email_label:             Your email
+      email_placeholder:       Your email
+      password_label:          Your password
+      password_placeholder:    Your password
+      submit:                  Sign up
+      link_to_signin:          Or sign in by clicking %tag%here%endtag%
+
+registration:
+  flash:
+    user_created:              Welcome to Social network !

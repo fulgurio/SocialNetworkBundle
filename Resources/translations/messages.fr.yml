@@ -1,4 +1,39 @@
 fulgurio:
-    socialnetwork:
-        title:    Social network bundle
-        homepage: Accueil
+  socialnetwork:
+    title:    Social network bundle
+    homepage: Accueil
+    header_link:
+      register:                Inscription
+      signin:                  Se connecter
+      logged_as:               Connecté sous %username%
+      profile:                 Profil
+      disconnect:              Déconnecter
+    login_form:
+      username:                Identifiant
+      password:                Mot de passe
+      remember_me_link:        Se souvenir de moi
+      signin_button:           Se connecter
+      lost_password_link:      Mot de passe perdu ?
+    signin:
+      title:                   S'inscrire
+      legend:                  S'inscrire
+      username:                Identifiant
+      password:                Mot de passe
+      remember_me:             Se souvenir de moi
+      submit:                  S'inscrire
+      link_to_register:        Ou inscrivez-vous en cliquant %tag%ici%endtag%
+    register:
+      title:                   Inscription
+      legend:                  Inscription
+      login_label:             Votre identifiant
+      login_placeholder:       Votre identifiant
+      email_label:             Votre adresse email
+      email_placeholder:       Votre adresse email
+      password_label:          Votre mot de passe
+      password_placeholder:    Votre mot de passe
+      submit:                  S'inscrire
+      link_to_signin:          Ou connectez-vous en cliquant %tag%ici%endtag%
+
+registration:
+  flash:
+    user_created:              Bienvenue dans Réseau social !

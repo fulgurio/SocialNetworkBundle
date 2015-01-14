@@ -1,0 +1,40 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+{% block title %}{% trans %}fulgurio.socialnetwork.register.title{% endtrans %}{% endblock %}
+{% block content %}
+	<form action="{{ path('fos_user_registration_register') }}" method="POST" class="form-horizontal">
+		<fieldset>
+			<legend>{% trans %}fulgurio.socialnetwork.register.legend{% endtrans %}</legend>
+{%   if (form.has('errors') and form.get('errors')|length > 0) or form.getChild('username').get('errors') or form.getChild('email').get('errors') or form.getChild('plainPassword').get('errors') %}
+			<div class="alert alert-error">
+{%     for error in form.getChild('username').get('errors') %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
+{%     for error in form.getChild('email').get('errors') %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
+{%     for error in form.getChild('plainPassword').get('errors') %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
+{%     for error in form.get('errors') %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{% endfor %}
+			</div>
+{%   endif %}
+			<div class="control-group">
+				<label class="control-label" for="r_username">{% trans %}fulgurio.socialnetwork.register.login_label{% endtrans %}</label>
+				<div class="controls">
+					<input type="text" class="inputtext" name="{{ form.getChild('username').get('full_name') }}" id="r_username" value="{{ form.getChild('username').get('value') }}" required="required" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="r_email">{% trans %}fulgurio.socialnetwork.register.email_label{% endtrans %}</label>
+				<div class="controls">
+					<input type="email" class="inputtext" name="{{ form.getChild('email').get('full_name') }}" id="r_email" value="{{ form.getChild('email').get('value') }}" required="required" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="r_pwd">{% trans %}fulgurio.socialnetwork.register.password_label{% endtrans %}</label>
+				<div class="controls">
+					<input type="password" class="inputtext" name="{{ form.getChild('plainPassword').get('full_name') }}" id="r_pwd" required="required" />
+				</div>
+			</div>
+			<div class="form-actions">
+				<input type="hidden" name="{{ form.getChild('_token').get('full_name') }}" value="{{ form.getChild('_token').get('value') }}" />
+				<button type="submit" name="_submit" class="btn btn-primary">{% trans %}fulgurio.socialnetwork.register.submit{% endtrans %}</button>
+				{% trans with {'%tag%': '<a href="' ~ path('fos_user_security_login') ~ '">', '%endtag%' : '</a>'} %}fulgurio.socialnetwork.register.link_to_signin{% endtrans %}
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}
