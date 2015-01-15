@@ -14,6 +14,7 @@ fulgurio:
       password:                Mot de passe
       remember_me_link:        Se souvenir de moi
       signin_button:           Se connecter
+      lost_password_link:      Mot de passe perdu ?
     signin:
       title:                   S'inscrire
       legend:                  S'inscrire
@@ -47,6 +48,15 @@ fulgurio:
         username_label:         Votre identifiant
         email_label:            Votre email
         current_password_label: Mot de passe actuel
+    lost_password:
+      title:                    Mot de passe perdu ?
+      legend:                   Mot de passe perdu ?
+      email_not_found:          Adresse email "%username%" non trouvée
+      email_label:              Votre adresse email
+      submit:                   Réinitialiser le mot de passe
+      new_password:             Nouveau mot de passe
+      second_new_password:      Saisissez le mot de passe une 2nde fois
+      change_password:          Changer le mot de passe
 
 registration:
   flash:
@@ -55,6 +65,10 @@ registration:
 profile:
   flash:
     updated:                    Profil mis à jour
+
+resetting:
+  flash:
+    success:                   Mot de passe réinitialisé !
 
 fos_user:
   username:

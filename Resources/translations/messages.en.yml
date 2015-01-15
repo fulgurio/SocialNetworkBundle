@@ -14,6 +14,7 @@ fulgurio:
       password:                Password
       remember_me_link:        Remember me
       signin_button:           Sign in
+      lost_password_link:      Lost password ?
     signin:
       title:                   Sign in
       legend:                  Sign in
@@ -47,6 +48,15 @@ fulgurio:
         username_label:         Your login
         email_label:            Your email
         current_password_label: Current password
+    lost_password:
+      title:                    Lost password ?
+      legend:                   Lost password ?
+      email_not_found:          Email "%username%" not found
+      email_label:              Email
+      submit:                   Reinit password
+      new_password:             New password
+      second_new_password:      Enter password a 2nd time
+      change_password:          Change password
 
 registration:
   flash:
@@ -54,7 +64,11 @@ registration:
 
 profile:
   flash:
-    updated:                    Profile has been updated successfully
+    updated:                    Profile has been updated successfully !
+
+resetting:
+  flash:
+    success:                    Password has been updated successfully
 
 fos_user:
   username:

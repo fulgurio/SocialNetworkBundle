@@ -1,0 +1,7 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+
+{% block title %}{{ parent() }} - {% trans %}fulgurio.socialnetwork.lost_password.title{% endtrans %}{% endblock %}
+
+{% block content %}
+	<div class="alert alert-error">{{ 'resetting.check_email'|trans({'%email%': email}, 'FOSUserBundle') }}</div>
+{% endblock %}

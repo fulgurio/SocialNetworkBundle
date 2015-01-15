@@ -1,0 +1,33 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+
+{% block title %}{{ parent() }} - {% trans %}fulgurio.socialnetwork.lost_password.title{% endtrans %}{% endblock %}
+
+{% block content %}
+<form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="post" class="form-horizontal">
+	<fieldset>
+		<legend>{% trans %}Lost password{% endtrans %}</legend>
+{%   if form.getChild('new').get('errors') or form.getChild('new').getChild('first').get('errors') %}
+			<div class="alert alert-error">
+{%     for error in form.getChild('new').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
+{%     for error in form.getChild('new').getChild('first').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
+			</div>
+{%   endif %}
+		<div class="control-group">
+			<label class="control-label" for="{{ form.getChild('new').getChild('first').get('id') }}">{% trans %}fulgurio.socialnetwork.lost_password.new_password{% endtrans %}</label>
+			<div class="controls">
+				<input type="password" class="inputtext" name="{{ form.getChild('new').getChild('first').get('full_name') }}" id="{{ form.getChild('new').getChild('first').get('id') }}" required="required" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="{{ form.getChild('new').getChild('second').get('id') }}">{% trans %}fulgurio.socialnetwork.lost_password.second_new_password{% endtrans %}</label>
+			<div class="controls">
+				<input type="password" class="inputtext" name="{{ form.getChild('new').getChild('second').get('full_name') }}" id="{{ form.getChild('new').getChild('second').get('id') }}" required="required" />
+			</div>
+		</div>
+		<div class="form-actions">
+			<input type="hidden" name="{{ form.getChild('_token').get('full_name') }}" value="{{ form.getChild('_token').get('value') }}" />
+			<button type="submit" class="btn btn-primary">{% trans %}fulgurio.socialnetwork.lost_password.change_password{% endtrans %}</button>
+		</div>
+	</fieldset>
+</form>
+{% endblock %}
