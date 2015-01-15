@@ -1,0 +1,43 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+{% block title %}{% trans %}fulgurio.socialnetwork.profile.edit_profil.title{% endtrans %}{% endblock %}
+{% block content %}
+	<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="post" class="form-horizontal">
+		<fieldset>
+			<legend>{% trans %}fulgurio.socialnetwork.profile.edit_profil.legend{% endtrans %}</legend>
+{%     if form.get('errors')
+         or form.getChild('user').getChild('username').get('errors')
+         or form.getChild('user').getChild('email').get('errors')
+         or form.getChild('current').get('errors') %}
+			<div class="alert alert-error">
+{%       for error in form.get('errors') %}{{ error.messageTemplate|trans }}<br />{%   endfor %}
+{%       for error in form.getChild('user').getChild('username').get('errors') %}{{ error.messageTemplate|trans }}<br />{%   endfor %}
+{%       for error in form.getChild('user').getChild('email').get('errors') %}{{ error.messageTemplate|trans }}<br />{%   endfor %}
+{%       for error in form.getChild('current').get('errors') %}{{ error.messageTemplate|trans }}<br />{%   endfor %}
+			</div>
+{%     endif %}
+			<div class="control-group">
+				<label class="control-label" for="{{ form.getChild('user').getChild('username').get('id') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.username_label{% endtrans %}</label>
+				<div class="controls">
+					<input type="text" id="{{ form.getChild('user').getChild('username').get('id') }}" class="input-xlarge" name="{{ form.getChild('user').getChild('username').get('full_name') }}" value="{{ form.getChild('user').getChild('username').get('value') }}" required="required" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="{{ form.getChild('user').getChild('email').get('id') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.email_label{% endtrans %}</label>
+				<div class="controls">
+					<input type="email" id="{{ form.getChild('user').getChild('email').get('id') }}" class="input-xlarge" name="{{ form.getChild('user').getChild('email').get('full_name') }}" value="{{ form.getChild('user').getChild('email').get('value') }}" required="required" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="{{ form.getChild('current').get('id') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.current_password_label{% endtrans %}</label>
+				<div class="controls">
+					<input type="password" id="{{ form.getChild('current').get('id') }}" class="input-xlarge" name="{{ form.getChild('current').get('full_name') }}" required="required" />
+				</div>
+			</div>
+			<div class="form-actions">
+				<input type="hidden" name="{{ form.getChild('_token').get('full_name') }}" value="{{ form.getChild('_token').get('value') }}" />
+				<button type="submit" name="_submit" class="btn btn-primary">{% trans %}fulgurio.socialnetwork.profile.edit_profil.update_profil_button{% endtrans %}</button>
+				<a href="{{ path('fos_user_profile_show') }}" class="btn">{% trans %}fulgurio.socialnetwork.profile.edit_profil.back_to_profil{% endtrans %}</a>
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}

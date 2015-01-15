@@ -14,13 +14,14 @@
 		<div class="navbar">
 			<div class="navbar-inner">
 				<div class="container">
-					<a class="brand" href="{{ path('FulgurioSocialNeworkBundle_front_homepage') }}">{% trans %}fulgurio.socialnetwork.title{% endtrans %}</a>
+					<a class="brand" href="{{ path('fulgurio_social_network_homepage') }}">{% trans %}fulgurio.socialnetwork.title{% endtrans %}</a>
 					<div class="nav-collapse">
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 						<ul class="nav pull-right">
 							<li class="dropdown" id="profil">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans with {'%username%': app.user.username}%}fulgurio.socialnetwork.header_link.logged_as{% endtrans %} <b class="caret"></b></a>
 								<ul class="dropdown-menu">
+									<li><a href="{{ path('fos_user_profile_show') }}">{% trans %}fulgurio.socialnetwork.header_link.profile{% endtrans %}</a></li>
 									<li><a href="{{ path('fos_user_security_logout') }}">{%trans %}fulgurio.socialnetwork.header_link.disconnect{% endtrans %}</a></li>
 								</ul>
 							</li>

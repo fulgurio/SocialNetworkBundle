@@ -2,6 +2,7 @@ fulgurio:
   socialnetwork:
     title:    Social network bundle
     homepage: Homepage
+    format_date:               Y-m-d
     header_link:
       register:                Register
       signin:                  Sign in
@@ -13,7 +14,6 @@ fulgurio:
       password:                Password
       remember_me_link:        Remember me
       signin_button:           Sign in
-      lost_password_link:      Lost password ?
     signin:
       title:                   Sign in
       legend:                  Sign in
@@ -33,7 +33,35 @@ fulgurio:
       password_placeholder:    Your password
       submit:                  Sign up
       link_to_signin:          Or sign in by clicking %tag%here%endtag%
+    profile:
+      title:                    Profile
+      username:                 Your login
+      email:                    Your email
+      registered_date:          Register from %date%
+      edit_profil:
+        title:                  Edit profile
+        legend:                 Edit profile
+        link:                   Edit profile
+        update_profil_button:   Save
+        back_to_profil:         Back
+        username_label:         Your login
+        email_label:            Your email
+        current_password_label: Current password
 
 registration:
   flash:
-    user_created:              Welcome to Social network !
+    user_created:               Welcome to Social network !
+
+profile:
+  flash:
+    updated:                    Profile has been updated successfully
+
+fos_user:
+  username:
+    blank:                      Username is required
+    already_used:               This username is already used
+  email:
+    blank:                      Email is required
+    already_used:               This email is already used
+  current_password:
+    invalid:                    Password is wrong

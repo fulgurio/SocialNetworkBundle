@@ -2,6 +2,7 @@ fulgurio:
   socialnetwork:
     title:    Social network bundle
     homepage: Accueil
+    format_date:               d/m/Y
     header_link:
       register:                Inscription
       signin:                  Se connecter
@@ -13,7 +14,6 @@ fulgurio:
       password:                Mot de passe
       remember_me_link:        Se souvenir de moi
       signin_button:           Se connecter
-      lost_password_link:      Mot de passe perdu ?
     signin:
       title:                   S'inscrire
       legend:                  S'inscrire
@@ -33,7 +33,35 @@ fulgurio:
       password_placeholder:    Votre mot de passe
       submit:                  S'inscrire
       link_to_signin:          Ou connectez-vous en cliquant %tag%ici%endtag%
+    profile:
+      title:                    Profil
+      username:                 Votre identifiant
+      email:                    Votre email
+      registered_date:          Inscrit depuis le %date%
+      edit_profil:
+        title:                  Modifier le profil
+        legend:                 Modifier le profil
+        link:                   Modifier le profil
+        update_profil_button:   Enregistrer
+        back_to_profil:         Retour
+        username_label:         Votre identifiant
+        email_label:            Votre email
+        current_password_label: Mot de passe actuel
 
 registration:
   flash:
-    user_created:              Bienvenue dans Réseau social !
+    user_created:               Bienvenue dans Réseau social !
+
+profile:
+  flash:
+    updated:                    Profil mis à jour
+
+fos_user:
+  username:
+    blank:                      L'identifiant est obligatoire
+    already_used:               Cet identifiant est déjà utilisé
+  email:
+    blank:                      L'email est obligatoire
+    already_used:               Cet email est déjà utilisé
+  current_password:
+    invalid:                    Le mot de passe est incorrect

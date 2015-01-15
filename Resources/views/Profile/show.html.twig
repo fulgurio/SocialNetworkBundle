@@ -1,0 +1,10 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+{% block title %}{% trans %}fulgurio.socialnetwork.profile.title{% endtrans %}{% endblock %}
+{% block content %}
+<section>
+	<p>{% trans %}fulgurio.socialnetwork.profile.username{% endtrans %}: {{ user.username }}</p>
+	<p>{% trans %}fulgurio.socialnetwork.profile.email{% endtrans %}: {{ user.email }}</p>
+	<p>{% trans with { '%date%': user.createdAt|date('fulgurio.socialnetwork.format_date'|trans) } %}fulgurio.socialnetwork.profile.registered_date{% endtrans %}</p>
+	<a href="{{ path('fos_user_profile_edit') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.link{% endtrans %}</a>
+</section>
+{% endblock %}
