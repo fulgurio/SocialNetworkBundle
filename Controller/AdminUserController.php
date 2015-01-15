@@ -108,9 +108,32 @@ class AdminUserController extends Controller
     }
 
     /**
+     * Init user password
+     *
+     * @param number $userId
+     * @return Response
+     */
+    public function initPasswordAction($userId)
+    {
+        $user = $this->getSpecifiedUser($userId);
+        $user->generateConfirmationToken();
+        $this->container->get('fos_user.mailer')->sendResettingEmailMessage($user);
+        $user->setPasswordRequestedAt(new \DateTime());
+        $this->container->get('fos_user.user_manager')->updateUser($user);
+        $this->container->get('session')->setFlash(
+                'success',
+                $this->get('translator')->trans(
+                        'fulgurio.socialnetwork.password_init.success',
+                        array('%email%' => $user->getEmail()),
+                        'admin_user'
+                )
+        );
+        return new RedirectResponse($this->generateUrl('fulgurio_social_network_admin_users'));
+    }
+
+    /**
      * Get user from given ID, and ckeck if he exists
      *
-     * @param integer $userId
      * @throws NotFoundHttpException
      * @param number $userId
      * @return User

@@ -127,4 +127,32 @@ class AdminUserControllerTest extends WebTestCase
 
         $this->assertCount(1, $secondLine->filter('a[href$="/ban"]'));
     }
+
+    public function testInitPasswordAction()
+    {
+        $client = $this->getAdminLoggedClient();
+
+        $crawler = $client->request('GET', '/admin/users/');
+        $firstLine = $crawler->filter('table tbody tr')->first();
+        $email = $firstLine->filter('td:nth-child(4)')->text();
+        $link = $firstLine->filter('a[href$="/view"]')->link();
+        $crawler = $client->click($link);
+        $initPasswordLink = $crawler->filter('a[href$="/init-password"]')->link();
+        $crawler = $client->click($initPasswordLink);
+
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+
+        // Check that an e-mail was sent
+        $this->assertEquals(1, $mailCollector->getMessageCount());
+
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+
+        // Asserting e-mail data
+        $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertEquals('resetting.email.subject', $message->getSubject());
+        $this->assertEquals('webmaster@example.com', key($message->getFrom()));
+        $this->assertEquals($email, key($message->getTo()));
+        $this->assertEquals('resetting.email.message', $message->getBody());
+    }
 }

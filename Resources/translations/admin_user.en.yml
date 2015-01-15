@@ -18,9 +18,12 @@ fulgurio:
       ban:           Ban
       unban:         Unban
       infos:         Infos
+      init_password: Password init
     ban:
         confirm:     Are you sure to ban "%username%" ?
         success:     "\"%username%\" is banned"
     unban:
         confirm:     Are you sure to unban "%username%" ?
         success:     "\"%username%\" is unbanned"
+    password_init:
+        success:     Password init mail has been sent to %email%

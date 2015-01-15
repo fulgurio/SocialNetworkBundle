@@ -11,6 +11,7 @@
 	<span class="span2">{% trans from 'admin_user' %}fulgurio.socialnetwork.view.last_login{% endtrans %}</span>{{ user.lastLogin|date('fulgurio.socialnetwork.format_date_time'|trans({}, 'admin')) }}<br />
 </p>
 <div class="form-actions">
+	<a href="{{ path('fulgurio_social_network_admin_users_init_password', {userId: user.id}) }}" class="btn btn-primary">{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.init_password{% endtrans %}</a>
 {% if user.isEnabled %}
 	<a href="{{ path('fulgurio_social_network_admin_users_ban', {userId: user.id}) }}" class="btn btn-primary">{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.ban{% endtrans %}</a>
 {% else %}
