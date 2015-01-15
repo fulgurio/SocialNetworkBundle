@@ -10,14 +10,14 @@
 
 namespace Fulgurio\SocialNetworkBundle\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseWebTestCase;
 
 /**
  * Front page controller tests
  *
  * @author Vincent GUERARD <v.guerard@fulgurio.net>
  */
-class FrontPageControllerTest extends WebTestCase
+class FrontPageControllerTest extends BaseWebTestCase
 {
     /**
      * Homepage test
