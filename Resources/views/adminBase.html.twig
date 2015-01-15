@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/bootstrap.css') }}" />
+	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/styles-admin.css') }}" />
+	<script src="{{ asset('bundles/fulguriosocialnetwork/js/jquery-1.7.2.min.js') }}"></script>
+	<script src="{{ asset('bundles/fulguriosocialnetwork/js/bootstrap.min.js') }}"></script>
+	<title>{% block title %}{% trans from "admin" %}fulgurio.socialnetwork.social_network_title{% endtrans %}{% endblock %}</title>
+</head>
+<body>
+<div class="container">
+	<header class="clearfix">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="brand" href="{{ path('fulgurio_social_network_homepage') }}">Social network</a>
+					<div class="nav-collapse">
+						<ul class="nav">
+{#							<li{% if app.request.attributes.get('_route')|slice(0, 10) == 'AdminPages' %} class="active"{% endif %}><a href="{{ path('AdminPages') }}">{% trans from "admin" %}fulgurio.lightcms.header_link.pages_link{% endtrans %}</a></li>#}
+							<li{% if app.request.attributes.get('_route')|slice(0, 35) == 'fulgurio_social_network_admin_users' %} class="active"{% endif %}><a href="{{ path('fulgurio_social_network_admin_users') }}">{% trans from "admin_user" %}fulgurio.socialnetwork.header_link{% endtrans %}</a></li>
+						</ul>
+						<ul class="nav pull-right">
+{#							<li{% if app.request.attributes.get('_route')|slice(0, 9) == 'Messenger' %} class="active"{% endif %}><a href="{{ path('MessengerList') }}"><i class="icon-envelope icon-white"></i> {% trans %}fulgurio.socialnetwork.header_link.messenger{% endtrans %}</a></li>#}
+							<li class="dropdown" id="profil">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans with {'%username%': app.user.username}%}fulgurio.socialnetwork.header_link.logged_as{% endtrans %} <b class="caret"></b></a>
+								<ul class="dropdown-menu">
+{#									<li><a href="{{ path('UserProfilShow') }}">{% trans %}fulgurio.socialnetwork.header_link.profile{% endtrans %}</a></li>#}
+									<li><a href="{{ path('fos_user_security_logout') }}">{%trans %}fulgurio.socialnetwork.header_link.disconnect{% endtrans %}</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+{% if app.session.hasFlash('notice') %}	<div class="alert alert-info">{{ app.session.flash('notice')|trans }}</div>{% endif %}
+{% if app.session.hasFlash('success') %}	<div class="alert alert-success">{{ app.session.flash('success')|trans }}</div>{% endif %}
+{% if app.session.hasFlash('alert') %}	<div class="alert alert-error">{{ app.session.flash('alert')|trans }}</div>{% endif %}
+{% block content %}{% endblock %}
+	<hr />
+	<footer>
+		&copy;<a href="http://www.fulgurio.net" target="_blank">Fulgurio</a>
+	</footer>
+</div>
+{% block javascriptBottom %}{% endblock %}
+<script>
+$('.dropdown-toggle').dropdown()
+{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+$('.dropdown-toggle').dropdown()
+{% else %}
+$('#connect a').click(function() {
+	$('#connect form').show();
+});
+{% endif %}
+</script>
+</body>
+</html>

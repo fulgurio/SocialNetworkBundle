@@ -62,6 +62,15 @@ Add the following lines in your `deps` file:
     git=http://github.com/Atlantic18/DoctrineExtensions.git
     version=origin/2.2.x
 
+[knp-components]
+    git=http://github.com/KnpLabs/knp-components.git
+    version=v1.1
+
+[KnpPaginatorBundle]
+    git=http://github.com/KnpLabs/KnpPaginatorBundle.git
+    target=bundles/Knp/Bundle/PaginatorBundle
+    version=v2.2
+
 [FulgurioSocialNetworkBundle]
     git=git://github.com/Fulgurio/SocialNetworkBundle.git
     target=bundles/Fulgurio/SocialNetworkBundle
@@ -81,6 +90,8 @@ If you prefer instead to use git submodules, then run the following:
 $ git submodule add git://github.com/FriendsOfSymfony/FOSUserBundle.git vendor/bundles/FOS/UserBundle
 $ git submodule add git://github.com/stof/StofDoctrineExtensionsBundle.git vendor/bundles/Stof/DoctrineExtensionsBundle
 $ git submodule add git://github.com/Atlantic18/DoctrineExtensions.git vendor
+$ git submodule add git://github.com/KnpLabs/knp-components.git vendor
+$ git submodule add git://github.com/KnpLabs/KnpPaginatorBundle.git vendor/bundles/Knp/Bundle/PaginatorBundle
 $ git submodule add git://github.com/Fulgurio/SocialNetworkBundle.git vendor/bundles/Fulgurio/SocialNetworkBundle
 $ git submodule update --init
 ```
@@ -98,6 +109,8 @@ $loader->registerNamespaces(array(
     'FOS' => __DIR__.'/../vendor/bundles',
     'Stof'             => __DIR__.'/../vendor/bundles',
     'Gedmo'            => __DIR__.'/../vendor/gedmo-doctrine-extensions/lib',
+    'Knp\\Component'   => __DIR__.'/../vendor/knp-components/src',
+    'Knp\\Bundle'      => __DIR__.'/../vendor/bundles',
     'Fulgurio' => __DIR__.'/../vendor/bundles',
 ));
 ```
@@ -116,6 +129,7 @@ public function registerBundles()
         // ...
         new FOS\UserBundle\FOSUserBundle(),
         new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+        new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
         new Fulgurio\SocialNetworkBundle\FulgurioSocialNetworkBundle(),
     );
 }
@@ -157,6 +171,8 @@ security:
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/, role: ROLE_ADMIN }
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER

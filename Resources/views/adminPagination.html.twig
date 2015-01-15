@@ -1,0 +1,33 @@
+{% if pageCount > 1 %}
+									<div class="pagination pull-right">
+										<ul>
+{#	{% if first is defined and current != first %}
+											<li><a href="{{ path(route, query|merge({'page': first})) }}" class="page_first" title="{% trans %}First page{% endtrans %}">&laquo;</a></li>
+	{% endif %}#}
+{%   if previous is defined %}
+											<li><a href="{{ path(route, query|merge({'page': previous})) }}" title="{% trans %}Previous page{% endtrans %}">&laquo;</a></li>
+{%   else %}
+											<li class="disabled"><a>&laquo;</a></li>
+{%   endif %}
+											<li class="active"><a>Page <strong>{{ current }}</strong> / {{pagesInRange|length}}</a></li>
+{%   if next is defined %}
+											<li><a href="{{ path(route, query|merge({'page': next})) }}" title="{% trans %}Next page{% endtrans %}">&raquo;</a></li>
+{%   else %}
+											<li class="disabled"><a>&raquo;</a></li>
+{%   endif %}
+{#	{% if last is defined and current != last %}
+	
+											<li><a href="{{ path(route, query|merge({'page': last})) }}" class="page_last" title="{% trans %}Last page{% endtrans %}"><i class="icon-fast-forward"></i></a></li>
+	{% endif %}#}
+										</ul>
+									</div>
+{% endif %}
+{#
+	{% for page in pagesInRange %}
+		{% if page != current %}
+			<a href="{{ path(route, query|merge({'page': page})) }}">{{ page }}</a>
+		{% else %}
+			<span class="current">{{ page }}</span>
+		{% endif %}
+	{% endfor %}
+#}

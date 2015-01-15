@@ -41,5 +41,14 @@ class LoadUsersData implements FixtureInterface
         $user2->setEnabled(FALSE);
         $manager->persist($user2);
         $manager->flush();
+
+        $admin = new User();
+        $admin->setUsername('admin');
+        $admin->setPlainPassword('admin');
+        $admin->setEmail('admin@example.com');
+        $admin->setEnabled(TRUE);
+        $admin->addRole('ROLE_ADMIN');
+        $manager->persist($admin);
+        $manager->flush();
     }
 }

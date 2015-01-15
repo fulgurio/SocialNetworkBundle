@@ -1,0 +1,26 @@
+fulgurio:
+  socialnetwork:
+    header_link:     Users
+    user_not_found:  User not found.
+    list:
+      title:         Users
+      last_login:    Last login
+      register_date: Registration date
+      username:      Username
+      email:         Email
+    view:
+      title:         %username% infos
+      last_login:    Last login
+      register_date: Registratopn date
+      username:      Username
+      email:         Email
+    actions:
+      ban:           Ban
+      unban:         Unban
+      infos:         Infos
+    ban:
+        confirm:     Are you sure to ban "%username%" ?
+        success:     "\"%username%\" is banned"
+    unban:
+        confirm:     Are you sure to unban "%username%" ?
+        success:     "\"%username%\" is unbanned"

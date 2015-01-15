@@ -20,4 +20,27 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository
 {
+	const NB_PER_PAGE = 10;
+
+	/**
+	 * Find all users (without admin) with sortable option, and default order by
+	 * name
+	 *
+	 * @param object $paginator
+	 * @param integer $page
+	 */
+	public function findOnlySubscribers($paginator, $page = 1)
+	{
+		$query = $this->getEntityManager()->createQuery('
+				SELECT a
+				FROM FulgurioSocialNetworkBundle:User a
+				WHERE a.roles NOT LIKE :role1
+				  AND a.roles NOT LIKE :role2
+				ORDER BY a.username'
+		);
+		$query->setParameter('role1', '%"ROLE_SUPER_ADMIN"%');
+		$query->setParameter('role2', '%"ROLE_ADMIN"%');
+		$users = $paginator->paginate($query, $page, self::NB_PER_PAGE);
+		return ($users);
+	}
 }

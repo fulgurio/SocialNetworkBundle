@@ -1,0 +1,8 @@
+fulgurio:
+  socialnetwork:
+    social_network_title:      Social network bundle
+    format_date:               Y-m-d
+    format_date:               Y-m-d H:i:s
+    yes:                       Yes
+    no:                        No
+    back:                      Back

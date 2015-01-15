@@ -1,0 +1,41 @@
+{% extends 'FulgurioSocialNetworkBundle::adminBase.html.twig' %}
+
+{% block title %}{{ parent() }} - {% trans from 'admin_user' %}fulgurio.socialnetwork.list.title{% endtrans %}{% endblock %}
+
+{% block content %}
+<h1>{% trans from 'admin_user' %}fulgurio.socialnetwork.list.title{% endtrans %}</h1>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>{{ users.sortable('fulgurio.socialnetwork.list.last_login'|trans({}, 'admin_user'), 'a.lastLogin')|raw }}</th>
+			<th>{{ users.sortable('fulgurio.socialnetwork.list.register_date'|trans({}, 'admin_user'), 'a.createdAt')|raw }}</th>
+			<th>{{ users.sortable('fulgurio.socialnetwork.list.username'|trans({}, 'admin_user'), 'a.username')|raw }}</th>
+			<th>{{ users.sortable('fulgurio.socialnetwork.list.email'|trans({}, 'admin_user'), 'a.email')|raw }}</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<td colspan="5">{{ users.render('FulgurioSocialNetworkBundle::adminPagination.html.twig')|raw }}</td>
+		</tr>
+	</tfoot>
+	<tbody>
+{% for user in users %}
+		<tr>
+			<td>{{ user.createdAt|date('fulgurio.socialnetwork.format_date_time'|trans({}, 'admin')) }}</td>
+			<td>{{ user.lastLogin|date('fulgurio.socialnetwork.format_date'|trans({}, 'admin')) }}</td>
+			<td>{{ user.username }}</td>
+			<td>{{ user.email }}</td>
+			<td>
+{%   if user.isEnabled %}
+				<a href="{{ path('fulgurio_social_network_admin_users_ban', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.ban{% endtrans %}"><i class="icon-ban-circle"></i></a>
+{%   else %}
+				<a href="{{ path('fulgurio_social_network_admin_users_unban', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.unban{% endtrans %}"><i class="icon-ok-circle"></i></a>
+{%   endif %}
+				<a href="{{ path('fulgurio_social_network_admin_users_view', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.infos{% endtrans %}"><i class=" icon-info-sign"></i></a>
+			</td>
+		</tr>
+{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

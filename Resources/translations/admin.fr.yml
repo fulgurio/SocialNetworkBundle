@@ -1,0 +1,8 @@
+fulgurio:
+  socialnetwork:
+    social_network_title:      Social network bundle admin
+    format_date:               d/m/Y
+    format_date_time:          d/m/Y H:i:s
+    yes:                       Oui
+    no:                        Non
+    back:                      Retour
