@@ -1,5 +1,7 @@
 {% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
-{% block title %}{% trans %}fulgurio.socialnetwork.profile.edit_profil.title{% endtrans %}{% endblock %}
+
+{% block title %}{{ parent() }} - {% trans %}fulgurio.socialnetwork.profile.edit_profil.title{% endtrans %}{% endblock %}
+
 {% block content %}
 	<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="post" class="form-horizontal">
 		<fieldset>

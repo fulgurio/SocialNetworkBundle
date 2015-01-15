@@ -1,5 +1,7 @@
 {% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
-{% block title %}{% trans %}fulgurio.socialnetwork.register.title{% endtrans %}{% endblock %}
+
+{% block title %}{{ parent() }} - {% trans %}fulgurio.socialnetwork.register.title{% endtrans %}{% endblock %}
+
 {% block content %}
 	<form action="{{ path('fos_user_registration_register') }}" method="POST" class="form-horizontal">
 		<fieldset>

@@ -1,5 +1,7 @@
 {% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+
 {% block title %}{% trans %}fulgurio.socialnetwork.signin.title{% endtrans %}{% endblock %}
+
 {% block content %}
 	<form action="{{ path('fos_user_security_check') }}" method="post" class="form-horizontal">
 		<fieldset>

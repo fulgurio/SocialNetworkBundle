@@ -1,5 +1,7 @@
 {% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
-{% block title %}{% trans %}fulgurio.socialnetwork.profile.title{% endtrans %}{% endblock %}
+
+{% block title %}{{ parent() }} - {% trans %}fulgurio.socialnetwork.profile.title{% endtrans %}{% endblock %}
+
 {% block content %}
 <section>
 	<p>{% trans %}fulgurio.socialnetwork.profile.username{% endtrans %}: {{ user.username }}</p>
