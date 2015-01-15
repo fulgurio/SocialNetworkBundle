@@ -17,3 +17,9 @@ services:
         class: Fulgurio\SocialNetworkBundle\Form\Type\ResettingFormType
         tags:
             - { name: form.type, alias: fulgurio_social_network_resetting }
+
+    fulgurio_social_network.profile.form.type:
+        class: Fulgurio\SocialNetworkBundle\Form\Type\ProfileFormType
+        tags:
+            - { name: form.type, alias: fulgurio_social_network_profile }
+        arguments: [ %fos_user.model.user.class% ]

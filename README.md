@@ -212,6 +212,9 @@ fos_user:
     resetting:
         form:
             type:  fulgurio_social_network_resetting
+    profile:
+        form:
+            type:  fulgurio_social_network_profile
 
 stof_doctrine_extensions:
     orm:

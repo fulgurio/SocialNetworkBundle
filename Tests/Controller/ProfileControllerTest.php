@@ -81,6 +81,31 @@ class ProfileControllerTest extends WebTestCase
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.email.already_used")'));
     }
 
+    /**
+     * Edit profil page test
+     */
+    public function testEditWithoutPasswordChangeAction()
+    {
+        $client = $this->getLoggedClient();
+        $crawler = $client->request('GET', '/profile/edit');
+
+        $data = array(
+            'fos_user_profile_form[user][username]' => 'user10',
+            'fos_user_profile_form[user][email]' => 'user10@example.com',
+            'fos_user_profile_form[user][plainPassword][first]' => '',
+            'fos_user_profile_form[user][plainPassword][second]' => '',
+            'fos_user_profile_form[current]' => $this->userData['password']
+        );
+        $userBeforeSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $this->userData['username']));
+        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
+
+        $client->submit($form, $data);
+        $crawler = $client->followRedirect();
+        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $data['fos_user_profile_form[user][username]'], $crawler->filter('section p:first-child')->text());
+        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $data['fos_user_profile_form[user][email]'], $crawler->filter('section p:nth-child(2)')->text());
+        $userAfterSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $data['fos_user_profile_form[user][username]']));
+        $this->assertEquals($userBeforeSave->getPassword(), $userAfterSave->getPassword());
+    }
 
     /**
      * Edit profil page test
@@ -90,9 +115,12 @@ class ProfileControllerTest extends WebTestCase
         $client = $this->getLoggedClient();
         $crawler = $client->request('GET', '/profile/edit');
 
+        $userBeforeSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $this->userData['username']));
         $data = array(
             'fos_user_profile_form[user][username]' => 'user10',
             'fos_user_profile_form[user][email]' => 'user10@example.com',
+            'fos_user_profile_form[user][plainPassword][first]' => 'user10',
+            'fos_user_profile_form[user][plainPassword][second]' => 'user10',
             'fos_user_profile_form[current]' => $this->userData['password']
         );
         $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
@@ -101,6 +129,14 @@ class ProfileControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
         $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $data['fos_user_profile_form[user][username]'], $crawler->filter('section p:first-child')->text());
         $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $data['fos_user_profile_form[user][email]'], $crawler->filter('section p:nth-child(2)')->text());
+
+        $userAfterSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $data['fos_user_profile_form[user][username]']));
+        $this->assertNotEquals($userBeforeSave->getPassword(), $userAfterSave->getPassword());
+
+        $encoder = $client->getContainer()->get('security.encoder_factory')->getEncoder($userAfterSave);
+        $encryptedPassword = $encoder->encodePassword($data['fos_user_profile_form[user][username]'], $userAfterSave->getSalt());
+
+        $this->assertSame($encryptedPassword, $userAfterSave->getPassword());
     }
 
     /**

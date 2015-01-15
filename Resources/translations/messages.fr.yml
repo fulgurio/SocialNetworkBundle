@@ -48,6 +48,9 @@ fulgurio:
         username_label:         Votre identifiant
         email_label:            Votre email
         current_password_label: Mot de passe actuel
+        new_password_label:     Nouveau mot de passe
+        new_password2_label:    Mot de passe à confirmer
+        password_no_match:      Les nouveaux mots de passe ne sont pas identiques
     lost_password:
       title:                    Mot de passe perdu ?
       legend:                   Mot de passe perdu ?

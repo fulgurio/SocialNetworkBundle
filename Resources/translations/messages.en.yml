@@ -48,6 +48,9 @@ fulgurio:
         username_label:         Your login
         email_label:            Your email
         current_password_label: Current password
+        new_password_label:     New password
+        new_password2_label:    Repeat new password
+        password_no_match:      The password fields must match.
     lost_password:
       title:                    Lost password ?
       legend:                   Lost password ?
