@@ -1,0 +1,82 @@
+body {
+	margin: 15px 0 0 0;
+}
+.clear {
+	clear: both;
+}
+.form-search input, .form-inline input, .form-horizontal input, .form-search textarea, .form-inline textarea, .form-horizontal textarea, .form-search select, .form-inline select, .form-horizontal select, .form-search .help-inline, .form-inline .help-inline, .form-horizontal .help-inline, .form-search .uneditable-input, .form-inline .uneditable-input, .form-horizontal .uneditable-input, .form-search .input-prepend, .form-inline .input-prepend, .form-horizontal .input-prepend, .form-search .input-append, .form-inline .input-append, .form-horizontal .input-append {
+	background: #FFF;
+}
+#connect {
+	position: relative;
+}
+#connect form {
+	display: none;
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 15px;
+	border: 1px solid #000;
+	background: #FFF;
+	width: 310px;
+}
+#connect form div.clearfix {
+	margin: 5px 0 0 0;
+	text-align: right;
+}
+#connect form a {
+	line-height: 24px;
+	padding: 4px 0 0 0;
+	/*display: block;*/
+}
+.friends ol,
+.friends .invit_from {
+	list-style: none;
+	padding: 0;
+	margin: 0 0 15px 0;
+}
+.friends ol li,
+.friends .invit_from li {
+	display: inline-block;
+	width: 80px;
+}
+.friends ol li {
+	border: 1px solid #CCC;
+	width: 180px;
+	background: #FFF;
+	padding: 3px;
+	margin: 0 0 10px 0;
+}
+.friends ol.addFriendsList li label {
+	display: block;
+	cursor: pointer;
+	margin: 0;
+}
+.friends ol.addFriendsList li.selected {
+	background: #08C;
+}
+.friends ol.addFriendsList li.selected label {
+	color: #FFF;
+	font-weight: bold;
+}
+.friends ol.addFriendsList li input {
+	display: none;
+}
+.friends ol.askingFriends li,
+.friends ol.addFriendsList li,
+.friends ol.myFriends li {
+	position: relative;
+}
+.friends ol.askingFriends div,
+.friends ol.addFriendsList span {
+	position: absolute;
+	bottom: 3px;
+	right: 3px;
+}
+.friends ol.addFriendsList li.pending span {
+	color: #FFF;
+	background: #FAA732;
+	padding: 0 3px;
+	font-size: 0.8em;
+}
