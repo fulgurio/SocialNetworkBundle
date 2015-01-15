@@ -12,3 +12,8 @@ services:
         arguments: [ %fos_user.model.user.class% ]
         tags:
             - { name: form.type, alias: fulgurio_social_network_registration }
+
+    fulgurio_social_network.resetting.form.type:
+        class: Fulgurio\SocialNetworkBundle\Form\Type\ResettingFormType
+        tags:
+            - { name: form.type, alias: fulgurio_social_network_resetting }

@@ -153,8 +153,7 @@ class ResettingControllerTest extends WebTestCase
         );
         $form = $crawler->filter('form[action$="' . $url . '"]button[type="submit"]')->form();
         $crawler = $client->submit($form, $newData);
-        //@todo : translate text
-        $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("This value is not valid")'));
+        $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fulgurio.socialnetwork.lost_password.password_no_match")'));
         $security = $client->getContainer()->get('security.context');
         $this->assertFalse($security->isGranted('ROLE_USER'));
     }

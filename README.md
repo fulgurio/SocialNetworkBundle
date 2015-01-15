@@ -193,6 +193,9 @@ fos_user:
     registration:
         form:
             type:  fulgurio_social_network_registration
+    resetting:
+        form:
+            type:  fulgurio_social_network_resetting
 
 stof_doctrine_extensions:
     orm:
