@@ -3,6 +3,8 @@ fulgurio:
     title:    Social network bundle
     homepage: Homepage
     format_date:               Y-m-d
+    yes:                       Yes
+    no:                        No
     header_link:
       register:                Register
       signin:                  Sign in
@@ -51,6 +53,9 @@ fulgurio:
         new_password_label:     New password
         new_password2_label:    Repeat new password
         password_no_match:      The password fields must match.
+      unsubscribe:
+        link:                   Unsubscribe
+        confirm:                Are your sure to unsubscribe ?
     lost_password:
       title:                    Lost password ?
       legend:                   Lost password ?

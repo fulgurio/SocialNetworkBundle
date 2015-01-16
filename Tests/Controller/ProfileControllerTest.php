@@ -34,6 +34,10 @@ class ProfileControllerTest extends WebTestCase
      */
     public function testShowAction()
     {
+        $client = self::createClient();
+        $crawler = $client->request('GET', '/profile/');
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
         $client = $this->getLoggedClient();
         $crawler = $client->request('GET', '/profile/');
         $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $this->userData['username'], $crawler->filter('section p:first-child')->text());
@@ -45,6 +49,10 @@ class ProfileControllerTest extends WebTestCase
      */
     public function testEditWithEmptyFormAction()
     {
+        $client = self::createClient();
+        $crawler = $client->request('GET', '/profile/');
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
         $client = $this->getLoggedClient();
         $crawler = $client->request('GET', '/profile/edit');
 
@@ -138,6 +146,55 @@ class ProfileControllerTest extends WebTestCase
 
         $this->assertSame($encryptedPassword, $userAfterSave->getPassword());
     }
+
+    /**
+     * Unsubscribe page test
+     */
+    public function testUnsubscribeAction()
+    {
+        $client = self::createClient();
+        $crawler = $client->request('GET', '/profile/');
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $client = $this->getLoggedClient();
+        $crawler = $client->followRedirect();
+
+        // Authentified
+        $security = $client->getContainer()->get('security.context');
+        $this->assertTrue($security->isGranted('ROLE_USER'));
+
+        $crawler = $client->request('GET', '/unsubscribe');
+        $buttonNo = $crawler->selectButton('fulgurio.socialnetwork.no');
+        $form = $buttonNo->form();
+        $client->submit($form);
+
+        $this->assertTrue($client->getResponse()->isRedirect('/profile/'));
+        $crawler = $client->followRedirect();
+        $security = $client->getContainer()->get('security.context');
+        $this->assertTrue($security->isGranted('ROLE_USER'));
+
+        $crawler = $client->request('GET', '/unsubscribe');
+        $buttonYes = $crawler->selectButton('fulgurio.socialnetwork.yes');
+        $form = $buttonYes->form();
+        $client->submit($form);
+        $this->assertTrue($client->getResponse()->isRedirect('/logout'));
+        $client->followRedirect();
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/'));
+        $crawler = $client->followRedirect();
+
+        $security = $client->getContainer()->get('security.context');
+        $this->assertFalse($security->isGranted('ROLE_USER'));
+
+        // Try to reconnect
+        $client = $this->getLoggedClient();
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+        $client->followRedirect();
+
+        $security = $client->getContainer()->get('security.context');
+        $this->assertFalse($security->isGranted('ROLE_USER'));
+
+    }
+
 
     /**
      * Get a logged client

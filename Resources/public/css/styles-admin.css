@@ -10,3 +10,7 @@ body {
 .pageListing ol {
 	list-style: none;
 }
+
+table td.no_result {
+	text-align: center;
+}

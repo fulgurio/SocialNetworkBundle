@@ -50,5 +50,14 @@ class LoadUsersData implements FixtureInterface
         $admin->addRole('ROLE_ADMIN');
         $manager->persist($admin);
         $manager->flush();
+
+        $superadmin = new User();
+        $superadmin->setUsername('superadmin');
+        $superadmin->setPlainPassword('superadmin');
+        $superadmin->setEmail('superadmin@example.com');
+        $superadmin->setEnabled(TRUE);
+        $superadmin->addRole('ROLE_SUPER_ADMIN');
+        $manager->persist($superadmin);
+        $manager->flush();
     }
 }

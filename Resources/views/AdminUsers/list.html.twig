@@ -8,7 +8,7 @@
 	<thead>
 		<tr>
 			<th>{{ users.sortable('fulgurio.socialnetwork.list.last_login'|trans({}, 'admin_user'), 'a.lastLogin')|raw }}</th>
-			<th>{{ users.sortable('fulgurio.socialnetwork.list.register_date'|trans({}, 'admin_user'), 'a.createdAt')|raw }}</th>
+			<th>{{ users.sortable('fulgurio.socialnetwork.list.register_date'|trans({}, 'admin_user'), 'a.created_at')|raw }}</th>
 			<th>{{ users.sortable('fulgurio.socialnetwork.list.username'|trans({}, 'admin_user'), 'a.username')|raw }}</th>
 			<th>{{ users.sortable('fulgurio.socialnetwork.list.email'|trans({}, 'admin_user'), 'a.email')|raw }}</th>
 			<th></th>
@@ -20,22 +20,31 @@
 		</tr>
 	</tfoot>
 	<tbody>
-{% for user in users %}
+{% if users is empty %}
+		<tr>
+			<td colspan="5" class="no_result">{% trans from 'admin_user' %}fulgurio.socialnetwork.no_result{% endtrans %}</td>
+		</tr>
+{% else %}
+{%   for user in users %}
 		<tr>
 			<td>{{ user.createdAt|date('fulgurio.socialnetwork.format_date_time'|trans({}, 'admin')) }}</td>
 			<td>{{ user.lastLogin|date('fulgurio.socialnetwork.format_date'|trans({}, 'admin')) }}</td>
 			<td>{{ user.username }}</td>
 			<td>{{ user.email }}</td>
 			<td>
-{%   if user.isEnabled %}
+{%     if user.isEnabled %}
 				<a href="{{ path('fulgurio_social_network_admin_users_ban', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.ban{% endtrans %}"><i class="icon-ban-circle"></i></a>
-{%   else %}
+{%     else %}
 				<a href="{{ path('fulgurio_social_network_admin_users_unban', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.unban{% endtrans %}"><i class="icon-ok-circle"></i></a>
-{%   endif %}
+{%     endif %}
+{%     if is_granted('ROLE_SUPER_ADMIN') %}
+				<a href="{{ path('fulgurio_social_network_admin_users_remove', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.remove{% endtrans %}"><i class="icon-trash"></i></a>
+{%     endif %}
 				<a href="{{ path('fulgurio_social_network_admin_users_view', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.infos{% endtrans %}"><i class=" icon-info-sign"></i></a>
 			</td>
 		</tr>
-{% endfor %}
+{%   endfor %}
+{% endif %}
 	</tbody>
 </table>
 {% endblock %}

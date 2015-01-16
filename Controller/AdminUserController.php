@@ -11,8 +11,8 @@
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Users admin controller
@@ -61,6 +61,50 @@ class AdminUserController extends Controller
     }
 
     /**
+     * Users remove action
+     *
+     * @todo : XmlRequest ?
+     * @todo : back to initial user page (with pagination)
+     */
+    public function removeAction($userId)
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN'))
+        {
+            throw new AccessDeniedHttpException();
+        }
+        $user = $this->getSpecifiedUser($userId);
+        $request = $this->container->get('request');
+        if ($request->get('confirm') === 'yes')
+        {
+            $userManager = $this->container->get('fos_user.user_manager');
+            $userManager->deleteUser($user);
+            $this->container->get('session')->setFlash(
+                    'success',
+                    $this->get('translator')->trans(
+                            'fulgurio.socialnetwork.remove.success',
+                            array('%username%' => $user->getUsername()),
+                            'admin_user'
+                    )
+            );
+            return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
+        }
+        else if ($request->get('confirm') === 'no')
+        {
+            return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
+        }
+        return $this->render(
+                'FulgurioSocialNetworkBundle:Admin:confirm.html.twig',
+                array(
+                    'confirmationMessage' => $this->get('translator')->trans(
+                            'fulgurio.socialnetwork.remove.confirm',
+                            array('%username%' => $user->getUsername()),
+                            'admin_user'
+                    )
+                )
+        );
+    }
+
+    /**
      * Users ban or unban action
      *
      * @todo : XmlRequest ?
@@ -87,20 +131,18 @@ class AdminUserController extends Controller
                             'admin_user'
                     )
             );
-            return new RedirectResponse($this->generateUrl('fulgurio_social_network_admin_users'));
+            return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
         }
-        else if ($request->request->get('confirm') === 'no')
+        else if ($request->get('confirm') === 'no')
         {
-            return new RedirectResponse($this->generateUrl('fulgurio_social_network_admin_users'));
+            return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
         }
         return $this->render(
                 'FulgurioSocialNetworkBundle:Admin:confirm.html.twig',
                 array(
                     'confirmationMessage' => $this->get('translator')->trans(
                             'fulgurio.socialnetwork.' . ($isEnabled ? 'ban' : 'unban') . '.confirm',
-                            array(
-                                '%username%' => $user->getUsername()
-                            ),
+                            array('%username%' => $user->getUsername()),
                             'admin_user'
                     )
                 )
@@ -128,7 +170,7 @@ class AdminUserController extends Controller
                         'admin_user'
                 )
         );
-        return new RedirectResponse($this->generateUrl('fulgurio_social_network_admin_users'));
+        return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
     }
 
     /**

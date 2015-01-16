@@ -2,6 +2,7 @@ fulgurio:
   socialnetwork:
     header_link:     Utilisateurs
     user_not_found:  Utilisateur non trouvé.
+    no_result:       Aucun utilisateur trouvé.
     list:
       title:         Utilisateurs
       last_login:    Dernière connexion
@@ -18,12 +19,17 @@ fulgurio:
       ban:           Bannir
       unban:         Débannir
       infos:         Infos
+      remove:        Supprimer
       init_password: Réinitialisation du mot de passe
+    remove:
+        confirm:     Etes-vous sûr de vouloir supprimer "%username%"
+        success:     "\"%username%\" est supprimé !"
     ban:
         confirm:     Etes-vous sûr de vouloir bannir "%username%" ?
         success:     "\"%username%\" est banni"
     unban:
         confirm:     Etes-vous sûr de vouloir débannir "%username%" ?
         success:     "\"%username%\" est débanni"
+
     password_init:
         success:     L'email de réinitialisation de mot de passe a été envoyé à %email%

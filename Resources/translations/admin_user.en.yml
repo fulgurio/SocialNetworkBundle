@@ -2,6 +2,7 @@ fulgurio:
   socialnetwork:
     header_link:     Users
     user_not_found:  User not found.
+    no_result:       No user found.
     list:
       title:         Users
       last_login:    Last login
@@ -18,7 +19,11 @@ fulgurio:
       ban:           Ban
       unban:         Unban
       infos:         Infos
+      remove:        Remove
       init_password: Password init
+    remove:
+        confirm:     Are you sure to delete "%username%"
+        success:     "\"%username%\" deleted !"
     ban:
         confirm:     Are you sure to ban "%username%" ?
         success:     "\"%username%\" is banned"

@@ -17,3 +17,7 @@ fos_user_registration_confirmed:
 fos_user_resetting:
     resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
     prefix: /resetting
+
+fulgurio_social_network_unsubscribe:
+    pattern:  /unsubscribe
+    defaults: { _controller: FulgurioSocialNetworkBundle:Profile:unsubscribe }

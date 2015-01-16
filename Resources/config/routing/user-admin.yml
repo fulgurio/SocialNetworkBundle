@@ -14,6 +14,10 @@ fulgurio_social_network_admin_users_init_password:
     pattern:  /admin/users/{userId}/init-password
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:initPassword }
 
+fulgurio_social_network_admin_users_remove:
+    pattern:  /admin/users/{userId}/remove
+    defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:remove }
+
 fulgurio_social_network_admin_users_view:
     pattern:  /admin/users/{userId}/view
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:view }

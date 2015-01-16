@@ -43,4 +43,22 @@ class WebTestCase extends BaseWebTestCase
         $client->submit($form, $data);
         return $client;
     }
+
+    /**
+     * Get a super admin logged client
+     *
+     * @return \Symfony\Bundle\FrameworkBundle\Client
+     */
+    protected function getSuperAdminLoggedClient()
+    {
+        $data = array(
+            '_username' => 'superadmin',
+            '_password' => 'superadmin'
+        );
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->filter('form[action$="login_check"].form-horizontal button[type="submit"]')->form();
+        $client->submit($form, $data);
+        return $client;
+    }
 }

@@ -27,10 +27,7 @@ class AdminUserControllerTest extends WebTestCase
         $client = $this->getAdminLoggedClient();
 
         $crawler = $client->request('GET', '/admin/users/');
-        $this->assertCount(
-                2,
-                $crawler->filter('table tbody tr')
-        );
+        $this->assertCount(2, $crawler->filter('table tbody tr'));
     }
 
     /**
@@ -97,8 +94,8 @@ class AdminUserControllerTest extends WebTestCase
         $link = $firstLine->filter('a[href$="/ban"]')->link();
         $crawler = $client->click($link);
 
-        $buttonNo = $crawler->selectButton('fulgurio.socialnetwork.yes');
-        $form = $buttonNo->form();
+        $buttonYes = $crawler->selectButton('fulgurio.socialnetwork.yes');
+        $form = $buttonYes->form();
         $client->submit($form);
         $crawler = $client->followRedirect();
         $firstLine = $crawler->filter('table tbody tr')->first();
@@ -119,8 +116,8 @@ class AdminUserControllerTest extends WebTestCase
         $link = $secondLine->filter('a[href$="/unban"]')->link();
         $crawler = $client->click($link);
 
-        $buttonNo = $crawler->selectButton('fulgurio.socialnetwork.yes');
-        $form = $buttonNo->form();
+        $buttonYes = $crawler->selectButton('fulgurio.socialnetwork.yes');
+        $form = $buttonYes->form();
         $client->submit($form);
         $crawler = $client->followRedirect();
         $secondLine = $crawler->filter('table tbody tr:contains(user2)')->first();
@@ -128,6 +125,29 @@ class AdminUserControllerTest extends WebTestCase
         $this->assertCount(1, $secondLine->filter('a[href$="/ban"]'));
     }
 
+    /**
+     * User remove action test
+     */
+    public function testRemoveAction()
+    {
+        $client = $this->getSuperAdminLoggedClient();
+
+        $crawler = $client->request('GET', '/admin/users/');
+        $firstLine = $crawler->filter('table tbody tr:contains(user1)')->first();
+
+        $link = $firstLine->filter('a[href$="/remove"]')->link();
+        $crawler = $client->click($link);
+
+        $buttonYes = $crawler->selectButton('fulgurio.socialnetwork.yes');
+        $form = $buttonYes->form();
+        $client->submit($form);
+        $crawler = $client->followRedirect();
+        $this->assertCount(1, $crawler->filter('table tbody tr'));
+    }
+
+    /**
+     * Init password action test
+     */
     public function testInitPasswordAction()
     {
         $client = $this->getAdminLoggedClient();

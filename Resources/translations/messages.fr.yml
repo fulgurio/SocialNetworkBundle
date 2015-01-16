@@ -3,6 +3,8 @@ fulgurio:
     title:    Social network bundle
     homepage: Accueil
     format_date:               d/m/Y
+    yes:                       Oui
+    no:                        Non
     header_link:
       register:                Inscription
       signin:                  Se connecter
@@ -51,6 +53,9 @@ fulgurio:
         new_password_label:     Nouveau mot de passe
         new_password2_label:    Mot de passe à confirmer
         password_no_match:      Les nouveaux mots de passe ne sont pas identiques
+      unsubscribe:
+        link:                   Se désinscrire
+        confirm:                Etes-vous sûr de vouloir vous désinscrire ?
     lost_password:
       title:                    Mot de passe perdu ?
       legend:                   Mot de passe perdu ?
