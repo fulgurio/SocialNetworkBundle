@@ -4,6 +4,7 @@
 
 {% block content %}
 <h1>{% trans with {"%username%": user.username} from 'admin_user' %}fulgurio.socialnetwork.view.title{% endtrans %}</h1>
+<img src="{{ avatar(user) }}" class="pull-right" />
 <p class="row">
 	<span class="span2">{% trans from 'admin_user' %}fulgurio.socialnetwork.view.username{% endtrans %}</span>{{ user.username }}<br />
 	<span class="span2">{% trans from 'admin_user' %}fulgurio.socialnetwork.view.email{% endtrans %}</span>{{ user.email }}<br />
@@ -12,6 +13,9 @@
 </p>
 <div class="form-actions">
 	<a href="{{ path('fulgurio_social_network_admin_users_init_password', {userId: user.id}) }}" class="btn btn-primary">{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.init_password{% endtrans %}</a>
+{% if user.avatar %}
+	<a href="{{ path('fulgurio_social_network_admin_users_remove_avatar', {userId: user.id}) }}" class="btn btn-primary">{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.remove_avatar{% endtrans %}</a>
+{% endif %}
 {% if user.isEnabled %}
 	<a href="{{ path('fulgurio_social_network_admin_users_ban', {userId: user.id}) }}" class="btn btn-primary">{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.ban{% endtrans %}</a>
 {% else %}

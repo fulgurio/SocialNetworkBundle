@@ -174,6 +174,53 @@ class AdminUserController extends Controller
     }
 
     /**
+     * Remove user avatar
+     *
+     * @param number $userId
+     * @todo : back to initial user page (with pagination)
+     * @todo: send an email
+     */
+    public function removeAvatarAction($userId)
+    {
+        $user = $this->getSpecifiedUser($userId);
+        if ($user->getAvatar() === NULL)
+        {
+            throw new AccessDeniedHttpException();
+        }
+        $request = $this->container->get('request');
+        if ($request->get('confirm') === 'yes')
+        {
+            $user->setAvatar(null);
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($user);
+            $em->flush();
+            $this->container->get('session')->setFlash(
+                    'success',
+                    $this->get('translator')->trans(
+                            'fulgurio.socialnetwork.remove_avatar.success',
+                            array('%username%' => $user->getUsername()),
+                            'admin_user'
+                    )
+            );
+            return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
+        }
+        else if ($request->get('confirm') === 'no')
+        {
+            return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
+        }
+        return $this->render(
+                'FulgurioSocialNetworkBundle:Admin:confirm.html.twig',
+                array(
+                    'confirmationMessage' => $this->get('translator')->trans(
+                            'fulgurio.socialnetwork.remove_avatar.confirm',
+                            array('%username%' => $user->getUsername()),
+                            'admin_user'
+                    )
+                )
+        );
+    }
+
+    /**
      * Get user from given ID, and ckeck if he exists
      *
      * @throws NotFoundHttpException

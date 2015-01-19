@@ -52,6 +52,11 @@ fulgurio:
         current_password_label: Mot de passe actuel
         new_password_label:     Nouveau mot de passe
         new_password2_label:    Mot de passe à confirmer
+        avatar:
+          label:                Avatar
+          select:               Sélectionner une image
+          remove:               Supprimer
+          change:               Changer
         password_no_match:      Les nouveaux mots de passe ne sont pas identiques
       unsubscribe:
         link:                   Se désinscrire

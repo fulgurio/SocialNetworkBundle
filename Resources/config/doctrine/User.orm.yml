@@ -8,6 +8,10 @@ Fulgurio\SocialNetworkBundle\Entity\User:
       id: true
       generator:
         strategy: AUTO
+    avatar:
+      type: string
+      length: 255
+      nullable: true
     created_at:
       type: datetime
       gedmo:
@@ -18,3 +22,9 @@ Fulgurio\SocialNetworkBundle\Entity\User:
       gedmo:
         timestampable:
           on: update
+  lifecycleCallbacks:
+    prePersist: [ preUpload ]
+    preUpdate: [ preUpload ]
+    postPersist: [ upload ]
+    postUpdate: [ upload ]
+    postRemove: [ removeUpload ]

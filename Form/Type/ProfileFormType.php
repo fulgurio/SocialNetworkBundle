@@ -30,6 +30,7 @@ class ProfileFormType extends BaseType
         $builder->add('plainPassword', 'repeated', array(
             'type' => 'password',
             'invalid_message' => 'fulgurio.socialnetwork.profile.edit_profil.password_no_match'
-        ));
-	}
+        ))
+        ->add('avatarFile', 'file', array('required' => FALSE));
+    }
 }

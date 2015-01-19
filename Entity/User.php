@@ -24,6 +24,166 @@ class User extends BaseUser
      * @var integer $id
      */
     protected $id;
+
+    /**
+     * @var string $avatarFile
+     */
+    private $avatarFile;
+
+
+    /**
+     * Set avatarFile
+     *
+     * @param string $avatarFile
+     */
+    public function setAvatarFile($avatarFile)
+    {
+        $this->avatarFile = $avatarFile;
+
+        // We simulate a change on submited form, to save data in database
+        $this->avatar .= '#CHANGE#';
+    }
+
+    /**
+     * Get avatarFile
+     *
+     * @return string
+     */
+    public function getAvatarFile()
+    {
+        return $this->avatarFile;
+    }
+
+    /**
+     * Display avatar
+     *
+     * @return string
+     */
+    public function displayAvatar()
+    {
+        return '/' . $this->getUploadDir() . $this->avatar;
+    }
+
+    /**
+     * Upload directory
+     */
+    public function getUploadDir()
+    {
+        return 'uploads/' . $this->getId() . '/';
+    }
+
+    /**
+     * Get absolut upload directory
+     */
+    public function getUploadRootDir()
+    {
+        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
+    }
+
+    /**
+     * Get a randomw filename, and check if file does'nt exist
+     *
+     * @param UploadedFile $file
+     * @param string $path
+     */
+    public function getUniqName($file, $path)
+    {
+        $filename = uniqid() . '.' . $file->guessExtension();
+        if (!file_exists($path . $filename))
+        {
+            return ($filename);
+        }
+        $this->getUniqName($file, $path);
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function preUpload()
+    {
+        if (null !== $this->avatarFile)
+        {
+            $this->removeUpload();
+            $this->avatar = $this->getUniqName($this->avatarFile, $this->getUploadRootDir());
+        }
+    }
+
+    /**
+     * @ORM\PostPersist
+     */
+    public function upload()
+    {
+        if (null !== $this->avatarFile)
+        {
+            $this->avatarFile->move($this->getUploadRootDir(), $this->avatar);
+            $this->image_shrink($this->getUploadRootDir(). $this->avatar, $this->getUploadRootDir(). $this->avatar, 50, 50, 80);
+            unset($this->avatarFile);
+        }
+    }
+
+    /**
+     * @ORM\PostRemove
+     */
+    public function removeUpload()
+    {
+        if ($this->avatar != '#CHANGE#')
+        {
+            @unlink($this->getUploadRootDir() . substr($this->avatar, 0, -strlen('#CHANGE#')));
+        }
+    }
+
+    /**
+     * Shrink picture
+     *
+     * @param type $sourcefile
+     * @param type $destfile
+     * @param type $fw
+     * @param type $fh
+     * @param type $jpegquality
+     * @return string
+     */
+    private function image_shrink($sourcefile, $destfile, $fw, $fh, $jpegquality = 100)
+    {
+        list($ow, $oh, $from_type) = getimagesize($sourcefile);
+        switch($from_type)
+        {
+            case 1: // GIF
+                $srcImage = imageCreateFromGif($sourcefile);
+                break;
+            case 2: // JPG
+                $srcImage = imageCreateFromJpeg($sourcefile);
+                break;
+            case 3: // PNG
+                $srcImage = imageCreateFromPng($sourcefile);
+                break;
+            default:
+                return;
+        }
+        if (($fw / $ow) > ($fh / $oh))
+        {
+            $tempw = $fw;
+            $temph = ($fw / $ow) * $oh;
+        }
+        else
+        {
+            $tempw = ($fh / $oh) * $ow;
+            $temph = $fh;
+        }
+        $tempImage = imageCreateTrueColor($fw, $fh);
+        imagecopyresampled($tempImage, $srcImage, ($fw - $tempw) / 2, ($fh - $temph) / 2, 0, 0, $tempw, $temph, $ow, $oh);
+        imageJpeg($tempImage, $destfile, $jpegquality);
+        return getimagesize($destfile);
+    }
+
+    /***************************************************************************
+     *                             GENERATED CODE                              *
+     **************************************************************************/
+
+    /**
+     * @var string $avatar
+     */
+    private $avatar;
+
     /**
      * @var datetime $created_at
      */
@@ -38,11 +198,31 @@ class User extends BaseUser
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set avatar
+     *
+     * @param string $avatar
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+    }
+
+    /**
+     * Get avatar
+     *
+     * @return string
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
     }
 
     /**
@@ -58,7 +238,7 @@ class User extends BaseUser
     /**
      * Get created_at
      *
-     * @return datetime 
+     * @return datetime
      */
     public function getCreatedAt()
     {
@@ -78,7 +258,7 @@ class User extends BaseUser
     /**
      * Get updated_at
      *
-     * @return datetime 
+     * @return datetime
      */
     public function getUpdatedAt()
     {

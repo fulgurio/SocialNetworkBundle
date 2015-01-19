@@ -20,6 +20,11 @@ use Fulgurio\SocialNetworkBundle\Tests\Controller\WebTestCase;
 class AdminUserControllerTest extends WebTestCase
 {
     /**
+     * Number of user with ROLE_USER into database
+     */
+    const NB_MEMBER = 3;
+
+    /**
      * Users list test
      */
     public function testlistAction()
@@ -27,7 +32,7 @@ class AdminUserControllerTest extends WebTestCase
         $client = $this->getAdminLoggedClient();
 
         $crawler = $client->request('GET', '/admin/users/');
-        $this->assertCount(2, $crawler->filter('table tbody tr'));
+        $this->assertCount(self::NB_MEMBER, $crawler->filter('table tbody tr'));
     }
 
     /**
@@ -142,7 +147,7 @@ class AdminUserControllerTest extends WebTestCase
         $form = $buttonYes->form();
         $client->submit($form);
         $crawler = $client->followRedirect();
-        $this->assertCount(1, $crawler->filter('table tbody tr'));
+        $this->assertCount(self::NB_MEMBER - 1, $crawler->filter('table tbody tr'));
     }
 
     /**
@@ -154,7 +159,7 @@ class AdminUserControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/admin/users/');
         $firstLine = $crawler->filter('table tbody tr')->first();
-        $email = $firstLine->filter('td:nth-child(4)')->text();
+        $email = $firstLine->filter('td:nth-child(5)')->text();
         $link = $firstLine->filter('a[href$="/view"]')->link();
         $crawler = $client->click($link);
         $initPasswordLink = $crawler->filter('a[href$="/init-password"]')->link();
@@ -174,5 +179,29 @@ class AdminUserControllerTest extends WebTestCase
         $this->assertEquals('webmaster@example.com', key($message->getFrom()));
         $this->assertEquals($email, key($message->getTo()));
         $this->assertEquals('resetting.email.message', $message->getBody());
+    }
+
+    /**
+     * Remove avatar action test
+     */
+    public function testRemoveAvatarAction()
+    {
+        $client = $this->getAdminLoggedClient();
+        $crawler = $client->request('GET', '/admin/users/');
+        $firstLine = $crawler->filter('table tbody tr:contains(user3)')->first();
+        $avatar = $firstLine->filter('img')->first();
+        $this->assertNotEquals('/bundles/fulguriosocialnetwork/images/avatar.png', $avatar->attr('src'));
+        $viewTag = $firstLine->filter('a[href$="/view"]');
+        $crawler = $client->click($viewTag->link());
+        $this->assertCount(1, $crawler->filter('a:contains("fulgurio.socialnetwork.actions.remove_avatar")'));
+        $removeAvatarLink = $crawler->filter('a:contains("fulgurio.socialnetwork.actions.remove_avatar")')->link();
+
+        $crawler = $client->click($removeAvatarLink);
+        $buttonYes = $crawler->selectButton('fulgurio.socialnetwork.yes');
+        $form = $buttonYes->form();
+        $client->submit($form);
+        $crawler = $client->followRedirect();
+        $avatar = $crawler->filter('table tbody tr:contains(user3) img')->first();
+        $this->assertEquals('/bundles/fulguriosocialnetwork/images/avatar.png', $avatar->attr('src'));
     }
 }

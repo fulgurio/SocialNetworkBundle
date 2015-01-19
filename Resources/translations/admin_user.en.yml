@@ -21,6 +21,7 @@ fulgurio:
       infos:         Infos
       remove:        Remove
       init_password: Password init
+      remove_avatar: Remove avatar
     remove:
         confirm:     Are you sure to delete "%username%"
         success:     "\"%username%\" deleted !"
@@ -32,3 +33,6 @@ fulgurio:
         success:     "\"%username%\" is unbanned"
     password_init:
         success:     Password init mail has been sent to %email%
+    remove_avatar:
+        confirm:     Are you sure to remove "%username%" avatar ?
+        success:     "\"%username%\" avatar has been removed"

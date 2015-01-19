@@ -52,6 +52,11 @@ fulgurio:
         current_password_label: Current password
         new_password_label:     New password
         new_password2_label:    Repeat new password
+        avatar:
+          label:                Avatar
+          select:               Select a picture
+          remove:               Remove
+          change:               Change
         password_no_match:      The password fields must match.
       unsubscribe:
         link:                   Unsubscribe

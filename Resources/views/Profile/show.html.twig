@@ -4,6 +4,7 @@
 
 {% block content %}
 <section>
+	<img class="pull-left" src="{{ avatar(user) }}" alt="" />
 	<p>{% trans %}fulgurio.socialnetwork.profile.username{% endtrans %}: {{ user.username }}</p>
 	<p>{% trans %}fulgurio.socialnetwork.profile.email{% endtrans %}: {{ user.email }}</p>
 	<p>{% trans with { '%date%': user.createdAt|date('fulgurio.socialnetwork.format_date'|trans) } %}fulgurio.socialnetwork.profile.registered_date{% endtrans %}</p>

@@ -40,8 +40,8 @@ class ProfileControllerTest extends WebTestCase
 
         $client = $this->getLoggedClient();
         $crawler = $client->request('GET', '/profile/');
-        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $this->userData['username'], $crawler->filter('section p:first-child')->text());
-        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $this->userData['email'], $crawler->filter('section p:nth-child(2)')->text());
+        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $this->userData['username'], $crawler->filter('section p')->first()->text());
+        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $this->userData['email'], $crawler->filter('section p:nth-child(3)')->text());
     }
 
     /**
@@ -109,8 +109,8 @@ class ProfileControllerTest extends WebTestCase
 
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
-        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $data['fos_user_profile_form[user][username]'], $crawler->filter('section p:first-child')->text());
-        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $data['fos_user_profile_form[user][email]'], $crawler->filter('section p:nth-child(2)')->text());
+        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $data['fos_user_profile_form[user][username]'], $crawler->filter('section p')->first()->text());
+        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $data['fos_user_profile_form[user][email]'], $crawler->filter('section p:nth-child(3)')->text());
         $userAfterSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $data['fos_user_profile_form[user][username]']));
         $this->assertEquals($userBeforeSave->getPassword(), $userAfterSave->getPassword());
     }
@@ -135,8 +135,9 @@ class ProfileControllerTest extends WebTestCase
 
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
-        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $data['fos_user_profile_form[user][username]'], $crawler->filter('section p:first-child')->text());
-        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $data['fos_user_profile_form[user][email]'], $crawler->filter('section p:nth-child(2)')->text());
+        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $data['fos_user_profile_form[user][username]'], $crawler->filter('section p')->first()->text());
+        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $data['fos_user_profile_form[user][email]'], $crawler->filter('section p:nth-child(3)')->text());
+        $this->assertTrue('/bundles/fulguriosocialnetwork/images/avatar.png' === $crawler->filter('section img')->attr('src'));
 
         $userAfterSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $data['fos_user_profile_form[user][username]']));
         $this->assertNotEquals($userBeforeSave->getPassword(), $userAfterSave->getPassword());
@@ -145,6 +146,26 @@ class ProfileControllerTest extends WebTestCase
         $encryptedPassword = $encoder->encodePassword($data['fos_user_profile_form[user][username]'], $userAfterSave->getSalt());
 
         $this->assertSame($encryptedPassword, $userAfterSave->getPassword());
+    }
+
+    /**
+     * Edit profil with avatar upload page test
+     */
+    public function testEditWithUploadAction()
+    {
+        $client = $this->getLoggedClient();
+        $crawler = $client->request('GET', '/profile/edit');
+
+        $userBeforeSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $this->userData['username']));
+        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
+        $form['fos_user_profile_form[user][avatarFile]'] = __DIR__ . '/../DataFixtures/icon.png';
+        $form['fos_user_profile_form[current]'] = $this->userData['password'];
+
+        $client->submit($form);
+        $crawler = $client->followRedirect();
+        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $this->userData['username'], $crawler->filter('section p')->first()->text());
+        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $this->userData['email'], $crawler->filter('section p:nth-child(3)')->text());
+        $this->assertFalse('/bundles/fulguriosocialnetwork/images/avatar.png' === $crawler->filter('section img')->attr('src'));
     }
 
     /**
@@ -192,9 +213,7 @@ class ProfileControllerTest extends WebTestCase
 
         $security = $client->getContainer()->get('security.context');
         $this->assertFalse($security->isGranted('ROLE_USER'));
-
     }
-
 
     /**
      * Get a logged client
