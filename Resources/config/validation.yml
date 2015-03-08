@@ -1,0 +1,8 @@
+Fulgurio\SocialNetworkBundle\Entity\Admin\Contact:
+    properties:
+        subject:
+            - NotBlank:
+                message: fulgurio.socialnetwork.contact.subject.not_blank
+        message:
+            - NotBlank:
+                message: fulgurio.socialnetwork.contact.message.not_blank

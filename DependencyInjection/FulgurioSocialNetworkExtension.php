@@ -27,7 +27,30 @@ class FulgurioSocialNetworkExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $this->addEmailsConfig($container, $config['admin_email']['contact'], 'admin_email_contact');
+    }
+
+    /**
+     * Adding email data config
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     * @param string $parameterName
+     */
+    private function addEmailsConfig(ContainerBuilder $container, array $config, $parameterName)
+    {
+        $container->setParameter('fulgurio_social_network.' . $parameterName . '.from', $config['from']);
+        if (isset($config['subject']))
+        {
+            $container->setParameter('fulgurio_social_network.' . $parameterName . '.subject', $config['subject']);
+        }
+        $container->setParameter('fulgurio_social_network.' . $parameterName . '.text', $config['text']);
+        $container->setParameter('fulgurio_social_network.' . $parameterName . '.html', $config['html']);
     }
 }

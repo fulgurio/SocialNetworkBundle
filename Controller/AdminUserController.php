@@ -10,6 +10,8 @@
 
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
+use Fulgurio\SocialNetworkBundle\Entity\Admin\Contact;
+use Fulgurio\SocialNetworkBundle\Form\Type\AdminContactFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -73,7 +75,7 @@ class AdminUserController extends Controller
             throw new AccessDeniedHttpException();
         }
         $user = $this->getSpecifiedUser($userId);
-        $request = $this->container->get('request');
+        $request = $this->getRequest();
         if ($request->get('confirm') === 'yes')
         {
             $userManager = $this->container->get('fos_user.user_manager');
@@ -114,7 +116,7 @@ class AdminUserController extends Controller
      */
     public function banAction($userId)
     {
-        $request = $this->container->get('request');
+        $request = $this->getRequest();
         $user = $this->getSpecifiedUser($userId);
         $isEnabled = $user->isEnabled();
         if ($request->get('confirm') === 'yes')
@@ -150,6 +152,45 @@ class AdminUserController extends Controller
     }
 
     /**
+     * Users contact action
+     *
+     * @todo : back to initial user page (with pagination)
+     */
+    public function contactAction($userId)
+    {
+        $user = $this->getSpecifiedUser($userId);
+        $request = $this->getRequest();
+        $form = $this->createForm(new AdminContactFormType(), new Contact());
+        if ($request->getMethod() === 'POST')
+        {
+            $form->bindRequest($request);
+            if ($form->isValid())
+            {
+                $data = $form->getData();
+                $this->container->get('fulgurio_social_network.admin_mailer')
+                        ->sendContactMessage(
+                                $user,
+                                $data->getSubject(),
+                                $data->getMessage()
+                );
+                $this->container->get('session')->setFlash(
+                        'notice',
+                        $this->get('translator')->trans(
+                                'fulgurio.socialnetwork.contact.success',
+                                array(),
+                                'admin_user'
+                        )
+                );
+                return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
+            }
+        }
+        return $this->render('FulgurioSocialNetworkBundle:AdminUsers:contact.html.twig', array(
+            'user' => $user,
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
      * Init user password
      *
      * @param number $userId
@@ -177,6 +218,7 @@ class AdminUserController extends Controller
      * Remove user avatar
      *
      * @param number $userId
+     * @todo : XmlRequest ?
      * @todo : back to initial user page (with pagination)
      * @todo: send an email
      */
@@ -187,7 +229,7 @@ class AdminUserController extends Controller
         {
             throw new AccessDeniedHttpException();
         }
-        $request = $this->container->get('request');
+        $request = $this->getRequest();
         if ($request->get('confirm') === 'yes')
         {
             $user->setAvatar(null);
@@ -227,7 +269,8 @@ class AdminUserController extends Controller
      * @param number $userId
      * @return User
      */
-    private function getSpecifiedUser($userId) {
+    private function getSpecifiedUser($userId)
+    {
         if (!$user = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->find($userId))
         {
             throw new NotFoundHttpException(

@@ -18,6 +18,10 @@ fulgurio_social_network_admin_users_init_password:
     pattern:  /admin/users/{userId}/init-password
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:initPassword }
 
+fulgurio_social_network_admin_users_contact:
+    pattern:  /admin/users/{userId}/contact
+    defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:contact }
+
 fulgurio_social_network_admin_users_remove:
     pattern:  /admin/users/{userId}/remove
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:remove }

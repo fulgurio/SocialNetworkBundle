@@ -39,6 +39,7 @@
 {%     else %}
 				<a href="{{ path('fulgurio_social_network_admin_users_unban', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.unban{% endtrans %}"><i class="icon-ok-circle"></i></a>
 {%     endif %}
+				<a href="{{ path('fulgurio_social_network_admin_users_contact', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.contact{% endtrans %}"><i class="icon-envelope"></i></a>
 {%     if is_granted('ROLE_SUPER_ADMIN') %}
 				<a href="{{ path('fulgurio_social_network_admin_users_remove', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.remove{% endtrans %}"><i class="icon-trash"></i></a>
 {%     endif %}

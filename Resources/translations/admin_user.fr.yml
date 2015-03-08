@@ -20,6 +20,7 @@ fulgurio:
       unban:         Débannir
       infos:         Infos
       remove:        Supprimer
+      contact:       Contacter
       init_password: Réinitialisation du mot de passe
       remove_avatar: Supprimer l'avatar
     remove:
@@ -36,3 +37,13 @@ fulgurio:
     remove_avatar:
         confirm:     Etes-vous sûr de vouloir supprimer l'avatar de "%username%" ?
         success:     L'avatar de "%username%" a été supprimé
+    contact:
+      title:         Contact
+      sent:          Envoyer
+      subject:
+        label:       Sujet
+        not_blank:   Le sujet est obligatoire
+      message:
+        label:       Message
+        not_blank:   Le message est obligatoire
+      success:       Votre message a bien été envoyé

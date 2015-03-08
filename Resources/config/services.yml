@@ -28,3 +28,15 @@ services:
         tags:
             - { name: form.type, alias: fulgurio_social_network_profile }
         arguments: [ %fos_user.model.user.class% ]
+
+    # Admin Mailer
+    fulgurio_social_network.admin_mailer:
+        class: Fulgurio\SocialNetworkBundle\Mailer\AdminMailer
+        arguments:
+            0: "@mailer"
+            1: "@router"
+            2: "@templating"
+            3:
+                contact.from         : %fulgurio_social_network.admin_email_contact.from%
+                contact.textTemplate : %fulgurio_social_network.admin_email_contact.text%
+                contact.htmlTemplate : %fulgurio_social_network.admin_email_contact.html%

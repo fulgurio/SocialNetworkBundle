@@ -20,6 +20,7 @@ fulgurio:
       unban:         Unban
       infos:         Infos
       remove:        Remove
+      contact:       Contact
       init_password: Password init
       remove_avatar: Remove avatar
     remove:
@@ -36,3 +37,13 @@ fulgurio:
     remove_avatar:
         confirm:     Are you sure to remove "%username%" avatar ?
         success:     "\"%username%\" avatar has been removed"
+    contact:
+      title:         Contact
+      sent:          Sent
+      subject:
+        label:       Subject
+        not_blank:   Subject is required
+      message:
+        label:       Message
+        not_blank:   Message is required
+      success:       Your message has been sent successfully
