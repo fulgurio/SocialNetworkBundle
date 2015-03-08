@@ -37,6 +37,11 @@ fulgurio:
     remove_avatar:
         confirm:     Are you sure to remove "%username%" avatar ?
         success:     "\"%username%\" avatar has been removed"
+        email:
+            subject: Your avatar has been removed
+            message: >
+                     Hi,
+                     I'm sorry, but it seems that you're avatar didn't respect our rules. We removed it, but you can upload a new one.
     contact:
       title:         Contact
       sent:          Sent

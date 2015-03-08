@@ -220,7 +220,6 @@ class AdminUserController extends Controller
      * @param number $userId
      * @todo : XmlRequest ?
      * @todo : back to initial user page (with pagination)
-     * @todo: send an email
      */
     public function removeAvatarAction($userId)
     {
@@ -232,10 +231,13 @@ class AdminUserController extends Controller
         $request = $this->getRequest();
         if ($request->get('confirm') === 'yes')
         {
+            //@todo: remove file ?
             $user->setAvatar(null);
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($user);
             $em->flush();
+                $this->container->get('fulgurio_social_network.admin_mailer')
+                        ->sendRemovedAvatarMessage($user);
             $this->container->get('session')->setFlash(
                     'success',
                     $this->get('translator')->trans(

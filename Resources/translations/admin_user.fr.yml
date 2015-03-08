@@ -37,6 +37,11 @@ fulgurio:
     remove_avatar:
         confirm:     Etes-vous sûr de vouloir supprimer l'avatar de "%username%" ?
         success:     L'avatar de "%username%" a été supprimé
+        email:
+            subject: Votre avatar a été effacé
+            message: >
+                     Bonjour,
+                     Nous sommes navré, mais votre avatar ne respecte pas notre charte. Nous l'avons effacé, et vous pouvez réuploader un nouveau.
     contact:
       title:         Contact
       sent:          Envoyer

@@ -37,6 +37,10 @@ services:
             1: "@router"
             2: "@templating"
             3:
-                contact.from         : %fulgurio_social_network.admin_email_contact.from%
-                contact.textTemplate : %fulgurio_social_network.admin_email_contact.text%
-                contact.htmlTemplate : %fulgurio_social_network.admin_email_contact.html%
+                contact.from               : %fulgurio_social_network.admin_email_contact.from%
+                contact.textTemplate       : %fulgurio_social_network.admin_email_contact.text%
+                contact.htmlTemplate       : %fulgurio_social_network.admin_email_contact.html%
+                remove_avatar.from         : %fulgurio_social_network.admin_email_remove_avatar.from%
+                remove_avatar.subject      : %fulgurio_social_network.admin_email_remove_avatar.subject%
+                remove_avatar.textTemplate : %fulgurio_social_network.admin_email_remove_avatar.text%
+                remove_avatar.htmlTemplate : %fulgurio_social_network.admin_email_remove_avatar.html%

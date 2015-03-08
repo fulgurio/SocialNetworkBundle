@@ -34,6 +34,7 @@ class FulgurioSocialNetworkExtension extends Extension
         $loader->load('services.yml');
 
         $this->addEmailsConfig($container, $config['admin_email']['contact'], 'admin_email_contact');
+        $this->addEmailsConfig($container, $config['admin_email']['remove_avatar'], 'admin_email_remove_avatar');
     }
 
     /**

@@ -44,4 +44,31 @@ class AdminMailer extends AbstractMailer
                 $bodyText
         );
     }
+
+    /**
+     * Send email on avatar deletion
+     *
+     * @param UserInterface $user
+     */
+    public function sendRemovedAvatarMessage(UserInterface $user)
+    {
+        $subject = $this->templating->render(
+                $this->parameters['remove_avatar.subject']
+        );
+        $data = array('user' => $user, 'subject' => $subject);
+        $bodyText = $this->templating->render(
+                $this->parameters['remove_avatar.textTemplate'], $data
+        );
+        $bodyHTML = $this->templating->render(
+                $this->parameters['remove_avatar.htmlTemplate'], $data
+        );
+
+        $this->sendEmailMessage(
+                $this->parameters['contact.from'],
+                $user->getEmail(),
+                $subject,
+                $bodyHTML,
+                $bodyText
+        );
+    }
 }
