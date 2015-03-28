@@ -17,10 +17,10 @@
 	<thead>
 		<tr>
 			<th></th>
-			<th>{{ users.sortable('fulgurio.socialnetwork.list.last_login'|trans({}, 'admin_user'), 'a.lastLogin')|raw }}</th>
-			<th>{{ users.sortable('fulgurio.socialnetwork.list.register_date'|trans({}, 'admin_user'), 'a.created_at')|raw }}</th>
 			<th>{{ users.sortable('fulgurio.socialnetwork.list.username'|trans({}, 'admin_user'), 'a.username')|raw }}</th>
 			<th>{{ users.sortable('fulgurio.socialnetwork.list.email'|trans({}, 'admin_user'), 'a.email')|raw }}</th>
+			<th>{{ users.sortable('fulgurio.socialnetwork.list.register_date'|trans({}, 'admin_user'), 'a.created_at')|raw }}</th>
+			<th>{{ users.sortable('fulgurio.socialnetwork.list.last_login'|trans({}, 'admin_user'), 'a.lastLogin')|raw }}</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -38,10 +38,10 @@
 {%   for user in users %}
 		<tr>
 			<td><img src="{{ avatar(user) }}" /></td>
-			<td>{{ user.createdAt|date('fulgurio.socialnetwork.format_date_time'|trans({}, 'admin')) }}</td>
-			<td>{{ user.lastLogin|date('fulgurio.socialnetwork.format_date'|trans({}, 'admin')) }}</td>
 			<td>{{ user.username }}</td>
 			<td>{{ user.email }}</td>
+			<td>{{ user.createdAt|date('fulgurio.socialnetwork.format_date'|trans({}, 'admin')) }}</td>
+			<td>{% if user.lastLogin %}{{ user.lastLogin|date('fulgurio.socialnetwork.format_date_time'|trans({}, 'admin')) }}{% endif %}</td>
 			<td>
 {%     if user.isEnabled %}
 				<a href="{{ path('fulgurio_social_network_admin_users_ban', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.ban{% endtrans %}"><i class="icon-ban-circle"></i></a>
