@@ -4,6 +4,12 @@
 
 {% block content %}
 <h1>{% trans from 'admin_user' %}fulgurio.socialnetwork.list.title{% endtrans %}</h1>
+<div class="rows">
+	<form action="{{ path('fulgurio_social_network_admin_users') }}" method="post" class="form-search pull-right">
+		<input type="search" name="s" class="input-medium search-query" value="{{ searchQuery }}">
+		<button type="submit" class="btn">{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.search{% endtrans %}</button>
+	</form>
+</div>
 <table class="table table-striped">
 	<thead>
 		<tr>

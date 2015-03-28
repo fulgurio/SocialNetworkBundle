@@ -20,27 +20,74 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository
 {
-	const NB_PER_PAGE = 10;
+    const NB_PER_PAGE = 10;
 
-	/**
-	 * Find all users (without admin) with sortable option, and default order by
-	 * name
-	 *
-	 * @param object $paginator
-	 * @param integer $page
-	 */
-	public function findOnlySubscribers($paginator, $page = 1)
-	{
-		$query = $this->getEntityManager()->createQuery('
-				SELECT a
-				FROM FulgurioSocialNetworkBundle:User a
-				WHERE a.roles NOT LIKE :role1
-				  AND a.roles NOT LIKE :role2
-				ORDER BY a.username'
-		);
-		$query->setParameter('role1', '%"ROLE_SUPER_ADMIN"%');
-		$query->setParameter('role2', '%"ROLE_ADMIN"%');
-		$users = $paginator->paginate($query, $page, self::NB_PER_PAGE);
-		return ($users);
-	}
+    /**
+     * Find all users (without admin) with sortable option, and default order by
+     * name
+     *
+     * @param object $paginator
+     * @param number $page
+     * @param string $searchQuery
+     */
+    public function findOnlySubscribers($paginator, $page = 1, $searchQuery = NULL)
+    {
+        if ($searchQuery === NULL || $searchQuery ==='')
+        {
+            $search = '';
+        }
+        else
+        {
+            $search = ' AND (a.email LIKE :searchQuery)';
+        }
+        $query = $this->getEntityManager()->createQuery('
+                SELECT a
+                FROM FulgurioSocialNetworkBundle:User a
+                WHERE a.roles NOT LIKE :role1
+                  AND a.roles NOT LIKE :role2
+                  AND a.roles NOT LIKE :role3
+                ' . $search . '
+                ORDER BY a.username'
+        );
+        $query->setParameter('role1', '%"ROLE_SUPER_ADMIN"%');
+        $query->setParameter('role2', '%"ROLE_ADMIN"%');
+        $query->setParameter('role3', '%"ROLE_GHOST"%');
+        if ($search !== '')
+        {
+            $query->setParameter('searchQuery', '%' . $searchQuery . '%');
+        }
+        return $paginator->paginate($query, $page, self::NB_PER_PAGE);
+    }
+
+    /**
+     * Find all users (without Ghost) with sortable option, and default order by name
+     *
+     * @param object $paginator
+     * @param number $page
+     * @param string $searchQuery
+     */
+    public function findWithPagination($paginator, $page = 1, $searchQuery = NULL)
+    {
+        if ($searchQuery === NULL || $searchQuery ==='')
+        {
+            $search = '';
+        }
+        else
+        {
+            $search = ' AND (a.email LIKE :searchQuery)';
+        }
+        $query = $this->getEntityManager()->createQuery('
+                SELECT a
+                FROM FulgurioSocialNetworkBundle:User a
+                WHERE a.roles NOT LIKE :role
+                ' . $search . '
+                ORDER BY a.username
+        ');
+        $query->setParameter('role', '%"ROLE_GHOST"%');
+        if ($search !== '')
+        {
+            $query->setParameter('searchQuery', '%' . $searchQuery . '%');
+        }
+        return $paginator->paginate($query, $page, self::NB_PER_PAGE);
+    }
 }

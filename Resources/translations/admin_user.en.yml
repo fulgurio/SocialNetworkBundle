@@ -1,54 +1,55 @@
 fulgurio:
   socialnetwork:
-    header_link:     Users
-    user_not_found:  User not found.
-    no_result:       No user found.
+    header_link:            Users
+    user_not_found:         User not found.
+    no_result:              No user found.
     list:
-      title:         Users
-      last_login:    Last login
-      register_date: Registration date
-      username:      Username
-      email:         Email
+      title:                Users
+      last_login:           Last login
+      register_date:        Registration date
+      username:             Username
+      email:                Email
     view:
-      title:         %username% infos
-      last_login:    Last login
-      register_date: Registratopn date
-      username:      Username
-      email:         Email
+      title:                %username% infos
+      last_login:           Last login
+      register_date:        Registratopn date
+      username:             Username
+      email:                Email
     actions:
-      ban:           Ban
-      unban:         Unban
-      infos:         Infos
-      remove:        Remove
-      contact:       Contact
-      init_password: Password init
-      remove_avatar: Remove avatar
+      ban:                  Ban
+      unban:                Unban
+      infos:                Infos
+      remove:               Remove
+      search:               Search
+      contact:              Contact
+      init_password:        Password init
+      remove_avatar:        Remove avatar
     remove:
-        confirm:     Are you sure to delete "%username%"
-        success:     "\"%username%\" deleted !"
+        confirm:            Are you sure to delete "%username%"
+        success:            "\"%username%\" deleted !"
     ban:
-        confirm:     Are you sure to ban "%username%" ?
-        success:     "\"%username%\" is banned"
+        confirm:            Are you sure to ban "%username%" ?
+        success:            "\"%username%\" is banned"
     unban:
-        confirm:     Are you sure to unban "%username%" ?
-        success:     "\"%username%\" is unbanned"
+        confirm:            Are you sure to unban "%username%" ?
+        success:            "\"%username%\" is unbanned"
     password_init:
-        success:     Password init mail has been sent to %email%
+        success:            Password init mail has been sent to %email%
     remove_avatar:
-        confirm:     Are you sure to remove "%username%" avatar ?
-        success:     "\"%username%\" avatar has been removed"
+        confirm:            Are you sure to remove "%username%" avatar ?
+        success:            "\"%username%\" avatar has been removed"
         email:
-            subject: Your avatar has been removed
-            message: >
-                     Hi,
-                     I'm sorry, but it seems that you're avatar didn't respect our rules. We removed it, but you can upload a new one.
+            subject:        Your avatar has been removed
+            message:        >
+                            Hi,
+                            I'm sorry, but it seems that you're avatar didn't respect our rules. We removed it, but you can upload a new one.
     contact:
-      title:         Contact
-      sent:          Sent
+      title:                Contact
+      sent:                 Sent
       subject:
-        label:       Subject
-        not_blank:   Subject is required
+        label:              Subject
+        not_blank:          Subject is required
       message:
-        label:       Message
-        not_blank:   Message is required
-      success:       Your message has been sent successfully
+        label:              Message
+        not_blank:          Message is required
+      success:              Your message has been sent successfully

@@ -31,16 +31,33 @@ class AdminUserController extends Controller
     public function listAction()
     {
         $request = $this->get('request');
-        $users = $this->getDoctrine()
-                ->getRepository('FulgurioSocialNetworkBundle:User')
-                ->findOnlySubscribers(
-                        $this->get('knp_paginator'),
-                        $request->query->get('page', 1)
-        );
+        $search = trim($request->get('s', ''));
+        $page = $request->get('page', 1);
+        $repository = $this->getDoctrine()
+                ->getRepository('FulgurioSocialNetworkBundle:User');
+        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))
+        {
+            $users = $repository->findWithPagination(
+                    $this->get('knp_paginator'),
+                    $page,
+                    $search);
+        }
+        else
+        {
+            $users = $repository->findOnlySubscribers(
+                    $this->get('knp_paginator'),
+                    $page,
+                    $search);
+        }
+        if (count($users) == 0 && $page > 1)
+        {
+            return new RedirectResponse($this->generateUrl('fulgurio_social_network_admin_users', array('page' => $page - 1)));
+        }
         return $this->render(
                 'FulgurioSocialNetworkBundle:AdminUsers:list.html.twig',
                 array(
                     'users' => $users,
+                    'searchQuery' => $search
                 )
         );
     }
