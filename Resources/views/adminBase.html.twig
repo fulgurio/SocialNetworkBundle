@@ -36,9 +36,9 @@
 			</div>
 		</div>
 	</header>
-{% if app.session.hasFlash('notice') %}	<div class="alert alert-info">{{ app.session.flash('notice')|trans }}</div>{% endif %}
-{% if app.session.hasFlash('success') %}	<div class="alert alert-success">{{ app.session.flash('success')|trans }}</div>{% endif %}
-{% if app.session.hasFlash('alert') %}	<div class="alert alert-error">{{ app.session.flash('alert')|trans }}</div>{% endif %}
+{% if app.session.hasFlash('notice') %}	<div class="alert alert-info">{{ app.session.flash('notice') }}</div>{% endif %}
+{% if app.session.hasFlash('success') %}	<div class="alert alert-success">{{ app.session.flash('success') }}</div>{% endif %}
+{% if app.session.hasFlash('alert') %}	<div class="alert alert-error">{{ app.session.flash('alert') }}</div>{% endif %}
 {% block content %}{% endblock %}
 	<hr />
 	<footer>

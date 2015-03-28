@@ -9,18 +9,20 @@
  */
 namespace Fulgurio\SocialNetworkBundle\Form\Handler;
 
-use FOS\UserBundle\Model\UserManagerInterface;
+use Fulgurio\SocialNetworkBundle\Mailer\AdminMailer;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
-class AdminAccountFormHandler
+class AdminContactFormHandler
 {
     /**
+     *
      * @var type
      */
-    private $userManager;
+    private $mailer;
 
     /**
+     *
      * @var Symfony\Component\Form\Form
      */
     private $form;
@@ -34,13 +36,13 @@ class AdminAccountFormHandler
     /**
      * Constructor
      *
-     * @param FOS\UserBundle\Model\UserManagerInterface $userManager
+     * @param Fulgurio\SocialNetworkBundle\Mailer\AdminMailer $mailer
      * @param Symfony\Component\Form\Form $form
      * @param Symfony\Component\HttpFoundation\Request $request
      */
-    public function __construct(UserManagerInterface $userManager, Form $form, Request $request)
+    public function __construct(AdminMailer $mailer, Form $form, Request $request)
     {
-        $this->userManager = $userManager;
+        $this->mailer = $mailer;
         $this->form = $form;
         $this->request = $request;
     }
@@ -58,13 +60,12 @@ class AdminAccountFormHandler
             $this->form->bindRequest($this->request);
             if ($this->form->isValid())
             {
-                $newPassword = $this->form->get('newPassword')->getData();
-                if (trim($newPassword))
-                {
-                    $user->setPlainPassword($newPassword);
-                    $this->userManager->updatePassword($user);
-                }
-                $this->userManager->updateUser($user);
+                $data = $this->form->getData();
+                $this->mailer->sendContactMessage(
+                        $user,
+                        $data['subject'],
+                        $data['message']
+                );
                 return TRUE;
             }
         }

@@ -13,6 +13,7 @@ namespace Fulgurio\SocialNetworkBundle\Controller;
 use Fulgurio\SocialNetworkBundle\Entity\Admin\Contact;
 use Fulgurio\SocialNetworkBundle\Entity\User;
 use Fulgurio\SocialNetworkBundle\Form\Handler\AdminAccountFormHandler;
+use Fulgurio\SocialNetworkBundle\Form\Handler\AdminContactFormHandler;
 use Fulgurio\SocialNetworkBundle\Form\Type\AdminAccountFormType;
 use Fulgurio\SocialNetworkBundle\Form\Type\AdminContactFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -78,7 +79,7 @@ class AdminUserController extends Controller
         return $this->render(
                 'FulgurioSocialNetworkBundle:AdminUsers:view.html.twig',
                 array(
-                    'user' => $user,
+                    'user' => $user
                 )
         );
     }
@@ -212,30 +213,19 @@ class AdminUserController extends Controller
     public function contactAction($userId)
     {
         $user = $this->getSpecifiedUser($userId);
-        $request = $this->getRequest();
-        $form = $this->createForm(new AdminContactFormType(), new Contact());
-        if ($request->getMethod() === 'POST')
+        $form = $this->createForm(new AdminContactFormType());
+        $formHandler = new AdminContactFormHandler($this->container->get('fulgurio_social_network.admin_mailer'), $form, $this->getRequest());
+        if ($formHandler->process($user))
         {
-            $form->bindRequest($request);
-            if ($form->isValid())
-            {
-                $data = $form->getData();
-                $this->container->get('fulgurio_social_network.admin_mailer')
-                        ->sendContactMessage(
-                                $user,
-                                $data->getSubject(),
-                                $data->getMessage()
-                );
-                $this->container->get('session')->setFlash(
-                        'notice',
-                        $this->get('translator')->trans(
-                                'fulgurio.socialnetwork.contact.success',
-                                array(),
-                                'admin_user'
-                        )
-                );
-                return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
-            }
+            $this->container->get('session')->setFlash(
+                    'notice',
+                    $this->get('translator')->trans(
+                            'fulgurio.socialnetwork.contact.success',
+                            array(),
+                            'admin_user'
+                    )
+            );
+            return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
         }
         return $this->render('FulgurioSocialNetworkBundle:AdminUsers:contact.html.twig', array(
             'user' => $user,
