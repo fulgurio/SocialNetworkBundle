@@ -22,6 +22,14 @@ fulgurio_social_network_admin_users_contact:
     pattern:  /admin/users/{userId}/contact
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:contact }
 
+fulgurio_social_network_admin_users_add:
+    pattern:  /admin/users/add
+    defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:add }
+
+fulgurio_social_network_admin_users_edit:
+    pattern:  /admin/users/{userId}/edit
+    defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:add }
+
 fulgurio_social_network_admin_users_remove:
     pattern:  /admin/users/{userId}/remove
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:remove }

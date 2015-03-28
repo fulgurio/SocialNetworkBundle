@@ -11,8 +11,12 @@
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
 use Fulgurio\SocialNetworkBundle\Entity\Admin\Contact;
+use Fulgurio\SocialNetworkBundle\Entity\User;
+use Fulgurio\SocialNetworkBundle\Form\Handler\AdminAccountFormHandler;
+use Fulgurio\SocialNetworkBundle\Form\Type\AdminAccountFormType;
 use Fulgurio\SocialNetworkBundle\Form\Type\AdminContactFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -77,6 +81,38 @@ class AdminUserController extends Controller
                     'user' => $user,
                 )
         );
+    }
+
+
+    /**
+     * Add or edit user page
+     *
+     * @param User $userId
+     * @throws AccessDeniedException
+     */
+    public function addAction($userId = null)
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))
+        {
+            throw new AccessDeniedException();
+        }
+        $user = is_null($userId) ? new User() : $this->getSpecifiedUser($userId);
+        $form = $this->createForm(new AdminAccountFormType($this->container), $user);
+        $formHandler = new AdminAccountFormHandler($this->container->get('fos_user.user_manager'), $form, $this->getRequest());
+        if ($formHandler->process($user))
+        {
+            $this->get('session')->setFlash('notice',
+                    $this->get('translator')->trans(
+                            'fulgurio.socialnetwork.' . (is_null($userId) ? 'add' : 'edit') . '.success',
+                            array(),
+                            'admin_user'
+            ));
+            return new RedirectResponse($this->generateUrl('fulgurio_social_network_admin_users'));
+        }
+        return $this->render('FulgurioSocialNetworkBundle:AdminUsers:add.html.twig', array(
+            'user' => $user,
+            'form' => $form->createView()
+        ));
     }
 
     /**

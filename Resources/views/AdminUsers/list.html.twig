@@ -5,6 +5,9 @@
 {% block content %}
 <h1>{% trans from 'admin_user' %}fulgurio.socialnetwork.list.title{% endtrans %}</h1>
 <div class="rows">
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+	<a href="{{ path('fulgurio_social_network_admin_users_add') }}" class="btn">{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.add{% endtrans %}</a>
+{% endif %}
 	<form action="{{ path('fulgurio_social_network_admin_users') }}" method="post" class="form-search pull-right">
 		<input type="search" name="s" class="input-medium search-query" value="{{ searchQuery }}">
 		<button type="submit" class="btn">{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.search{% endtrans %}</button>
@@ -47,6 +50,7 @@
 {%     endif %}
 				<a href="{{ path('fulgurio_social_network_admin_users_contact', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.contact{% endtrans %}"><i class="icon-envelope"></i></a>
 {%     if is_granted('ROLE_SUPER_ADMIN') %}
+				<a href="{{ path('fulgurio_social_network_admin_users_edit', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.edit{% endtrans %}"><i class=" icon-pencil"></i></a>
 				<a href="{{ path('fulgurio_social_network_admin_users_remove', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.remove{% endtrans %}"><i class="icon-trash"></i></a>
 {%     endif %}
 				<a href="{{ path('fulgurio_social_network_admin_users_view', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.infos{% endtrans %}"><i class=" icon-info-sign"></i></a>

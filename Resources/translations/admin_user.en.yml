@@ -19,11 +19,37 @@ fulgurio:
       ban:                  Ban
       unban:                Unban
       infos:                Infos
+      add:                  Add
+      edit:                 Edit
       remove:               Remove
       search:               Search
       contact:              Contact
       init_password:        Password init
       remove_avatar:        Remove avatar
+    add:
+      title:                Add user
+      username:
+        label:              Username
+        not_blank:          Username required
+      email:
+        label:              Email
+        not_blank:          Email required
+      password:
+        label:              Password
+        not_blank:          Password required
+        no_match:           Passwords are differents
+      password2:
+        label:              Password to confirm
+      avatar:
+        label:              Avatar
+        select:             Select picture
+        remove:             Delete
+        change:             Change
+      save_button:          Save
+      success:              User added !
+    edit:
+      title:                Edit user
+      success:              User updated !
     remove:
         confirm:            Are you sure to delete "%username%"
         success:            "\"%username%\" deleted !"

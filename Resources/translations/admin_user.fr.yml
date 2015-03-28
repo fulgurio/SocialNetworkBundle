@@ -28,26 +28,28 @@ fulgurio:
       remove_avatar:        Supprimer l'avatar
     add:
       title:                Ajouter un utilisateur
-      username_label:       Identifiant
-      lastname_label:       Nom
-      firstname_label:      Prénom
-      email_label:          Email
-      password_label:       Mot de passe
-      password2_label:      Mot de passe à confirmer
-      avatar_label:         Avatar
+      username:
+        label:              Identifiant
+        not_blank:          Nom d'utilisateur obligatoire
+      email:
+        label:              Email
+        not_blank:          Email obligatoire
+      password:
+        label:              Mot de passe
+        not_blank:          Mot de passe obligatoire
+        no_match:           Les mots de passe ne sont pas identiques
+      password2:
+        label:              Mot de passe à confirmer
+      avatar:
+        label:              Avatar
+        select:             Sélectionner une image
+        remove:             Supprimer
+        change:             Changer
       save_button:          Enregistrer
-      username_required:    Nom d'utilisateur obligatoire
-      email_required:       Email obligatoire
-      password_required:    Mot de passe obligatoire
-      password_no_match:    Les mots de passe ne sont pas identiques
-      role_label:           Droits
       success:              Utilisateur créé !
-      roles:
-        ROLE_ADMIN:         Administrateur
-        ROLE_SUPER_ADMIN:   Super Administrateur
     edit:
       title:                Modifier un utilisateur
-      success:              Utilisateur mise à jour !
+      success:              Utilisateur mis à jour !
     remove:
         confirm:            Etes-vous sûr de vouloir supprimer "%username%"
         success:            "\"%username%\" est supprimé !"
