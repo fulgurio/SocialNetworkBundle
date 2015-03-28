@@ -65,6 +65,75 @@ class AdminUserControllerTest extends WebTestCase
     }
 
     /**
+     * User add action test
+     */
+    public function testAddAction()
+    {
+        $client = $this->getSuperAdminLoggedClient();
+
+        $crawler = $client->request('GET', '/admin/users/');
+        $nbUsers = $crawler->filter('table tbody tr')->count();
+        $link = $crawler->filter('a[href$="/add"]')->link();
+        $crawler = $client->click($link);
+
+        $data = array(
+            'user[username]' => 'user4',
+            'user[email]' => 'user4@example.com',
+            'user[newPassword][first]' => 'user4',
+            'user[newPassword][second]' => 'user4',
+        );
+        $form = $crawler->filter('form[action$="/add"]button[type="submit"]')->form();
+        $client->submit($form, $data);
+        $crawler = $client->followRedirect();
+        $this->assertCount($nbUsers + 1, $crawler->filter('table tbody tr'));
+    }
+
+    /**
+     * User add action test
+     */
+    public function testEditAction()
+    {
+        $client = $this->getSuperAdminLoggedClient();
+
+        $crawler = $client->request('GET', '/admin/users/');
+        $nbUsers = $crawler->filter('table tbody tr')->count();
+        $firstLine = $crawler->filter('table tbody tr:contains(user3)')->first();
+
+        $link = $firstLine->filter('a[href$="/edit"]')->link();
+        $crawler = $client->click($link);
+
+        $data = array(
+            'user[email]' => 'user33@example.com',
+        );
+        $form = $crawler->filter('form[action$="/edit"]button[type="submit"]')->form();
+        $client->submit($form, $data);
+        $crawler = $client->followRedirect();
+        $this->assertCount($nbUsers, $crawler->filter('table tbody tr'));
+        $this->assertCount(1, $crawler->filter('table tbody tr:contains(user3) td:contains(user33)'));
+    }
+
+    /**
+     * User remove action test
+     */
+    public function testRemoveAction()
+    {
+        $client = $this->getSuperAdminLoggedClient();
+
+        $crawler = $client->request('GET', '/admin/users/');
+        $nbUsers = $crawler->filter('table tbody tr')->count();
+        $firstLine = $crawler->filter('table tbody tr:contains(user1)')->first();
+
+        $link = $firstLine->filter('a[href$="/remove"]')->link();
+        $crawler = $client->click($link);
+
+        $buttonYes = $crawler->selectButton('fulgurio.socialnetwork.yes');
+        $form = $buttonYes->form();
+        $client->submit($form);
+        $crawler = $client->followRedirect();
+        $this->assertCount($nbUsers - 1, $crawler->filter('table tbody tr'));
+    }
+
+    /**
      * User ban action test
      */
     public function testBanWithoutConfirmAction()
@@ -130,24 +199,39 @@ class AdminUserControllerTest extends WebTestCase
         $this->assertCount(1, $secondLine->filter('a[href$="/ban"]'));
     }
 
+
     /**
-     * User remove action test
+     * User contact action test
      */
-    public function testRemoveAction()
+    public function testContactAction()
     {
-        $client = $this->getSuperAdminLoggedClient();
+        $client = $this->getAdminLoggedClient();
 
         $crawler = $client->request('GET', '/admin/users/');
         $firstLine = $crawler->filter('table tbody tr:contains(user1)')->first();
 
-        $link = $firstLine->filter('a[href$="/remove"]')->link();
+        $link = $firstLine->filter('a[href$="/contact"]')->link();
         $crawler = $client->click($link);
 
-        $buttonYes = $crawler->selectButton('fulgurio.socialnetwork.yes');
-        $form = $buttonYes->form();
-        $client->submit($form);
-        $crawler = $client->followRedirect();
-        $this->assertCount(self::NB_MEMBER - 1, $crawler->filter('table tbody tr'));
+        $data = array(
+            'contact[subject]' => 'New message',
+            'contact[message]' => 'this is a test'
+        );
+        $form = $crawler->filter('form[action$="contact"]button[type="submit"]')->form();
+        $crawler = $client->submit($form, $data);
+
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+
+        // Check that an e-mail was sent
+        $this->assertEquals(1, $mailCollector->getMessageCount());
+
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+
+        // Asserting e-mail data
+        $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertEquals($data['contact[subject]'], $message->getSubject());
+        $this->assertContains($data['contact[message]'], $message->getBody());
     }
 
     /**
@@ -159,7 +243,7 @@ class AdminUserControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/admin/users/');
         $firstLine = $crawler->filter('table tbody tr')->first();
-        $email = $firstLine->filter('td:nth-child(5)')->text();
+        $email = $firstLine->filter('td:nth-child(3)')->text();
         $link = $firstLine->filter('a[href$="/view"]')->link();
         $crawler = $client->click($link);
         $initPasswordLink = $crawler->filter('a[href$="/init-password"]')->link();

@@ -25,9 +25,9 @@ class RegistrationControllerTest extends WebTestCase
     public function testRegisterAction()
     {
         $data = array(
-            'fos_user_registration_form[username]'      => 'user3',
-            'fos_user_registration_form[email]'         => 'user3@example.com',
-            'fos_user_registration_form[plainPassword]' => 'user3',
+            'fos_user_registration_form[username]'      => 'user100',
+            'fos_user_registration_form[email]'         => 'user100@example.com',
+            'fos_user_registration_form[plainPassword]' => 'user100',
         );
         $client = static::createClient();
         $crawler = $client->request('GET', '/register/');
