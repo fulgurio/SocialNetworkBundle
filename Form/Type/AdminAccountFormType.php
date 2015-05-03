@@ -10,10 +10,8 @@
 namespace Fulgurio\SocialNetworkBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\CallbackValidator;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AdminAccountFormType extends AbstractType
 {
@@ -33,43 +31,45 @@ class AdminAccountFormType extends AbstractType
      * (non-PHPdoc)
      * @see Symfony\Component\Form.AbstractType::buildForm()
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $container = $this->container;
         $builder
             ->add('username', 'text', array(
-                'required' => TRUE
+                'required' => TRUE,
+                'constraints' => array(
+                    new NotBlank(array('message' => 'fulgurio.socialnetwork.add.username.not_blank'))
+                )
             ))
             ->add('email', 'email', array(
-                'required' => TRUE
+                'required' => TRUE,
+                'constraints' => array(
+                    new NotBlank(array('message' => 'fulgurio.socialnetwork.add.email.not_blank'))
+                )
             ))
-            ->add('newPassword', 'repeated', array(
+            ->add('avatarFile', 'file', array('required' => FALSE));
+
+        $request = $this->container->get('request');
+        if ($request->get('userId'))
+        {
+            $builder->add('newPassword', 'repeated', array(
+                'type' => 'password',
+                'invalid_message' => 'fulgurio.socialnetwork.add.password.not_blank',
+                'required' => FALSE,
+                'mapped' => FALSE
+            ));
+        }
+        else
+        {
+            $builder->add('newPassword', 'repeated', array(
                 'type' => 'password',
                 'invalid_message' => 'fulgurio.socialnetwork.add.password.no_match',
-                'required' => FALSE,
-                'property_path' => FALSE
-            ))
-            ->add('avatarFile', 'file', array('required' => FALSE))
-            ->addValidator(new CallbackValidator(function(FormInterface $form) use ($container) {
-                $request = $container->get('request');
-                $isUpdate = $request->get('userId') ? TRUE : FALSE;
-                $usernameField = $form->get('username');
-                if (trim($usernameField->getData()) == '')
-                {
-                    $usernameField->addError(new FormError('fulgurio.socialnetwork.add.username.not_blank'));
-                }
-                $emailField = $form->get('email');
-                if (trim($emailField->getData()) == '')
-                {
-                    $emailField->addError(new FormError('fulgurio.socialnetwork.add.email.not_blank'));
-                }
-                $newPasswordField = $form->get('newPassword')->get('first');
-                if (!$isUpdate && trim($newPasswordField->getData()) === '')
-                {
-                    $newPasswordField->addError(new FormError('fulgurio.socialnetwork.add.password.not_blank'));
-                }
-            })
-        );
+                'required' => TRUE,
+                'mapped' => FALSE,
+                'constraints' => array(
+                    new NotBlank(array('message' => 'fulgurio.socialnetwork.add.password.not_blank'))
+                )
+            ));
+        }
     }
 
     /**

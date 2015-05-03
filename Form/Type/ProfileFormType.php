@@ -10,7 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Form\Type;
 
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 
 /**
@@ -24,7 +24,7 @@ class ProfileFormType extends BaseType
      * (non-PHPdoc)
      * @see FOS\UserBundle\Form\Type\ProfileFormType::buildUserForm()
      */
-    protected function buildUserForm(FormBuilder $builder, array $options)
+    protected function buildUserForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildUserForm($builder, $options);
         $builder->add('plainPassword', 'repeated', array(
@@ -32,5 +32,14 @@ class ProfileFormType extends BaseType
             'invalid_message' => 'fulgurio.socialnetwork.profile.edit_profil.password_no_match'
         ))
         ->add('avatarFile', 'file', array('required' => FALSE));
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form\FormTypeInterface::getName()
+     */
+    public function getName()
+    {
+        return 'fulgurio_social_network_profile';
     }
 }

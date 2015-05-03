@@ -3,26 +3,26 @@
 		<form action="{{ path('fulgurio_social_network_admin_users_contact', {userId: user.id}) }}" method="post" class="form-horizontal">
 			<fieldset>
 				<legend>{% trans from 'admin_user' %}fulgurio.socialnetwork.contact.title{% endtrans %}</legend>
-{% if form.getChild('subject').get('errors') or form.getChild('message').get('errors') %}
+{% if form.subject.vars.errors or form.message.vars.errors %}
 			<div class="alert alert-error">
-{%   for error in form.getChild('subject').get('errors') %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
-{%   for error in form.getChild('message').get('errors') %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
+{%   for error in form.subject.vars.errors %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
+{%   for error in form.message.vars.errors %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
 			</div>
 {% endif %}
 				<div class="control-group">
-					<label class="control-label" for="{{ form.getChild('subject').get('id') }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.contact.subject.label{% endtrans %}</label>
+					<label class="control-label" for="{{ form.subject.vars.id }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.contact.subject.label{% endtrans %}</label>
 					<div class="controls">
-						<input class="input-xlarge" id="{{ form.getChild('subject').get('id') }}" name="{{ form.getChild('subject').get('full_name') }}" value="{{ form.getChild('subject').get('value') }}" />
+						<input class="input-xlarge" id="{{ form.subject.vars.id }}" name="{{ form.subject.vars.full_name }}" value="{{ form.subject.vars.value }}" />
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label" for="{{ form.getChild('message').get('id') }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.contact.message.label{% endtrans %}</label>
+					<label class="control-label" for="{{ form.message.vars.id }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.contact.message.label{% endtrans %}</label>
 					<div class="controls">
-						<textarea class="input-xlarge" id="{{ form.getChild('message').get('id') }}" name="{{ form.getChild('message').get('full_name') }}">{{ form.getChild('message').get('value') }}</textarea>
+						<textarea class="input-xlarge" id="{{ form.message.vars.id }}" name="{{ form.message.vars.full_name }}">{{ form.message.vars.value }}</textarea>
 					</div>
 				</div>
 				<div class="form-actions">
-					<input type="hidden" name="{{ form.getChild('_token').get('full_name') }}" value="{{ form.getChild('_token').get('value') }}" />
+					<input type="hidden" name="{{ form._token.vars.full_name }}" value="{{ form._token.vars.value }}" />
 					<button type="submit" class="btn btn-primary">{% trans from 'admin_user' %}fulgurio.socialnetwork.contact.sent{% endtrans %}</button>
 					<a href="{{ path('fulgurio_social_network_admin_users') }}" class="btn">{% trans from 'admin' %}fulgurio.socialnetwork.back{% endtrans %}</a>
 				</div>

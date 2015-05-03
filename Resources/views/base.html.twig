@@ -33,7 +33,7 @@
 								<a href="{{ path('fos_user_registration_register') }}">{% trans %}fulgurio.socialnetwork.header_link.register{% endtrans %}</a>
 							</li>
 							<li id="connect">
-								<a href="{{ path('fos_user_security_login') }}" class="dropdown-toggle">{% trans %}fulgurio.socialnetwork.header_link.signin{% endtrans %}</a>
+								<a href="{{ path('fos_user_security_login') }}">{% trans %}fulgurio.socialnetwork.header_link.signin{% endtrans %}</a>
 								<form method="post" action="{{ path('fos_user_security_check') }}" class="form-inline">
 									<input type="text" name="_username" class="input-small" value="{{ last_username() }}" placeholder="{% trans %}fulgurio.socialnetwork.login_form.username{% endtrans %}" required="required" />
 									<input type="password" name="_password" class="input-small" placeholder="{% trans %}fulgurio.socialnetwork.login_form.password{% endtrans %}" required="required" />
@@ -54,8 +54,11 @@
 			</div>
 		</div>
 	</header>
-{% if app.session.hasFlash('notice') or app.session.hasFlash('fos_user_success') %}
-	<div class="alert alert-info">{{ app.session.flash('notice')|trans }}{{ app.session.flash('fos_user_success')|trans }}</div>
+{% if app.session.getFlashBag.has('notice') or app.session.getFlashBag.has('fos_user_success') %}
+	<div class="alert alert-info">
+{%   for flashMessage in app.session.flashbag.get('fos_user_success') %}{{ flashMessage|trans }}{%   endfor %}
+{%   for flashMessage in app.session.flashbag.get('fos_user_success') %}{{ flashMessage|trans }}{%   endfor %}
+	</div>
 {% endif %}
 {% block content %}{% endblock %}
 	<hr />
@@ -69,6 +72,7 @@ $('.dropdown-toggle').dropdown();
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") == false %}
 $('#connect a').click(function() {
 	$('#connect form').show();
+	return false;
 });
 {% endif %}
 </script>

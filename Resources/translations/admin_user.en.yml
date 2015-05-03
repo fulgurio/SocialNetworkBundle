@@ -12,7 +12,7 @@ fulgurio:
     view:
       title:                %username% infos
       last_login:           Last login
-      register_date:        Registratopn date
+      register_date:        Registration date
       username:             Username
       email:                Email
     actions:

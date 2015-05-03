@@ -6,26 +6,26 @@
 <form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="post" class="form-horizontal">
 	<fieldset>
 		<legend>{% trans %}Lost password{% endtrans %}</legend>
-{%   if form.getChild('new').get('errors') or form.getChild('new').getChild('first').get('errors') %}
+{%   if form.new.vars.errors or form.new.first.vars.errors %}
 			<div class="alert alert-error">
-{%     for error in form.getChild('new').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
-{%     for error in form.getChild('new').getChild('first').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
+{%     for error in form.new.vars.errors %}{{ error.messageTemplate|trans }}<br />{% endfor %}
+{%     for error in form.new.first.vars.errors %}{{ error.messageTemplate|trans }}<br />{% endfor %}
 			</div>
 {%   endif %}
 		<div class="control-group">
-			<label class="control-label" for="{{ form.getChild('new').getChild('first').get('id') }}">{% trans %}fulgurio.socialnetwork.lost_password.new_password{% endtrans %}</label>
+			<label class="control-label" for="{{ form.new.first.vars.id }}">{% trans %}fulgurio.socialnetwork.lost_password.new_password{% endtrans %}</label>
 			<div class="controls">
-				<input type="password" class="inputtext" name="{{ form.getChild('new').getChild('first').get('full_name') }}" id="{{ form.getChild('new').getChild('first').get('id') }}" required="required" />
+				<input type="password" class="inputtext" name="{{ form.new.first.vars.full_name }}" id="{{ form.new.first.vars.id }}" required="required" />
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="{{ form.getChild('new').getChild('second').get('id') }}">{% trans %}fulgurio.socialnetwork.lost_password.second_new_password{% endtrans %}</label>
+			<label class="control-label" for="{{ form.new.second.vars.id }}">{% trans %}fulgurio.socialnetwork.lost_password.second_new_password{% endtrans %}</label>
 			<div class="controls">
-				<input type="password" class="inputtext" name="{{ form.getChild('new').getChild('second').get('full_name') }}" id="{{ form.getChild('new').getChild('second').get('id') }}" required="required" />
+				<input type="password" class="inputtext" name="{{ form.new.second.vars.full_name }}" id="{{ form.new.second.vars.id }}" required="required" />
 			</div>
 		</div>
 		<div class="form-actions">
-			<input type="hidden" name="{{ form.getChild('_token').get('full_name') }}" value="{{ form.getChild('_token').get('value') }}" />
+			<input type="hidden" name="{{ form._token.vars.full_name }}" value="{{ form._token.vars.value }}" />
 			<button type="submit" class="btn btn-primary">{% trans %}fulgurio.socialnetwork.lost_password.change_password{% endtrans %}</button>
 		</div>
 	</fieldset>

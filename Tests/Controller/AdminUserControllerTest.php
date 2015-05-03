@@ -82,7 +82,7 @@ class AdminUserControllerTest extends WebTestCase
             'user[newPassword][first]' => 'user4',
             'user[newPassword][second]' => 'user4',
         );
-        $form = $crawler->filter('form[action$="/add"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="/add"] button[type="submit"]')->form();
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
         $this->assertCount($nbUsers + 1, $crawler->filter('table tbody tr'));
@@ -105,7 +105,7 @@ class AdminUserControllerTest extends WebTestCase
         $data = array(
             'user[email]' => 'user33@example.com',
         );
-        $form = $crawler->filter('form[action$="/edit"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="/edit"] button[type="submit"]')->form();
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
         $this->assertCount($nbUsers, $crawler->filter('table tbody tr'));
@@ -217,7 +217,8 @@ class AdminUserControllerTest extends WebTestCase
             'contact[subject]' => 'New message',
             'contact[message]' => 'this is a test'
         );
-        $form = $crawler->filter('form[action$="contact"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="contact"] button[type="submit"]')->form();
+        $client->enableProfiler();
         $crawler = $client->submit($form, $data);
 
         $mailCollector = $client->getProfile()->getCollector('swiftmailer');
@@ -247,6 +248,7 @@ class AdminUserControllerTest extends WebTestCase
         $link = $firstLine->filter('a[href$="/view"]')->link();
         $crawler = $client->click($link);
         $initPasswordLink = $crawler->filter('a[href$="/init-password"]')->link();
+        $client->enableProfiler();
         $crawler = $client->click($initPasswordLink);
 
         $mailCollector = $client->getProfile()->getCollector('swiftmailer');

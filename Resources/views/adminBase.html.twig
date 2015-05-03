@@ -36,9 +36,9 @@
 			</div>
 		</div>
 	</header>
-{% if app.session.hasFlash('notice') %}	<div class="alert alert-info">{{ app.session.flash('notice') }}</div>{% endif %}
-{% if app.session.hasFlash('success') %}	<div class="alert alert-success">{{ app.session.flash('success') }}</div>{% endif %}
-{% if app.session.hasFlash('alert') %}	<div class="alert alert-error">{{ app.session.flash('alert') }}</div>{% endif %}
+{% if app.session.getFlashBag.has('notice') %}	<div class="alert alert-info">{% for flashMessage in app.session.flashbag.get('notice') %}{{ flashMessage}}{% endfor %}</div>{% endif %}
+{% if app.session.getFlashBag.has('success') %}	<div class="alert alert-success">{% for flashMessage in app.session.flashbag.get('success') %}{{ flashMessage}}{% endfor %}</div>{% endif %}
+{% if app.session.getFlashBag.has('alert') %}	<div class="alert alert-error">{% for flashMessage in app.session.flashbag.get('alert') %}{{ flashMessage}}{% endfor %}</div>{% endif %}
 {% block content %}{% endblock %}
 	<hr />
 	<footer>

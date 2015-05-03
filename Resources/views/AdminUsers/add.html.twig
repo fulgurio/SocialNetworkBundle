@@ -12,50 +12,50 @@
 		<fieldset>
 			<legend>{{ formTitle|trans({}, 'admin_user') }}</legend>
 {{ form_errors(form) }}
-{% if form.getChild('username').get('errors')
-     or form.getChild('email').get('errors')
-     or form.getChild('newPassword').getChild('first').get('errors') %}
+{% if form.username.vars.errors
+     or form.email.vars.errors
+     or form.newPassword.first.vars.errors %}
 			<div class="alert alert-error">
-{%   for error in form.getChild('username').get('errors') %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
-{%   for error in form.getChild('email').get('errors') %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
-{%   for error in form.getChild('newPassword').getChild('first').get('errors') %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
+{%   for error in form.username.vars.errors %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
+{%   for error in form.email.vars.errors %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
+{%   for error in form.newPassword.first.vars.errors %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
 			</div>
 {% endif %}
 			<div class="control-group">
-				<label class="control-label" for="{{ form.getChild('username').get('id') }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.username.label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.username.vars.id }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.username.label{% endtrans %}</label>
 				<div class="controls">
-					<input type="text" id="{{ form.getChild('username').get('id') }}" class="input-xlarge" name="{{ form.getChild('username').get('full_name') }}" value="{{ form.getChild('username').get('value') }}" />
+					<input type="text" id="{{ form.username.vars.id }}" class="input-xlarge" name="{{ form.username.vars.full_name }}" value="{{ form.username.vars.value }}" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="{{ form.getChild('email').get('id') }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.email.label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.email.vars.id }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.email.label{% endtrans %}</label>
 				<div class="controls">
-					<input type="email" id="{{ form.getChild('email').get('id') }}" class="input-xlarge" name="{{ form.getChild('email').get('full_name') }}" value="{{ form.getChild('email').get('value') }}" />
+					<input type="email" id="{{ form.email.vars.id }}" class="input-xlarge" name="{{ form.email.vars.full_name }}" value="{{ form.email.vars.value }}" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="{{ form.getChild('newPassword').getChild('first').get('id') }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.password.label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.newPassword.first.vars.id }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.password.label{% endtrans %}</label>
 				<div class="controls">
-					<input type="password" id="{{ form.getChild('newPassword').getChild('first').get('id') }}" class="input-xlarge" name="{{ form.getChild('newPassword').getChild('first').get('full_name') }}" />
+					<input type="password" id="{{ form.newPassword.first.vars.id }}" class="input-xlarge" name="{{ form.newPassword.first.vars.full_name }}" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="{{ form.getChild('newPassword').getChild('second').get('id') }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.password2.label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.newPassword.second.vars.id }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.password2.label{% endtrans %}</label>
 				<div class="controls">
-					<input type="password" id="{{ form.getChild('newPassword').getChild('second').get('id') }}" class="input-xlarge" name="{{ form.getChild('newPassword').getChild('second').get('full_name') }}" />
+					<input type="password" id="{{ form.newPassword.second.vars.id }}" class="input-xlarge" name="{{ form.newPassword.second.vars.full_name }}" />
 				</div>
 			</div>
 			<div class="control-group avatar">
-				<label class="control-label" for="{{ form.getChild('email').get('id') }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.avatar.label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.email.vars.id }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.avatar.label{% endtrans %}</label>
 				<div class="controls fileupload {% if user.avatar %}fileupload-exists{% else %}fileupload-new{% endif %}" data-provides="fileupload">
 					<div class="fileupload-new thumbnail"><img src="{{ asset('bundles/fulguriosocialnetwork/images/avatar.png') }}" /></div>
 					<div class="fileupload-preview fileupload-exists thumbnail"><img src="{{ avatar(user) }}" /></div>
-					<span class="btn btn-file"><span class="fileupload-new">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.avatar.select{% endtrans %}</span><span class="fileupload-exists">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.avatar.change{% endtrans %}</span><input type="file" id="{{ form.getChild('avatarFile').get('id') }}" name="{{ form.getChild('avatarFile').get('full_name') }}" /></span>
+					<span class="btn btn-file"><span class="fileupload-new">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.avatar.select{% endtrans %}</span><span class="fileupload-exists">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.avatar.change{% endtrans %}</span><input type="file" id="{{ form.avatarFile.vars.id }}" name="{{ form.avatarFile.vars.full_name }}" /></span>
 					<a class="btn fileupload-exists" data-dismiss="fileupload">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.avatar.remove{% endtrans %}</a>
 				</div>
 			</div>
 			<div class="form-actions">
-				<input type="hidden" name="{{ form.getChild('_token').get('full_name') }}" value="{{ form.getChild('_token').get('value') }}" />
+				<input type="hidden" name="{{ form._token.vars.full_name }}" value="{{ form._token.vars.value }}" />
 				<button type="submit" name="_submit" class="btn btn-primary">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.save_button{% endtrans %}</button>
 			</div>
 		</fieldset>

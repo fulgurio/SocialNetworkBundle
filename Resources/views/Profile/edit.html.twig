@@ -6,62 +6,62 @@
 	<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="post" class="form-horizontal profile-form">
 		<fieldset>
 			<legend>{% trans %}fulgurio.socialnetwork.profile.edit_profil.legend{% endtrans %}</legend>
-{%   if form.get('errors')
-       or form.getChild('user').getChild('username').get('errors')
-       or form.getChild('user').getChild('email').get('errors')
-       or form.getChild('current').get('errors')
-       or form.getChild('user').getChild('plainPassword').get('errors')
-       or form.getChild('user').getChild('avatarFile').get('errors')%}
+{%   if form.vars.errors
+       or form.username.vars.errors
+       or form.email.vars.errors
+       or form.current_password.vars.errors
+       or form.plainPassword.vars.errors
+       or form.avatarFile.vars.errors%}
 			<div class="alert alert-error">
-{%     for error in form.get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
-{%     for error in form.getChild('user').getChild('username').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
-{%     for error in form.getChild('user').getChild('email').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
-{%     for error in form.getChild('current').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
-{%     for error in form.getChild('user').getChild('plainPassword').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
-{%     for error in form.getChild('user').getChild('avatarFile').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
+{%     for error in form.vars.errors %}{{ error.messageTemplate|trans }}<br />{% endfor %}
+{%     for error in form.username.vars.errors %}{{ error.messageTemplate|trans }}<br />{% endfor %}
+{%     for error in form.email.vars.errors %}{{ error.messageTemplate|trans }}<br />{% endfor %}
+{%     for error in form.current_password.vars.errors %}{{ error.messageTemplate|trans }}<br />{% endfor %}
+{%     for error in form.plainPassword.vars.errors %}{{ error.messageTemplate|trans }}<br />{% endfor %}
+{%     for error in form.avatarFile.vars.errors %}{{ error.messageTemplate|trans }}<br />{% endfor %}
 			</div>
 {%   endif %}
 			<div class="control-group">
-				<label class="control-label" for="{{ form.getChild('user').getChild('username').get('id') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.username_label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.username.vars.id }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.username_label{% endtrans %}</label>
 				<div class="controls">
-					<input type="text" id="{{ form.getChild('user').getChild('username').get('id') }}" class="input-xlarge" name="{{ form.getChild('user').getChild('username').get('full_name') }}" value="{{ form.getChild('user').getChild('username').get('value') }}" required="required" />
+					<input type="text" id="{{ form.username.vars.id }}" class="input-xlarge" name="{{ form.username.vars.full_name }}" value="{{ form.username.vars.value }}" required="required" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="{{ form.getChild('user').getChild('email').get('id') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.email_label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.email.vars.id }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.email_label{% endtrans %}</label>
 				<div class="controls">
-					<input type="email" id="{{ form.getChild('user').getChild('email').get('id') }}" class="input-xlarge" name="{{ form.getChild('user').getChild('email').get('full_name') }}" value="{{ form.getChild('user').getChild('email').get('value') }}" required="required" />
+					<input type="email" id="{{ form.email.vars.id }}" class="input-xlarge" name="{{ form.email.vars.full_name }}" value="{{ form.email.vars.value }}" required="required" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="{{ form.getChild('current').get('id') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.current_password_label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.current_password.vars.id }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.current_password_label{% endtrans %}</label>
 				<div class="controls">
-					<input type="password" id="{{ form.getChild('current').get('id') }}" class="input-xlarge" name="{{ form.getChild('current').get('full_name') }}" required="required" />
+					<input type="password" id="{{ form.current_password.vars.id }}" class="input-xlarge" name="{{ form.current_password.vars.full_name }}" required="required" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="{{ form.getChild('user').getChild('plainPassword').getChild('first').get('id') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.new_password_label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.plainPassword.first.vars.id }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.new_password_label{% endtrans %}</label>
 				<div class="controls">
-					<input type="password" id="{{ form.getChild('user').getChild('plainPassword').getChild('first').get('id') }}" class="input-xlarge" name="{{ form.getChild('user').getChild('plainPassword').getChild('first').get('full_name') }}" />
+					<input type="password" id="{{ form.plainPassword.first.vars.id }}" class="input-xlarge" name="{{ form.plainPassword.first.vars.full_name }}" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="{{ form.getChild('user').getChild('plainPassword').getChild('second').get('id') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.new_password2_label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.plainPassword.second.vars.id }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.new_password2_label{% endtrans %}</label>
 				<div class="controls">
-					<input type="password" id="{{ form.getChild('user').getChild('plainPassword').getChild('second').get('id') }}" class="input-xlarge" name="{{ form.getChild('user').getChild('plainPassword').getChild('second').get('full_name') }}" />
+					<input type="password" id="{{ form.plainPassword.second.vars.id }}" class="input-xlarge" name="{{ form.plainPassword.second.vars.full_name }}" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="{{ form.getChild('user').getChild('avatarFile').get('id') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.avatarFile.vars.id }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.label{% endtrans %}</label>
 				<div class="controls fileupload {% if app.user.avatar %}fileupload-exists{% else %}fileupload-new{% endif %}" data-provides="fileupload">
 					<div class="fileupload-new thumbnail"><img src="{{ asset('bundles/fulguriosocialnetwork/images/avatar.png') }}" /></div>
 					<div class="fileupload-preview fileupload-exists thumbnail"><img src="{{ avatar(app.user) }}" /></div>
-					<span class="btn btn-file"><span class="fileupload-new">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.select{% endtrans %}</span><span class="fileupload-exists">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.change{% endtrans %}</span><input type="file" id="{{ form.getChild('user').getChild('avatarFile').get('id') }}" name="{{ form.getChild('user').getChild('avatarFile').get('full_name') }}" /></span>
+					<span class="btn btn-file"><span class="fileupload-new">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.select{% endtrans %}</span><span class="fileupload-exists">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.change{% endtrans %}</span><input type="file" id="{{ form.avatarFile.vars.id }}" name="{{ form.avatarFile.vars.full_name }}" /></span>
 					<a class="btn fileupload-exists" data-dismiss="fileupload">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.remove{% endtrans %}</a>
 				</div>
 			</div>
 			<div class="form-actions">
-				<input type="hidden" name="{{ form.getChild('_token').get('full_name') }}" value="{{ form.getChild('_token').get('value') }}" />
+				<input type="hidden" name="{{ form._token.vars.full_name }}" value="{{ form._token.vars.value }}" />
 				<button type="submit" name="_submit" class="btn btn-primary">{% trans %}fulgurio.socialnetwork.profile.edit_profil.update_profil_button{% endtrans %}</button>
 				<a href="{{ path('fos_user_profile_show') }}" class="btn">{% trans %}fulgurio.socialnetwork.profile.edit_profil.back_to_profil{% endtrans %}</a>
 			</div>

@@ -6,34 +6,34 @@
 	<form action="{{ path('fos_user_registration_register') }}" method="POST" class="form-horizontal">
 		<fieldset>
 			<legend>{% trans %}fulgurio.socialnetwork.register.legend{% endtrans %}</legend>
-{%   if (form.has('errors') and form.get('errors')|length > 0) or form.getChild('username').get('errors') or form.getChild('email').get('errors') or form.getChild('plainPassword').get('errors') %}
+{%   if (form.vars.errors and form.vars.errors|length > 0) or form.username.vars.errors or form.email.vars.errors or form.plainPassword.vars.errors %}
 			<div class="alert alert-error">
-{%     for error in form.getChild('username').get('errors') %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
-{%     for error in form.getChild('email').get('errors') %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
-{%     for error in form.getChild('plainPassword').get('errors') %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
-{%     for error in form.get('errors') %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{% endfor %}
+{%     for error in form.username.vars.errors %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
+{%     for error in form.email.vars.errors %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
+{%     for error in form.plainPassword.vars.errors %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
+{%     for error in form.vars.errors %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{% endfor %}
 			</div>
 {%   endif %}
 			<div class="control-group">
-				<label class="control-label" for="r_username">{% trans %}fulgurio.socialnetwork.register.login_label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.username.vars.id }}">{% trans %}fulgurio.socialnetwork.register.login_label{% endtrans %}</label>
 				<div class="controls">
-					<input type="text" class="inputtext" name="{{ form.getChild('username').get('full_name') }}" id="r_username" value="{{ form.getChild('username').get('value') }}" required="required" />
+					<input type="text" class="inputtext" name="{{ form.username.vars.full_name }}" id="{{ form.username.vars.id }}" value="{{ form.username.vars.value }}" required="required" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="r_email">{% trans %}fulgurio.socialnetwork.register.email_label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.email.vars.id }}">{% trans %}fulgurio.socialnetwork.register.email_label{% endtrans %}</label>
 				<div class="controls">
-					<input type="email" class="inputtext" name="{{ form.getChild('email').get('full_name') }}" id="r_email" value="{{ form.getChild('email').get('value') }}" required="required" />
+					<input type="email" class="inputtext" name="{{ form.email.vars.full_name }}" id="{{ form.email.vars.id }}" value="{{ form.email.vars.value }}" required="required" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="r_pwd">{% trans %}fulgurio.socialnetwork.register.password_label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.plainPassword.vars.id }}">{% trans %}fulgurio.socialnetwork.register.password_label{% endtrans %}</label>
 				<div class="controls">
-					<input type="password" class="inputtext" name="{{ form.getChild('plainPassword').get('full_name') }}" id="r_pwd" required="required" />
+					<input type="password" class="inputtext" name="{{ form.plainPassword.vars.full_name }}" id="{{ form.plainPassword.vars.id }}" required="required" />
 				</div>
 			</div>
 			<div class="form-actions">
-				<input type="hidden" name="{{ form.getChild('_token').get('full_name') }}" value="{{ form.getChild('_token').get('value') }}" />
+				<input type="hidden" name="{{ form._token.vars.full_name }}" value="{{ form._token.vars.value }}" />
 				<button type="submit" name="_submit" class="btn btn-primary">{% trans %}fulgurio.socialnetwork.register.submit{% endtrans %}</button>
 				{% trans with {'%tag%': '<a href="' ~ path('fos_user_security_login') ~ '">', '%endtag%' : '</a>'} %}fulgurio.socialnetwork.register.link_to_signin{% endtrans %}
 			</div>

@@ -82,7 +82,7 @@ class SecurityControllerTest extends WebTestCase
         $form = $crawler->filter('form[action$="login_check"].form-horizontal button[type="submit"]')->form();
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
-        $this->assertEquals('The presented password is invalid.', $crawler->filter('div.alert.alert-error')->text());
+        $this->assertEquals('Bad credentials', $crawler->filter('div.alert.alert-error')->text());
         $security = $client->getContainer()->get('security.context');
         $this->assertFalse($security->isGranted('ROLE_USER'));
     }

@@ -10,7 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Form\Type;
 
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use FOS\UserBundle\Form\Type\ResettingFormType as BaseType;
 
 /**
@@ -22,13 +22,22 @@ class ResettingFormType extends BaseType
 {
     /**
      * (non-PHPdoc)
-     * @see Symfony\Component\Form\FormTypeInterface::buildForm()
+     * @see FOS\UserBundle\Form\Type\ResettingFormType::buildForm()
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('new', 'repeated', array(
             'type' => 'password',
             'invalid_message' => 'fulgurio.socialnetwork.lost_password.password_no_match'
         ));
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form\FormTypeInterface::getName()
+     */
+    public function getName()
+    {
+        return 'fulgurio_social_network_resetting';
     }
 }

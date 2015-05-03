@@ -55,7 +55,7 @@ class AdminAccountFormHandler
     {
         if ($this->request->getMethod() == 'POST')
         {
-            $this->form->bindRequest($this->request);
+            $this->form->handleRequest($this->request);
             if ($this->form->isValid())
             {
                 $newPassword = $this->form->get('newPassword')->getData();

@@ -17,16 +17,16 @@
 	<thead>
 		<tr>
 			<th></th>
-			<th>{{ users.sortable('fulgurio.socialnetwork.list.username'|trans({}, 'admin_user'), 'a.username')|raw }}</th>
-			<th>{{ users.sortable('fulgurio.socialnetwork.list.email'|trans({}, 'admin_user'), 'a.email')|raw }}</th>
-			<th>{{ users.sortable('fulgurio.socialnetwork.list.register_date'|trans({}, 'admin_user'), 'a.created_at')|raw }}</th>
-			<th>{{ users.sortable('fulgurio.socialnetwork.list.last_login'|trans({}, 'admin_user'), 'a.lastLogin')|raw }}</th>
+			<th>{{ knp_pagination_sortable(users, 'fulgurio.socialnetwork.list.username'|trans({}, 'admin_user'), 'a.username')|raw }}</th>
+			<th>{{ knp_pagination_sortable(users, 'fulgurio.socialnetwork.list.email'|trans({}, 'admin_user'), 'a.email')|raw }}</th>
+			<th>{{ knp_pagination_sortable(users, 'fulgurio.socialnetwork.list.register_date'|trans({}, 'admin_user'), 'a.created_at')|raw }}</th>
+			<th>{{ knp_pagination_sortable(users, 'fulgurio.socialnetwork.list.last_login'|trans({}, 'admin_user'), 'a.lastLogin')|raw }}</th>
 			<th></th>
 		</tr>
 	</thead>
 	<tfoot>
 		<tr>
-			<td colspan="6">{{ users.render('FulgurioSocialNetworkBundle::adminPagination.html.twig')|raw }}</td>
+			<td colspan="6">{{ knp_pagination_render(users, 'FulgurioSocialNetworkBundle::adminPagination.html.twig')|raw }}</td>
 		</tr>
 	</tfoot>
 	<tbody>

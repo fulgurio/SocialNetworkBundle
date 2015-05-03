@@ -10,7 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Form\Type;
 
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 
 /**
@@ -22,9 +22,9 @@ class RegistrationFormType extends BaseType
 {
     /**
      * (non-PHPdoc)
-     * @see Symfony\Component\Form\FormTypeInterface::buildForm()
+     * @see Symfony\Component\Form\FormBuilderInterface::buildForm()
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('username')
@@ -38,6 +38,6 @@ class RegistrationFormType extends BaseType
      */
     public function getName()
     {
-        return 'registration';
+        return 'fulgurio_social_network_registration';
     }
 }

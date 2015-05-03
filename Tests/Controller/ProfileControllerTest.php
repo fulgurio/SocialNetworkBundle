@@ -57,16 +57,16 @@ class ProfileControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/profile/edit');
 
         $data = array(
-            'fos_user_profile_form[user][username]' => '',
-            'fos_user_profile_form[user][email]' => '',
-            'fos_user_profile_form[current]' => ''
+            'fos_user_profile_form[username]' => '',
+            'fos_user_profile_form[email]' => '',
+            'fos_user_profile_form[current_password]' => ''
         );
-        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();
 
         $crawler = $client->submit($form, $data);
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.username.blank")'));
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.email.blank")'));
-        $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.current_password.invalid")'));
+        $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("This value should be the user current password.")'));
     }
 
     /**
@@ -78,11 +78,11 @@ class ProfileControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/profile/edit');
 
         $data = array(
-            'fos_user_profile_form[user][username]' => 'user2',
-            'fos_user_profile_form[user][email]' => 'user2@example.com',
-            'fos_user_profile_form[current]' => $this->userData['password']
+            'fos_user_profile_form[username]' => 'user2',
+            'fos_user_profile_form[email]' => 'user2@example.com',
+            'fos_user_profile_form[current_password]' => $this->userData['password']
         );
-        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();
 
         $crawler = $client->submit($form, $data);
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.username.already_used")'));
@@ -98,20 +98,20 @@ class ProfileControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/profile/edit');
 
         $data = array(
-            'fos_user_profile_form[user][username]' => 'user10',
-            'fos_user_profile_form[user][email]' => 'user10@example.com',
-            'fos_user_profile_form[user][plainPassword][first]' => '',
-            'fos_user_profile_form[user][plainPassword][second]' => '',
-            'fos_user_profile_form[current]' => $this->userData['password']
+            'fos_user_profile_form[username]' => 'user10',
+            'fos_user_profile_form[email]' => 'user10@example.com',
+            'fos_user_profile_form[plainPassword][first]' => '',
+            'fos_user_profile_form[plainPassword][second]' => '',
+            'fos_user_profile_form[current_password]' => $this->userData['password']
         );
         $userBeforeSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $this->userData['username']));
-        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();
 
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
-        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $data['fos_user_profile_form[user][username]'], $crawler->filter('section p')->first()->text());
-        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $data['fos_user_profile_form[user][email]'], $crawler->filter('section p:nth-child(3)')->text());
-        $userAfterSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $data['fos_user_profile_form[user][username]']));
+        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $data['fos_user_profile_form[username]'], $crawler->filter('section p')->first()->text());
+        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $data['fos_user_profile_form[email]'], $crawler->filter('section p:nth-child(3)')->text());
+        $userAfterSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $data['fos_user_profile_form[username]']));
         $this->assertEquals($userBeforeSave->getPassword(), $userAfterSave->getPassword());
     }
 
@@ -125,25 +125,25 @@ class ProfileControllerTest extends WebTestCase
 
         $userBeforeSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $this->userData['username']));
         $data = array(
-            'fos_user_profile_form[user][username]' => 'user10',
-            'fos_user_profile_form[user][email]' => 'user10@example.com',
-            'fos_user_profile_form[user][plainPassword][first]' => 'user10',
-            'fos_user_profile_form[user][plainPassword][second]' => 'user10',
-            'fos_user_profile_form[current]' => $this->userData['password']
+            'fos_user_profile_form[username]' => 'user10',
+            'fos_user_profile_form[email]' => 'user10@example.com',
+            'fos_user_profile_form[plainPassword][first]' => 'user10',
+            'fos_user_profile_form[plainPassword][second]' => 'user10',
+            'fos_user_profile_form[current_password]' => $this->userData['password']
         );
-        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();
 
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
-        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $data['fos_user_profile_form[user][username]'], $crawler->filter('section p')->first()->text());
-        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $data['fos_user_profile_form[user][email]'], $crawler->filter('section p:nth-child(3)')->text());
+        $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $data['fos_user_profile_form[username]'], $crawler->filter('section p')->first()->text());
+        $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $data['fos_user_profile_form[email]'], $crawler->filter('section p:nth-child(3)')->text());
         $this->assertTrue('/bundles/fulguriosocialnetwork/images/avatar.png' === $crawler->filter('section img')->attr('src'));
 
-        $userAfterSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $data['fos_user_profile_form[user][username]']));
+        $userAfterSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $data['fos_user_profile_form[username]']));
         $this->assertNotEquals($userBeforeSave->getPassword(), $userAfterSave->getPassword());
 
         $encoder = $client->getContainer()->get('security.encoder_factory')->getEncoder($userAfterSave);
-        $encryptedPassword = $encoder->encodePassword($data['fos_user_profile_form[user][username]'], $userAfterSave->getSalt());
+        $encryptedPassword = $encoder->encodePassword($data['fos_user_profile_form[username]'], $userAfterSave->getSalt());
 
         $this->assertSame($encryptedPassword, $userAfterSave->getPassword());
     }
@@ -157,9 +157,9 @@ class ProfileControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/profile/edit');
 
         $userBeforeSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $this->userData['username']));
-        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
-        $form['fos_user_profile_form[user][avatarFile]'] = __DIR__ . '/../DataFixtures/icon.png';
-        $form['fos_user_profile_form[current]'] = $this->userData['password'];
+        $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();
+        $form['fos_user_profile_form[avatarFile]'] = __DIR__ . '/../DataFixtures/icon.png';
+        $form['fos_user_profile_form[current_password]'] = $this->userData['password'];
 
         $client->submit($form);
         $crawler = $client->followRedirect();

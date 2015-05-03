@@ -11,7 +11,7 @@
 namespace Fulgurio\SocialNetworkBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Admin contact form type
@@ -24,7 +24,7 @@ class AdminContactFormType extends AbstractType
      * (non-PHPdoc)
      * @see Symfony\Component\Form\FormTypeInterface::buildForm()
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('subject', 'text', array(

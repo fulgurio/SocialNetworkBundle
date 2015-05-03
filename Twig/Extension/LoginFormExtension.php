@@ -11,7 +11,7 @@
 namespace Fulgurio\SocialNetworkBundle\Twig\Extension;
 
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 
 /**
@@ -37,7 +37,7 @@ class LoginFormExtension extends \Twig_Extension
      * @param Symfony\Component\HttpFoundation\Session $session
      * @param Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider $csrfProvider
      */
-    public function __construct(Session $session, SessionCsrfProvider $csrfProvider)
+    public function __construct(SessionInterface $session, SessionCsrfProvider $csrfProvider)
     {
         $this->session = $session;
         $this->csrfProvider = $csrfProvider;

@@ -10,7 +10,6 @@
 
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
-use Fulgurio\SocialNetworkBundle\Entity\Admin\Contact;
 use Fulgurio\SocialNetworkBundle\Entity\User;
 use Fulgurio\SocialNetworkBundle\Form\Handler\AdminAccountFormHandler;
 use Fulgurio\SocialNetworkBundle\Form\Handler\AdminContactFormHandler;
@@ -95,14 +94,14 @@ class AdminUserController extends Controller
     {
         if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))
         {
-            throw new AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
         $user = is_null($userId) ? new User() : $this->getSpecifiedUser($userId);
         $form = $this->createForm(new AdminAccountFormType($this->container), $user);
         $formHandler = new AdminAccountFormHandler($this->container->get('fos_user.user_manager'), $form, $this->getRequest());
         if ($formHandler->process($user))
         {
-            $this->get('session')->setFlash('notice',
+            $this->get('session')->getFlashBag()->add('notice',
                     $this->get('translator')->trans(
                             'fulgurio.socialnetwork.' . (is_null($userId) ? 'add' : 'edit') . '.success',
                             array(),
@@ -134,7 +133,7 @@ class AdminUserController extends Controller
         {
             $userManager = $this->container->get('fos_user.user_manager');
             $userManager->deleteUser($user);
-            $this->container->get('session')->setFlash(
+            $this->get('session')->getFlashBag()->add(
                     'success',
                     $this->get('translator')->trans(
                             'fulgurio.socialnetwork.remove.success',
@@ -179,7 +178,7 @@ class AdminUserController extends Controller
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($user);
             $em->flush();
-            $this->container->get('session')->setFlash(
+            $this->get('session')->getFlashBag()->add(
                     'success',
                     $this->get('translator')->trans(
                             'fulgurio.socialnetwork.' . ($isEnabled ? 'ban' : 'unban') . '.success',
@@ -217,7 +216,7 @@ class AdminUserController extends Controller
         $formHandler = new AdminContactFormHandler($this->container->get('fulgurio_social_network.admin_mailer'), $form, $this->getRequest());
         if ($formHandler->process($user))
         {
-            $this->container->get('session')->setFlash(
+            $this->get('session')->getFlashBag()->add(
                     'notice',
                     $this->get('translator')->trans(
                             'fulgurio.socialnetwork.contact.success',
@@ -242,11 +241,15 @@ class AdminUserController extends Controller
     public function initPasswordAction($userId)
     {
         $user = $this->getSpecifiedUser($userId);
-        $user->generateConfirmationToken();
+        if (null === $user->getConfirmationToken()) {
+            /** @var $tokenGenerator \FOS\UserBundle\Util\TokenGeneratorInterface */
+            $tokenGenerator = $this->container->get('fos_user.util.token_generator');
+            $user->setConfirmationToken($tokenGenerator->generateToken());
+        }
         $this->container->get('fos_user.mailer')->sendResettingEmailMessage($user);
         $user->setPasswordRequestedAt(new \DateTime());
         $this->container->get('fos_user.user_manager')->updateUser($user);
-        $this->container->get('session')->setFlash(
+        $this->get('session')->getFlashBag()->add(
                 'success',
                 $this->get('translator')->trans(
                         'fulgurio.socialnetwork.password_init.success',
@@ -281,7 +284,7 @@ class AdminUserController extends Controller
             $em->flush();
                 $this->container->get('fulgurio_social_network.admin_mailer')
                         ->sendRemovedAvatarMessage($user);
-            $this->container->get('session')->setFlash(
+            $this->get('session')->getFlashBag()->add(
                     'success',
                     $this->get('translator')->trans(
                             'fulgurio.socialnetwork.remove_avatar.success',
