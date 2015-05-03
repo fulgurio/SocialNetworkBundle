@@ -32,8 +32,9 @@ Installation is a quick 3 step process:
 3. Enable the Bundle
 4. Configure your application's security.yml
 5. Configure the FOSUserBundle
-6. Import FulgurioSocialNetworkBundle routing
-7. Update your database schema
+6. Configure the bundle
+7. Import FulgurioSocialNetworkBundle routing
+8. Update your database schema
 
 ### Step 1: Download FulgurioSocialNetworkBundle
 
@@ -223,7 +224,21 @@ stof_doctrine_extensions:
             sluggable: true
 ```
 
-### Step 6: Import FulgurioSocialNetworkBundle routing
+### Step 6: Configure the bundle
+Now configure the bundle, just set contact email (it's the "From:" email of
+bundle sent email)
+
+``` yaml
+# app/config/config.yml
+fulgurio_social_network:
+    admin_email:
+        contact:
+            from: contact@example.com
+        remove_avatar:
+            from: contact@example.com
+```
+
+### Step 7: Import FulgurioSocialNetworkBundle routing
 
 Now that you have activated and configured the bundle, all that is left to do is
 import the FulgurioSocialNetworkBundle routing files.
@@ -246,7 +261,7 @@ Or if you prefer XML:
 <import resource="@FulgurioSocialNetworkBundle/Resources/config/routing.yml"/>
 ```
 
-### Step 7: Update your database schema
+### Step 8: Update your database schema
 
 Now that the bundle is configured, the last thing you need to do is update your
 database schema because you have added a new entity, the `User` class which you
