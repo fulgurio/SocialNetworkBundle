@@ -19,6 +19,8 @@
 					<div class="nav-collapse">
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 						<ul class="nav pull-right">
+{#							<li{% if app.request.attributes.get('_route')|substr(0, 9) == 'Messenger' %} class="active"{% endif %}><a href="{{ path('MessengerList') }}"><i class="icon-envelope icon-white"></i> {% trans %}fulgurio.socialnetwork.header_link.messenger{% endtrans %}</a></li>#}
+							<li{% if app.request.attributes.get('_route')|split(0, 30) == 'fulgurio_social_network_friend' %} class="active"{% endif %}><a href="{{ path('fulgurio_social_network_friend_list') }}"><i class="icon-user icon-white"></i> {% trans from 'friendship' %}fulgurio.socialnetwork.header_link{% endtrans %}</a></li>
 							<li class="dropdown" id="profil">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans with {'%username%': app.user.username}%}fulgurio.socialnetwork.header_link.logged_as{% endtrans %} <b class="caret"></b></a>
 								<ul class="dropdown-menu">
@@ -33,7 +35,7 @@
 								<a href="{{ path('fos_user_registration_register') }}">{% trans %}fulgurio.socialnetwork.header_link.register{% endtrans %}</a>
 							</li>
 							<li id="connect">
-								<a href="{{ path('fos_user_security_login') }}" class="dropdown-toggle">{% trans %}fulgurio.socialnetwork.header_link.signin{% endtrans %}</a>
+								<a href="{{ path('fos_user_security_login') }}">{% trans %}fulgurio.socialnetwork.header_link.signin{% endtrans %}</a>
 								<form method="post" action="{{ path('fos_user_security_check') }}" class="form-inline">
 									<input type="text" name="_username" class="input-small" value="{{ last_username() }}" placeholder="{% trans %}fulgurio.socialnetwork.login_form.username{% endtrans %}" required="required" />
 									<input type="password" name="_password" class="input-small" placeholder="{% trans %}fulgurio.socialnetwork.login_form.password{% endtrans %}" required="required" />
@@ -69,6 +71,7 @@ $('.dropdown-toggle').dropdown();
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") == false %}
 $('#connect a').click(function() {
 	$('#connect form').show();
+	return false;
 });
 {% endif %}
 </script>
