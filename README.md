@@ -25,7 +25,7 @@ For more information about translations, check [Symfony documentation](http://sy
 The bundle uses [FOSUser](https://github.com/FriendsOfSymfony/FOSUserBundle).
 Configuration of this bundle is also included on this document.
 
-Installation is a quick 6 steps process:
+Installation is a quick 7 steps process:
 
 1. Download FulgurioSocialNetworkBundle using composer
 2. Enable the Bundle
