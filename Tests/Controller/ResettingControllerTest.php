@@ -36,7 +36,7 @@ class ResettingControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/resetting/request');
-        $form = $crawler->filter('form[action$="resetting/send-email"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="resetting/send-email"] button[type="submit"]')->form();
 
         $data = array('username' => '');
         $crawler = $client->submit($form, $data);
@@ -50,7 +50,7 @@ class ResettingControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/resetting/request');
-        $form = $crawler->filter('form[action$="resetting/send-email"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="resetting/send-email"] button[type="submit"]')->form();
 
         $data = array('username' => 'userNotExits@example.com');
         $crawler = $client->submit($form, $data);
@@ -64,7 +64,7 @@ class ResettingControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/resetting/request');
-        $form = $crawler->filter('form[action$="resetting/send-email"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="resetting/send-email"] button[type="submit"]')->form();
 
         $data = array('username' => 'user1@example.com');
         $crawler = $client->submit($form, $data);
@@ -94,7 +94,7 @@ class ResettingControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/resetting/request');
-        $form = $crawler->filter('form[action$="resetting/send-email"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="resetting/send-email"] button[type="submit"]')->form();
         $data = array('username' => 'user1@example.com');
         $crawler = $client->submit($form, $data);
 
@@ -111,7 +111,7 @@ class ResettingControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/resetting/request');
-        $form = $crawler->filter('form[action$="resetting/send-email"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="resetting/send-email"] button[type="submit"]')->form();
         $data = array('username' => 'user1@example.com');
         $crawler = $client->submit($form, $data);
 
@@ -124,7 +124,7 @@ class ResettingControllerTest extends WebTestCase
             'fos_user_resetting_form[new][first]' => '',
             'fos_user_resetting_form[new][second]' => ''
         );
-        $form = $crawler->filter('form[action$="' . $url . '"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="' . $url . '"] button[type="submit"]')->form();
         $crawler = $client->submit($form, $newData);
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.new_password.blank")'));
         $security = $client->getContainer()->get('security.context');
@@ -138,7 +138,7 @@ class ResettingControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/resetting/request');
-        $form = $crawler->filter('form[action$="resetting/send-email"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="resetting/send-email"] button[type="submit"]')->form();
         $data = array('username' => 'user1@example.com');
         $crawler = $client->submit($form, $data);
 
@@ -151,7 +151,7 @@ class ResettingControllerTest extends WebTestCase
             'fos_user_resetting_form[new][first]' => 'password1',
             'fos_user_resetting_form[new][second]' => 'password2'
         );
-        $form = $crawler->filter('form[action$="' . $url . '"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="' . $url . '"] button[type="submit"]')->form();
         $crawler = $client->submit($form, $newData);
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fulgurio.socialnetwork.lost_password.password_no_match")'));
         $security = $client->getContainer()->get('security.context');
@@ -165,7 +165,7 @@ class ResettingControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/resetting/request');
-        $form = $crawler->filter('form[action$="resetting/send-email"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="resetting/send-email"] button[type="submit"]')->form();
         $data = array('username' => 'user1@example.com');
         $crawler = $client->submit($form, $data);
 
@@ -178,7 +178,7 @@ class ResettingControllerTest extends WebTestCase
             'fos_user_resetting_form[new][first]' => 'password1',
             'fos_user_resetting_form[new][second]' => 'password1'
         );
-        $form = $crawler->filter('form[action$="' . $url . '"]button[type="submit"]')->form();
+        $form = $crawler->filter('form[action$="' . $url . '"] button[type="submit"]')->form();
         $client->submit($form, $newData);
         $this->assertTrue($client->getResponse()->isRedirect('/'));
         $crawler = $client->followRedirect();

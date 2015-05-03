@@ -124,6 +124,16 @@ class SecurityControllerTest extends WebTestCase
         $this->assertTrue($security->isGranted('ROLE_USER'));
     }
 
+    public function toto()
+    {
+//        // We check all URLs that authentied user still not use
+//        //$client->followRedirects(FALSE);
+//        $crawler = $client->request('GET', '/login');
+//        $this->assertTrue($client->getResponse()->isRedirect('/'));
+//        $crawler = $client->request('GET', '/register/');
+//        $this->assertTrue($client->getResponse()->isRedirect('/'));
+    }
+
     /**
      * Login test
      */

@@ -61,7 +61,7 @@ class ProfileControllerTest extends WebTestCase
             'fos_user_profile_form[user][email]' => '',
             'fos_user_profile_form[current]' => ''
         );
-        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();
 
         $crawler = $client->submit($form, $data);
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.username.blank")'));
@@ -82,7 +82,7 @@ class ProfileControllerTest extends WebTestCase
             'fos_user_profile_form[user][email]' => 'user2@example.com',
             'fos_user_profile_form[current]' => $this->userData['password']
         );
-        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();
 
         $crawler = $client->submit($form, $data);
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.username.already_used")'));
@@ -105,7 +105,7 @@ class ProfileControllerTest extends WebTestCase
             'fos_user_profile_form[current]' => $this->userData['password']
         );
         $userBeforeSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $this->userData['username']));
-        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();
 
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
@@ -131,7 +131,7 @@ class ProfileControllerTest extends WebTestCase
             'fos_user_profile_form[user][plainPassword][second]' => 'user10',
             'fos_user_profile_form[current]' => $this->userData['password']
         );
-        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();
 
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
@@ -157,7 +157,7 @@ class ProfileControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/profile/edit');
 
         $userBeforeSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $this->userData['username']));
-        $form = $crawler->filter('form[action$="profile/edit"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();
         $form['fos_user_profile_form[user][avatarFile]'] = __DIR__ . '/../DataFixtures/icon.png';
         $form['fos_user_profile_form[current]'] = $this->userData['password'];
 

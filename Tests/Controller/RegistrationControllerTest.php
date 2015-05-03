@@ -34,7 +34,7 @@ class RegistrationControllerTest extends WebTestCase
 
         $this->assertEquals('fulgurio.socialnetwork.register.legend', $crawler->filter('form legend')->text());
 
-        $form = $crawler->filter('form[action$="register/"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="register/"] button[name="_submit"]')->form();
         $crawler = $client->submit($form, $data);
         $this->assertTrue($client->getResponse()->isRedirect('/'));
 
@@ -55,7 +55,7 @@ class RegistrationControllerTest extends WebTestCase
         );
         $client = static::createClient();
         $crawler = $client->request('GET', '/register/');
-        $form = $crawler->filter('form[action$="register/"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="register/"] button[name="_submit"]')->form();
 
         $crawler = $client->submit($form, $data);
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.username.blank")'));
@@ -75,7 +75,7 @@ class RegistrationControllerTest extends WebTestCase
         );
         $client = static::createClient();
         $crawler = $client->request('GET', '/register/');
-        $form = $crawler->filter('form[action$="register/"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="register/"] button[name="_submit"]')->form();
 
         $crawler = $client->submit($form, $data);
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.email.invalid")'));
@@ -93,7 +93,7 @@ class RegistrationControllerTest extends WebTestCase
         );
         $client = static::createClient();
         $crawler = $client->request('GET', '/register/');
-        $form = $crawler->filter('form[action$="register/"]button[name="_submit"]')->form();
+        $form = $crawler->filter('form[action$="register/"] button[name="_submit"]')->form();
 
         $crawler = $client->submit($form, $data);
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.email.already_used")'));
