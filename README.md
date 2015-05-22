@@ -173,7 +173,7 @@ In YAML:
 
 ``` yaml
 # app/config/routing.yml
-fos_user_security:
+fulgurio_social_network:
     resource: "@FulgurioSocialNetworkBundle/Resources/config/routing.yml"
 ```
 
