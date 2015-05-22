@@ -42,7 +42,7 @@ First, edit composer.json, and add the bundle
 ``` json
 {
     "require": {
-        "fulgurio/socialnetwork-bundle" : "dev-master"
+        "fulgurio/social-network-bundle" : "dev-2.3"
     }
 }
 ```
