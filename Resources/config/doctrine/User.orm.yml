@@ -1,6 +1,6 @@
 Fulgurio\SocialNetworkBundle\Entity\User:
-#  type: mappedSuperclass
-  type: entity
+  type: mappedSuperclass
+#  type: entity
   repositoryClass: Fulgurio\SocialNetworkBundle\Repository\UserRepository
   table: member
   fields:
