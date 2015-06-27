@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('fulgurio_social_network');
         $this->addAdminUserMailsSection($rootNode);
+        $this->addFriendsSection($rootNode);
         return $treeBuilder;
     }
 
@@ -76,5 +77,87 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end();
+    }
+
+    /**
+     * Admin user mails configuration
+     *
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addFriendsSection(ArrayNodeDefinition $node)
+    {
+        $node
+                ->children()
+                    ->arrayNode('friendship')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('nb_refusals')->defaultValue(3)->end()
+                    ->end()
+                    ->children()
+                        ->arrayNode('email')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('from')->end()
+                            ->end()
+                            ->children()
+                                ->arrayNode('invit')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Friendship:invit_email.subject.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Friendship:invit_email.txt.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Friendship:invit_email.html.twig')->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                            ->children()
+                                ->arrayNode('accept')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Friendship:accept_email.subject.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Friendship:accept_email.txt.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Friendship:accept_email.html.twig')->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                            ->children()
+                                ->arrayNode('refuse')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Friendship:refuse_email.subject.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Friendship:refuse_email.txt.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Friendship:refuse_email.html.twig')->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                            ->children()
+                                ->arrayNode('remove')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Friendship:remove_email.subject.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Friendship:remove_email.txt.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Friendship:remove_email.html.twig')->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ;
     }
 }

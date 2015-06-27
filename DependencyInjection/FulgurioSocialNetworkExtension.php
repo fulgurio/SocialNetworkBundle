@@ -35,6 +35,7 @@ class FulgurioSocialNetworkExtension extends Extension
 
         $this->addEmailsConfig($container, $config['admin_email']['contact'], 'admin_email_contact');
         $this->addEmailsConfig($container, $config['admin_email']['remove_avatar'], 'admin_email_remove_avatar');
+        $this->addFriendshipConfig($container, $config['friendship']);
     }
 
     /**
@@ -46,12 +47,25 @@ class FulgurioSocialNetworkExtension extends Extension
      */
     private function addEmailsConfig(ContainerBuilder $container, array $config, $parameterName)
     {
-        $container->setParameter('fulgurio_social_network.' . $parameterName . '.from', $config['from']);
+        if (isset($config['from']))
+        {
+            $container->setParameter('fulgurio_social_network.' . $parameterName . '.from', $config['from']);
+        }
         if (isset($config['subject']))
         {
             $container->setParameter('fulgurio_social_network.' . $parameterName . '.subject', $config['subject']);
         }
         $container->setParameter('fulgurio_social_network.' . $parameterName . '.text', $config['text']);
         $container->setParameter('fulgurio_social_network.' . $parameterName . '.html', $config['html']);
+    }
+
+    private function addFriendshipConfig(ContainerBuilder $container, array $config)
+    {
+        $container->setParameter('fulgurio_social_network.friendship_email_from', $config['email']['from']);
+        $container->setParameter('fulgurio_social_network.friendship_nb_refusals', $config['nb_refusals']);
+        $this->addEmailsConfig($container, $config['email']['invit'],  'friendship_email_invit');
+        $this->addEmailsConfig($container, $config['email']['accept'], 'friendship_email_accept');
+        $this->addEmailsConfig($container, $config['email']['refuse'], 'friendship_email_refuse');
+        $this->addEmailsConfig($container, $config['email']['remove'], 'friendship_email_remove');
     }
 }

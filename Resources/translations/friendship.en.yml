@@ -1,0 +1,74 @@
+fulgurio:
+  socialnetwork:
+    header_link:             Friends
+    title:                   My friends
+    legend:                  My friends
+    no_friend:               You have no friend, %tag%find them now%endtag% !
+    pending:                 pending
+    back_to_friend_list:     Back to my friends list
+    show_his_profil:         Show his profil
+    remove_link:             Remove from friends
+    invitation:
+      asking:                Invitations asking
+      accept:                Accept ?
+      success_msg:           Invitation has been sent successfully !
+      pending:               Invitation is pending
+      email:
+        subject:             %current_username% invit you to join Social Network
+        text:                |
+                             Hello %username%,
+
+                             %current_username% invit you to join his friends list on Social Network.
+                             Click on the link %link% to accept or not his invitation.
+        html:
+          msg1:              Hello %username%,
+          msg2:              %current_username% invit you to join his friends list on Social Network.
+          msg3:              Click %tag%here%endtag% to accept or not his invitation.
+    accept:
+      email:
+        subject:             %current_username% has accepted your invitation to join his friends list on Social Network
+        text:                |
+                             Hello %username%,
+
+                             %current_username% has accepted your invitation to join his friends list on Social Network.
+        html:
+          msg1:              Hello %username%,
+          msg2:              %current_username% has accepted your invitation to join his friends list on Social Network.
+    refuse:
+      email:
+        subject:             %current_username% has refused your invitation to join his friends list on Social Network
+        text:                |
+                             Hello %username%,
+
+                             %current_username% has refused your invitation to join his friends list on Social Network.
+        html:
+          msg1:              Hello %username%,
+          msg2:              %current_username% has refused your invitation to join his friends list on Social Network.
+    remove:
+      email:
+        subject:             %current_username% has removed you from his friends list on Social Network
+        text:                |
+                             Hello %username%,
+
+                             %current_username% has refused your invitation to join his friends list on Social Network.
+        html:
+          msg1:              Hello %username%,
+          msg2:              %current_username% has removed you from his friends list on Social Network.
+    add:
+      title:                 Friend search
+      search:                Friend search
+      find_button:           Find a friend
+      no_user_found:         No user found with that name
+      as_friend:             Add as friend
+      accepted_msg:          Now you are friend with "%username%" !
+      refused_msg:           You refuse the "%username%" invitation
+      remove_msg:            Now you are not friend with "%username%"
+      confirm_refuse_msg:    Are you sur to reject the invitation ?
+      confirm_remove_msg:    Are you sur to remove the relationship ?
+    block:
+      find_from:             Find friends from
+      invit_by_email:        Or %tag%send a email to invit your friends to join us%endtag%
+      find_friends_button:   Find friends
+    profile:
+        username:            His username
+        email:               His email

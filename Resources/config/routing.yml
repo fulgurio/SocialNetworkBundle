@@ -1,3 +1,7 @@
+FulgurioSocialNeworkBundle_friendship:
+    resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/friendship.yml"
+    prefix:   /
+
 FulgurioSocialNeworkBundle_user:
     resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/user.yml"
     prefix:   /

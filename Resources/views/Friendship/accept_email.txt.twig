@@ -1,0 +1,3 @@
+{% autoescape false %}
+{% trans with { '%current_username%' : app.user.username, '%username%' : user.username, '%link%' : url('fulgurio_social_network_friendship_list') } from 'friendship' %}fulgurio.socialnetwork.accept.email.text{% endtrans %}
+{% endautoescape %}

@@ -1,0 +1,60 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+
+{% block title %}{% trans from 'friendship' %}fulgurio.socialnetwork.add.title{% endtrans %}{% endblock %}
+
+{% block content %}
+<h1>{% trans from 'friendship' %}fulgurio.socialnetwork.add.search{% endtrans %}</h1>
+<div class="row-fluid friends">
+	<div class="span8">
+		<form action="{{ path('fulgurio_social_network_friendship_search_to_add') }}" class="well form-search form-horizontal" method="post">
+			<div class="control-group">
+				<div class="controls">
+					<input type="text" class="input" name="search" value="{{ searchValue|e }}" required="required" />
+					<button type="submit" name="searchSubmit" class="btn">{% trans from 'friendship' %}fulgurio.socialnetwork.add.find_button{% endtrans %}</button>
+				</div>
+			</div>
+		</form>
+{%   if users %}
+		<form action="{{ path('fulgurio_social_network_friendship_add') }}" class="well form-search form-horizontal" method="post">
+			<ol class="addFriendsList">
+{%     for user in users %}
+{%       if user.id in pendingFriendshipsIDs %}
+				<li class="pending">
+					<img src="{{ avatar(user) }}" class="pull-left" />
+					<div>
+						{{ user.username }}
+						<span>{% trans from 'friendship' %}fulgurio.socialnetwork.pending{% endtrans %}
+					</div>
+{%       else %}
+				<li>
+					<input type="checkbox" name="friends_id[]" value="{{ user.id }}" id="search_user_{{ user.id }}" />
+					<label for="search_user_{{ user.id }}"><img src="{{ avatar(user) }}" />{{ user.username }}</label>
+{%       endif %}
+				</li>
+{%     endfor %}
+			</ol>
+			<button type="submit" name="addSubmit" class="btn btn-primary" value="Add">{% trans from 'friendship' %}fulgurio.socialnetwork.add.as_friend{% endtrans %}</button>
+			<a href="{{ path('fulgurio_social_network_friendship_list') }}" class="btn">{% trans from 'friendship' %}fulgurio.socialnetwork.back_to_friend_list{% endtrans %}</a>
+		</form>
+{%   else %}
+{%     if app.request.method == "POST" %}
+		<p class="alert alert-info">{% trans from 'friendship' %}fulgurio.socialnetwork.add.no_user_found{% endtrans %}</p>
+{%     endif %}
+		<p><a href="{{ path('fulgurio_social_network_friendship_list') }}" class="btn">{% trans from 'friendship' %}fulgurio.socialnetwork.back_to_friend_list{% endtrans %}</a></p>
+{%   endif %}
+	</div>
+{%   include 'FulgurioSocialNetworkBundle:Friendship:_invit.html.twig' with {'searchValue': searchValue} %}
+</div>
+{% endblock %}
+
+{% block javascriptTop %}
+	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/styles_friends.css') }}" />
+{% endblock %}
+
+{% block javascriptBottom %}
+<script>
+$(".friends ol label").click(function() {
+	$(this).parent().toggleClass("selected");
+});
+</script>
+{% endblock %}

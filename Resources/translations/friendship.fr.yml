@@ -1,0 +1,74 @@
+fulgurio:
+  socialnetwork:
+    header_link:             Amis
+    title:                   Mes amis
+    legend:                  Mes amis
+    no_friend:               Vous n'avez aucun ami, %tag%trouvez les maintenant%endtag% !
+    pending:                 en attente
+    back_to_friend_list:     Revenir à ma liste d'amis
+    show_his_profil:         Voir son profil
+    remove_link:             Retirer de mes amis
+    invitation:
+      asking:                Demande d'invitations
+      accept:                Accepter ?
+      success_msg:           La demande d'ami a bien été envoyée !
+      pending:               Invitation en attente
+      email:
+        subject:             %current_username% souhaite vous inviter à rejoindre sa liste d'amis sur Réseau Social
+        text:                |
+                             Bonjour %username%,
+
+                             %current_username% souhaite vous inviter à rejoindre sa liste d'amis sur Réseau Social.
+                             Cliquez sur le lien %link% pour accepter ou non son invitation.
+        html:
+          msg1:              Bonjour %username%,
+          msg2:              %current_username% souhaite vous inviter à rejoindre sa liste d'amis sur Réseau Social.
+          msg3:              Cliquez %tag%ici%endtag% pour accepter ou non son invitation.
+    accept:
+      email:
+        subject:             %current_username% a accepté de rejoindre votre liste d'amis sur Réseau Social
+        text:                |
+                             Bonjour %username%,
+
+                             %current_username% vous a accepté comme ami sur Réseau Social.|
+        html:
+          msg1:              Bonjour %username%,
+          msg2:              %current_username% vous a accepté comme ami sur Réseau Social
+    refuse:
+      email:
+        subject:             %current_username% a refusé de rejoindre votre liste d'amis sur Réseau Social
+        text:                |
+                             Bonjour %username%,
+
+                             %current_username% a refusé votre invitation à rejoindre votre liste d'amis sur Réseau Social.
+        html:
+          msg1:              Bonjour %username%,
+          msg2:              %current_username% a refusé votre invitation à rejoindre votre liste d'amis sur Réseau Social.
+    remove:
+      email:
+        subject:             %current_username% vous a retiré de sa liste d'amis sur Réseau Social
+        text:                |
+                             Bonjour %username%,
+
+                             %current_username% vous a retiré de sa liste d'amis sur Réseau Social.
+        html:
+          msg1:              Bonjour %username%,
+          msg2:              %current_username% vous a retiré de sa liste d'amis sur Réseau Social.
+    add:
+      title:                 Rechercher un ami
+      search:                Rechercher un ami
+      find_button:           Trouver un ami
+      no_user_found:         Aucun utilisateur de ce nom trouvé
+      as_friend:             Ajouter comme ami
+      accepted_msg:          Vous êtes maintenant ami avec "%username%" !
+      refused_msg:           Vous avez refusé la demande d'ami de "%username%"
+      remove_msg:            Vous n'êtes plus ami avec "%username%"
+      confirm_refuse_msg:    Etes- vous sûr de refuser cette demande d'ami ?
+      confirm_remove_msg:    Etes- vous sûr de supprimer cette relation ?
+    block:
+      find_from:             Trouvez des amis grâce à
+      invit_by_email:        Ou %tag%envoyez à vos amis un email d'invitation à vous rejoindre%endtag%
+      find_friends_button:   Trouver des amis
+    profile:
+        username:            Son identifiant
+        email:               Son email

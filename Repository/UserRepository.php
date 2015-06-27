@@ -90,4 +90,30 @@ class UserRepository extends EntityRepository
         }
         return $paginator->paginate($query, $page, self::NB_PER_PAGE);
     }
+
+    /**
+     * Find enabled user from a part of their username
+     *
+     * @todo : add pagination
+     */
+    public function findOnlyInEnabledSubscribers($username, $excludeIDs)
+    {
+        $query = $this->getEntityManager()->createQuery('
+                SELECT a
+                FROM FulgurioSocialNetworkBundle:User a
+                WHERE a.roles NOT LIKE :role1
+                    AND a.roles NOT LIKE :role2
+                    AND a.roles NOT LIKE :role3
+                    AND a.username LIKE :username
+                    AND a.id NOT IN (:ids)
+                    AND a.enabled=1
+                ORDER BY a.username
+        ');
+        $query->setParameter('role1', '%"ROLE_SUPER_ADMIN"%');
+        $query->setParameter('role2', '%"ROLE_ADMIN"%');
+        $query->setParameter('role3', '%"ROLE_GHOST"%');
+        $query->setParameter('username', $username . '%');
+        $query->setParameter('ids', $excludeIDs);
+        return $query->getResult();
+    }
 }

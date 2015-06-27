@@ -10,7 +10,6 @@
 
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
-use Fulgurio\SocialNetworkBundle\Entity\Admin\Contact;
 use Fulgurio\SocialNetworkBundle\Entity\User;
 use Fulgurio\SocialNetworkBundle\Form\Handler\AdminAccountFormHandler;
 use Fulgurio\SocialNetworkBundle\Form\Handler\AdminContactFormHandler;
