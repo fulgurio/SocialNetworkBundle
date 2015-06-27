@@ -44,3 +44,24 @@ services:
                 remove_avatar.subject      : %fulgurio_social_network.admin_email_remove_avatar.subject%
                 remove_avatar.textTemplate : %fulgurio_social_network.admin_email_remove_avatar.text%
                 remove_avatar.htmlTemplate : %fulgurio_social_network.admin_email_remove_avatar.html%
+
+    fulgurio_social_network.friendship_mailer:
+        class: Fulgurio\SocialNetworkBundle\Mailer\FriendshipMailer
+        arguments:
+            0: "@mailer"
+            1: "@router"
+            2: "@templating"
+            4:
+                from               :    %fulgurio_social_network.friendship_email_from%
+                invit.subjectTemplate:  %fulgurio_social_network.friendship_email_invit.subject%
+                invit.textTemplate:     %fulgurio_social_network.friendship_email_invit.text%
+                invit.htmlTemplate:     %fulgurio_social_network.friendship_email_invit.html%
+                accept.subjectTemplate: %fulgurio_social_network.friendship_email_accept.subject%
+                accept.textTemplate:    %fulgurio_social_network.friendship_email_accept.text%
+                accept.htmlTemplate:    %fulgurio_social_network.friendship_email_accept.html%
+                refuse.subjectTemplate: %fulgurio_social_network.friendship_email_refuse.subject%
+                refuse.textTemplate:    %fulgurio_social_network.friendship_email_refuse.text%
+                refuse.htmlTemplate:    %fulgurio_social_network.friendship_email_refuse.html%
+                remove.subjectTemplate: %fulgurio_social_network.friendship_email_remove.subject%
+                remove.textTemplate:    %fulgurio_social_network.friendship_email_remove.text%
+                remove.htmlTemplate:    %fulgurio_social_network.friendship_email_remove.html%

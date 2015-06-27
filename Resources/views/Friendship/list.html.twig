@@ -1,0 +1,45 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+{% block title %}{% trans from 'friendship' %}fulgurio.socialnetwork.title{% endtrans %}{% endblock %}
+{% block content %}
+<h1>{% trans from 'friendship' %}fulgurio.socialnetwork.legend{% endtrans %}</h1>
+<div class="row-fluid friends">
+	<div class="span8">
+{%   if friendsAsking|length > 0 %}
+		<form method="post">
+			<h2>{% trans from 'friendship' %}fulgurio.socialnetwork.invitation.asking{% endtrans %}</h2>
+			<ol class="askingFriends">
+{%     for friendAsking in friendsAsking %}
+				<li>
+					<img class="pull-left" src="{{ avatar(friendAsking) }}" alt="" />
+					{{ friendAsking.username }}
+					<div>{% trans from 'friendship' %}fulgurio.socialnetwork.invitation.accept{% endtrans %} <a href="{{ path('fulgurio_social_network_friendship_accept', {userId: friendAsking.id}) }}" class="btn btn-mini btn-primary">{% trans %}fulgurio.socialnetwork.yes{% endtrans %}</a> <a href="{{ path('fulgurio_social_network_friendship_refuse', {userId: friendAsking.id}) }}" class="btn btn-mini">{% trans %}fulgurio.socialnetwork.no{% endtrans %}</a></div>
+				</li>
+{%     endfor %}
+			</ol>
+		</form>
+		<hr />
+{%   endif %}
+{%   if friends|length > 0 %}
+		<ol class="myFriends">
+{%     for friend in friends %}
+			<li{% if friend.status != "accepted" %} class="status_{{ friend.status }}"{% endif %}>
+				<img class="pull-left" src="{{ avatar(friend) }}" alt="" />
+				{{ friend.username }}{% if friend.status != "accepted" %}<br /><span>{{ ('fulgurio.socialnetwork.' ~ friend.status)|trans({}, 'friendship') }}</span>{% else %}
+				<p><a href="{{ path('fulgurio_social_network_friendship_profil', { userId: friend.id }) }}">{% trans from 'friendship' %}fulgurio.socialnetwork.show_his_profil{% endtrans %}</a>
+				<a href="{{ path('fulgurio_social_network_friendship_refuse', {userId: friend.id}) }}" class="btn btn-mini">{% trans from 'friendship' %}fulgurio.socialnetwork.remove_link{% endtrans %}</a></p>{% endif %}
+			</li>
+{%     endfor %}
+		</ol>
+{%   else %}
+{%     if friendsAsking|length == 0 %}
+{%       trans with {"%tag%": '<a href="' ~  path('fulgurio_social_network_friendship_search_to_add') ~'">', "%endtag%": '</a>'} from 'friendship' %}fulgurio.socialnetwork.no_friend{% endtrans %}
+{%     endif %}
+{%   endif %}
+	</div>
+{% include 'FulgurioSocialNetworkBundle:Friendship:_invit.html.twig' with {'searchValue': ''} %}
+</div>
+{% endblock %}
+
+{% block javascriptTop %}
+	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/styles_friends.css') }}" />
+{% endblock %}

@@ -1,0 +1,30 @@
+Fulgurio\SocialNetworkBundle\Entity\UserFriendship:
+  type: entity
+  repositoryClass: Fulgurio\SocialNetworkBundle\Repository\UserFriendshipRepository
+  table: member_friendship
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    status:
+      type: string
+      length: 8
+    nb_refusals:
+      type: smallint
+    created_at:
+      type: date
+      gedmo:
+        timestampable:
+          on: create
+    updated_at:
+      type: datetime
+      gedmo:
+        timestampable:
+          on: update
+  manyToOne:
+    user_src:
+      targetEntity: User
+    user_tgt:
+      targetEntity: User

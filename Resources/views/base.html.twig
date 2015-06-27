@@ -19,6 +19,8 @@
 					<div class="nav-collapse">
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 						<ul class="nav pull-right">
+{#							<li{% if app.request.attributes.get('_route')|substr(0, 9) == 'Messenger' %} class="active"{% endif %}><a href="{{ path('MessengerList') }}"><i class="icon-envelope icon-white"></i> {% trans %}fulgurio.socialnetwork.header_link.messenger{% endtrans %}</a></li>#}
+							<li{% if app.request.attributes.get('_route')|split(0, 30) == 'fulgurio_social_network_friend' %} class="active"{% endif %}><a href="{{ path('fulgurio_social_network_friendship_list') }}"><i class="icon-user icon-white"></i> {% trans from 'friendship' %}fulgurio.socialnetwork.header_link{% endtrans %}</a></li>
 							<li class="dropdown" id="profil">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans with {'%username%': app.user.username}%}fulgurio.socialnetwork.header_link.logged_as{% endtrans %} <b class="caret"></b></a>
 								<ul class="dropdown-menu">

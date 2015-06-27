@@ -5,10 +5,28 @@
 {% block content %}
 <section>
 	<img class="pull-left" src="{{ avatar(user) }}" alt="" />
+{% if user == app.user %}
 	<p>{% trans %}fulgurio.socialnetwork.profile.username{% endtrans %}: {{ user.username }}</p>
 	<p>{% trans %}fulgurio.socialnetwork.profile.email{% endtrans %}: {{ user.email }}</p>
 	<p>{% trans with { '%date%': user.createdAt|date('fulgurio.socialnetwork.format_date'|trans) } %}fulgurio.socialnetwork.profile.registered_date{% endtrans %}</p>
-	<a href="{{ path('fos_user_profile_edit') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.link{% endtrans %}</a><br />
-	<a href="{{ path('fulgurio_social_network_unsubscribe') }}">{% trans %}fulgurio.socialnetwork.profile.unsubscribe.link{% endtrans %}</a>
+	<a href="{{ path('fos_user_profile_edit') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.link{% endtrans %}</a>
+{% else %}
+	<p>{% trans from 'friendship' %}fulgurio.socialnetwork.profile.username{% endtrans %}: {{ user.username }}</p>
+{%   if areFriend %}
+{#	<p>{% trans %}fulgurio.socialnetwork.profile.lastname_and_firstname{% endtrans %}: {{ user.lastname }} {{ user.firstname }}</p>#}
+	<p>{% trans from 'friendship' %}fulgurio.socialnetwork.profile.email{% endtrans %}: {{ user.email }}</p>
+{%   endif %}
+	<p>{% trans with { '%date%': user.createdAt|date('fulgurio.socialnetwork.format_date'|trans) } %}fulgurio.socialnetwork.profile.registered_date{% endtrans %}</p>
+{%   if areFriend %}
+{#	<a href="{{ path('MessengerNewMessageToFriend', { userId : user.id }) }}" class="btn"><i class="icon-envelope"></i> {% trans %}fulgurio.socialnetwork.messenger.write_to_him{% endtrans %}</a>#}
+	<a href="{{ path('fulgurio_social_network_friendship_refuse', {userId: user.id}) }}" class="btn">{% trans from 'friendship' %}fulgurio.socialnetwork.remove_link{% endtrans %}</a>
+{%   else %}
+{%     if havePendingInvit %}
+	{% trans %}fulgurio.socialnetwork.friends.invitation.pending{% endtrans %}
+{%     else %}
+	<a href="{{ path('fulgurio_social_network_friendship_invit', { userId : user.id }) }}" class="btn"><i class="icon-user"></i> {% trans from 'friendship' %}fulgurio.socialnetwork.add.as_friend{% endtrans %}</a>
+{%     endif %}
+{%   endif %}
+{% endif %}
 </section>
 {% endblock %}

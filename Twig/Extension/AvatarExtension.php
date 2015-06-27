@@ -46,10 +46,14 @@ class AvatarExtension extends \Twig_Extension
     /**
      * Return user avatar
      *
-     * @param User $user
+     * @param User|array $user
      */
     public function getAvatar($user)
     {
+        if (is_array($user))
+        {
+            return '/uploads/' . $user['id'] . '/' . $user['avatar'];
+        }
         if ($user->getAvatar() != '')
         {
             return $user->displayAvatar();

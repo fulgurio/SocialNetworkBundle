@@ -1,0 +1,27 @@
+fulgurio_social_network_friendship_add:
+    pattern:  /friends/add
+    defaults: { _controller: FulgurioSocialNetworkBundle:Friendship:add }
+
+fulgurio_social_network_friendship_invit:
+    pattern:  /friends/{userId}/invit
+    defaults: { _controller: FulgurioSocialNetworkBundle:Friendship:invit }
+
+fulgurio_social_network_friendship_accept:
+    pattern:  /friends/{userId}/accept
+    defaults: { _controller: FulgurioSocialNetworkBundle:Friendship:accept }
+
+fulgurio_social_network_friendship_refuse:
+    pattern:  /friends/{userId}/refuse
+    defaults: { _controller: FulgurioSocialNetworkBundle:Friendship:refuse }
+
+fulgurio_social_network_friendship_profil:
+    pattern:  /friends/{userId}/show
+    defaults: { _controller: FulgurioSocialNetworkBundle:Profile:show }
+
+fulgurio_social_network_friendship_search_to_add:
+    pattern:  /friends/searchToAdd
+    defaults: { _controller: FulgurioSocialNetworkBundle:Friendship:searchToAdd }
+
+fulgurio_social_network_friendship_list:
+    pattern:  /friends/
+    defaults: { _controller: FulgurioSocialNetworkBundle:Friendship:list }

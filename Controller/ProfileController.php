@@ -23,20 +23,53 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ProfileController extends Controller
 {
     /**
+     * Show page action
+     */
+    public function showAction($userId = null)
+    {
+        $currentUser = $this->getUser();
+        if (is_null($userId))
+        {
+            $userToDisplay = $currentUser;
+            $areFriend = FALSE;
+            $havePendingInvit = FALSE;
+        }
+        else
+        {
+            $doctrine = $this->container->get('doctrine');
+            $userToDisplay = $doctrine->getRepository('FulgurioSocialNetworkBundle:User')->find($userId);
+            if ($currentUser != $userToDisplay && ($userToDisplay->hasRole('ROLE_ADMIN') || $userToDisplay->hasRole('ROLE_SUPER_ADMIN')))
+            {
+                throw new NotFoundHttpException();
+            }
+            $areFriend = $doctrine->getRepository('FulgurioSocialNetworkBundle:UserFriendship')->areFriends($currentUser, $userToDisplay);
+            $havePendingInvit = ($areFriend == FALSE) ? $doctrine->getRepository('FulgurioSocialNetworkBundle:UserFriendship')->havePendingInvitation($currentUser, $userToDisplay) : FALSE;
+        }
+        return $this->container->get('templating')->renderResponse(
+                'FulgurioSocialNetworkBundle:Profile:show.html.twig',
+                array(
+                    'user' => $userToDisplay,
+                    'areFriend' => $areFriend,
+                    'havePendingInvit' => $havePendingInvit,
+                )
+        );
+    }
+
+    /**
      * Unsubscribe action
      */
     public function unsubscribeAction()
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        if (!is_object($user) || !$user instanceof UserInterface)
+        $currentUser = $this->getUser();
+        if (!$currentUser)
         {
-            throw new AccessDeniedException('This user does not have access to this section.');
+            throw new AccessDeniedException();
         }
         $request = $this->container->get('request');
         if ($request->get('confirm') === 'yes')
         {
             $userManager = $this->container->get('fos_user.user_manager');
-            $userManager->deleteUser($user);
+            $userManager->deleteUser($currentUser);
             return new RedirectResponse($this->container->get('router')->generate('fos_user_security_logout'));
         }
         else if ($request->get('confirm') === 'no')
@@ -51,5 +84,15 @@ class ProfileController extends Controller
                     )
                 )
         );
+    }
+
+    /**
+     * Get current user
+     *
+     * @return type
+     */
+    private function getUser()
+    {
+        return $this->container->get('security.context')->getToken()->getUser();
     }
 }

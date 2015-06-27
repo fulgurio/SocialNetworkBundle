@@ -1,0 +1,16 @@
+	<div class="span4">
+		<section>
+		{% trans with {'%tag%' : '<a href="#">', '%endtag%': '</a>'} from 'friendship' %}fulgurio.socialnetwork.block.invit_by_email{% endtrans %}
+		</section>
+		<hr />
+		<section>
+			<form action="{{ path('fulgurio_social_network_friendship_search_to_add') }}" class="form-search form-inline" method="post">
+				<div class="control-group">
+					<div class="controls">
+						<input type="text" class="input-small" name="search" value="{{ searchValue|e }}" required="required" />
+						<button type="submit" name="searchSubmit" class="btn btn-small btn-info">{% trans from 'friendship' %}fulgurio.socialnetwork.block.find_friends_button{% endtrans %}</button>
+					</div>
+				</div>
+			</form>
+		</section>
+	</div>
