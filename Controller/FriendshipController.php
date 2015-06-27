@@ -13,7 +13,6 @@ use Fulgurio\SocialNetworkBundle\Entity\UserFriendship;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Friendship controller
@@ -82,7 +81,7 @@ class FriendshipController extends Controller
             $currentUser = $this->getUser();
             $userRepository = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User');
             $friendshipRepository = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:UserFriendship');
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             foreach($selectedFriends as $selectedFriendId)
             {
                 $mayBeFriend = $userRepository->findOneById($selectedFriendId);
@@ -90,7 +89,7 @@ class FriendshipController extends Controller
                 {
                     if ($usersFriendship[0]->getUserSrc() == $currentUser)
                     {
-                        if ($usersFriendship[0]->getNbRefusals() >= $this->getParameter('fulgurio_social_network.friendship_nb_refusals'))
+                        if ($usersFriendship[0]->getNbRefusals() >= $this->container->getParameter('fulgurio_social_network.friendship_nb_refusals'))
                         {
                             continue;
                         }
@@ -99,7 +98,7 @@ class FriendshipController extends Controller
                     }
                     else
                     {
-                        if ($usersFriendship[1]->getNbRefusals() >= $this->getParameter('fulgurio_social_network.friendship_nb_refusals'))
+                        if ($usersFriendship[1]->getNbRefusals() >= $this->container->getParameter('fulgurio_social_network.friendship_nb_refusals'))
                         {
                             continue;
                         }
@@ -124,7 +123,7 @@ class FriendshipController extends Controller
             }
             $em->persist($currentUser);
             $em->flush();
-            $this->get('session')->setFlash('notice',
+            $this->get('session')->getFlashBag('notice',
                     $this->get('translator')->trans(
                             'fulgurio.socialnetwork.invitation.success_msg',
                             array(),
@@ -140,7 +139,7 @@ class FriendshipController extends Controller
     public function invitAction($userId)
     {
         $request = $this->get('request');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $currentUser = $this->getUser();
         $user = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->find($userId);
         if (!$user->hasRole('ROLE_ADMIN')
@@ -190,7 +189,7 @@ class FriendshipController extends Controller
         {
             throw new NotFoundHttpException();
         }
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         foreach ($usersFriendship as $userFriendship)
         {
             $userFriendship->setNbRefusals(0);
@@ -200,7 +199,7 @@ class FriendshipController extends Controller
         $em->flush();
 
         $this->get('fulgurio_social_network.friendship_mailer')->sendAcceptMessage($user);
-            $this->get('session')->setFlash('notice',
+            $this->get('session')->getFlashBag('notice',
                     $this->get('translator')->trans(
                             'fulgurio.socialnetwork.add.accepted_msg',
                             array('%username%' => $user->getUsername()),
@@ -231,7 +230,7 @@ class FriendshipController extends Controller
             throw new NotFoundHttpException();
         }
         $hasAcceptedBefore = FALSE;
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         foreach ($usersFriendship as $userFriendship)
         {
             if ($userFriendship->getStatus() == 'accepted')
@@ -266,7 +265,7 @@ class FriendshipController extends Controller
                 $this->get('fulgurio_social_network.friendship_mailer')->sendRefusalMessage($user);
             }
             $em->flush();
-            $this->get('session')->setFlash('notice',
+            $this->get('session')->getFlashBag('notice',
                     $this->get('translator')->trans(
                             $message,
                             array('%username%' => $user->getUsername()),
@@ -287,15 +286,5 @@ class FriendshipController extends Controller
                     'friendship'
             )
         ));
-    }
-
-    /**
-     * Get current user
-     *
-     * @return type
-     */
-    private function getUser()
-    {
-        return $this->get('security.context')->getToken()->getUser();
     }
 }
