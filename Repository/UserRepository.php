@@ -94,7 +94,8 @@ class UserRepository extends EntityRepository
     /**
      * Find enabled user from a part of their username
      *
-     * @todo : add pagination
+     * @param string $username
+     * @param array $excludeIDs
      */
     public function findOnlyInEnabledSubscribers($username, $excludeIDs)
     {
