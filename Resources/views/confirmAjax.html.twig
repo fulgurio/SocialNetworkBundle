@@ -1,0 +1,18 @@
+<form action="{{ app.request.requestUri }}" method="post">
+	<p>{{ confirmationMessage }}</p>
+	<p>
+{% if url_referer is defined %}
+		<input type="hidden" name="referer" value="{{ url_referer }}" />
+{% endif %}
+		<button type="submit" name="confirm" class="btn btn-primary btn-large" value="yes">{% trans from 'admin' %}fulgurio.socialnetwork.yes{% endtrans %}</button>
+		<button type="submit" name="confirm" class="btn btn-large popupClose" value="no">{% trans from 'admin' %}fulgurio.socialnetwork.no{% endtrans %}</button>
+	</p>
+</form>
+<script>
+$('.popupClose').click(function(e) {
+	if ($.nmTop()) {
+		e.preventDefault();
+		$.nmTop().close();
+	}
+});
+</script>

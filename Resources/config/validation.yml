@@ -6,3 +6,12 @@ Fulgurio\SocialNetworkBundle\Entity\Admin\Contact:
         message:
             - NotBlank:
                 message: fulgurio.socialnetwork.contact.message.not_blank
+
+Fulgurio\SocialNetworkBundle\Entity\Message:
+    properties:
+        subject:
+            - NotBlank:
+                message: fulgurio.socialnetwork.new_message.subject.not_blank
+        content:
+            - NotBlank:
+                message: fulgurio.socialnetwork.new_message.content.not_blank

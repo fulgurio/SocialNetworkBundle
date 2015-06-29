@@ -175,6 +175,17 @@ class User extends BaseUser
         return getimagesize($destfile);
     }
 
+    /**
+     * Get avatar url from an array of data
+     *
+     * @param array $user
+     * @return string
+     */
+    static function getAvatarUrl(array $user)
+    {
+        return '/uploads/' . $user['id'] . '/' . $user['avatar'];
+    }
+
     /***************************************************************************
      *                             GENERATED CODE                              *
      **************************************************************************/
@@ -194,6 +205,21 @@ class User extends BaseUser
      */
     private $updated_at;
 
+    /**
+     * @var Fulgurio\SocialNetworkBundle\Entity\Message
+     */
+    private $msgSender;
+
+    /**
+     * @var Fulgurio\SocialNetworkBundle\Entity\MessageTarget
+     */
+    private $msgTarget;
+
+    public function __construct()
+    {
+        $this->msgSender = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->msgTarget = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -263,5 +289,45 @@ class User extends BaseUser
     public function getUpdatedAt()
     {
         return $this->updated_at;
+    }
+
+    /**
+     * Add msgSender
+     *
+     * @param Fulgurio\SocialNetworkBundle\Entity\Message $msgSender
+     */
+    public function addMessage(\Fulgurio\SocialNetworkBundle\Entity\Message $msgSender)
+    {
+        $this->msgSender[] = $msgSender;
+    }
+
+    /**
+     * Get msgSender
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getMsgSender()
+    {
+        return $this->msgSender;
+    }
+
+    /**
+     * Add msgTarget
+     *
+     * @param Fulgurio\SocialNetworkBundle\Entity\MessageTarget $msgTarget
+     */
+    public function addMessageTarget(\Fulgurio\SocialNetworkBundle\Entity\MessageTarget $msgTarget)
+    {
+        $this->msgTarget[] = $msgTarget;
+    }
+
+    /**
+     * Get msgTarget
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getMsgTarget()
+    {
+        return $this->msgTarget;
     }
 }

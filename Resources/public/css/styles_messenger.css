@@ -1,0 +1,112 @@
+/* Messenger */
+.messenger ol {
+	list-style: none;
+	margin: 20px;
+}
+.messenger ol.messagesList li {
+	cursor: pointer;
+	padding: 10px 10px 9px 10px;
+	border-bottom: 1px solid #DDD;
+	height: 50px;
+}
+.messenger ol.messagesList li:hover,
+.messenger ol.messagesList li:nth-child(odd):hover {
+	background: #f5f5f5;
+}
+.messenger ol.messagesList li:last-child {
+	border: none;
+}
+.messenger ol li:nth-child(odd) {
+	background: #f9f9f9;
+}
+.messenger ol li.hasNotRead a {
+	font-weight: bold;
+}
+.messenger ol li img {
+	float: left;
+	margin: 0 10px 0 0;
+}
+.messenger ol li div {
+	margin: 0 0 0 60px;
+}
+.messenger ol li {
+	clear: both;
+	padding: 10px 0;
+}
+.messenger ol li div span {
+	font-weight: bold;
+}
+.messenger ol.participants {
+	margin: 0;
+}
+.messenger ol.participants li {
+	display: inline-block;
+	padding: 2px;
+	margin: 1px;
+	border: 2px solid #FFF;
+}
+.messenger ol.participants li:hover {
+	border: 2px solid #DDD;
+}
+.messenger ol.participants img {
+	margin: 0;
+}
+.messenger ol.participants a.notAFriend img {
+	opacity: 0.4;
+}
+.messenger ol.participants a.notAFriend img:hover {
+	opacity: 1;
+}
+.posrel {
+	position: relative;
+}
+.posrel #searchResult {
+	position: absolute;
+	top: 27px;
+	z-index: 5;
+	list-style: none;
+	background: #FFF;
+	margin: 0;
+	border-left: 1px solid #DDD;
+	border-right: 1px solid #DDD;
+}
+.posrel #searchResult li {
+	clear: both;
+	height: 50px;
+	padding: 5px;
+	width: 268px;
+	border-bottom: 1px solid #DDD;
+}
+.posrel #searchResult li:hover {
+	background: #08C;
+	color: #FFF;
+	cursor: pointer;
+}
+.posrel #searchResult li img {
+	margin: 0 10px 0 0;
+}
+ul#selectedFriends {
+	list-style: none;
+	margin: 5px 0 0 160px;
+}
+ul#selectedFriends li {
+	float: left;
+	margin: 0 10px 0 0;
+	color: #3A87AD;
+	background: #f5f5f5;
+	border: 1px solid #DDD;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	padding: 0 5px;
+}
+ul#selectedFriends li span {
+	float: left;
+	display: block;
+	padding: 0 5px 0 0;
+	font-weight: normal;
+	font-size: 10px;
+}
+ul#selectedFriends li a {
+	cursor: pointer;
+}

@@ -11,6 +11,7 @@
 namespace Fulgurio\SocialNetworkBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Fulgurio\SocialNetworkBundle\Entity\User;
 
 /**
  * UserFriendshipRepository
@@ -50,6 +51,19 @@ class UserFriendshipRepository extends EntityRepository
     }
 
     /**
+     * Return all accepted friends for a given user
+     *
+     * @param User $user
+     * @param integer $page
+     * @param Paginator $paginator
+     * @return ArrayCollection
+     */
+    public function findAcceptedFriends($user, $page = 1, $paginator = NULL)
+    {
+        return ($this->filterFriendsByStatus($user, 'accepted', $page, $paginator));
+    }
+
+    /**
      * Return all accepted and pendingfriends for a given user
      *
      * @param User $user
@@ -80,6 +94,8 @@ class UserFriendshipRepository extends EntityRepository
      *
      * @param User $user
      * @param string|array $status
+     * @param integer $page
+     * @param Paginator $paginator
      * @return ArrayCollection
      */
     private function filterFriendsByStatus($user, $status, $page = 1, $paginator = NULL)
@@ -171,5 +187,28 @@ class UserFriendshipRepository extends EntityRepository
         $query->setParameter('friendUser', $friendUser);
         $query->setParameter('status', 'pending');
         return ($query->getResult());
+    }
+
+    /**
+     * Search friend from a part of string
+     *
+     * @param User $user
+     * @param string $username
+     */
+    public function searchFriend(User $user, $username)
+    {
+        $query = $this->getEntityManager()->createQuery(
+                'SELECT u.id, u.avatar, u.username
+                FROM FulgurioSocialNetworkBundle:UserFriendship f
+                JOIN f.user_tgt u
+                WHERE f.user_src=:user
+                    AND f.status=:status
+                    AND u.username LIKE :username
+                    AND u.enabled=1
+                ORDER BY u.username');
+        $query->setParameter('user', $user);
+        $query->setParameter('username', $username . '%');
+        $query->setParameter('status', 'accepted');
+        return $query->getResult();
     }
 }

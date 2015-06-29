@@ -11,7 +11,6 @@
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
 use FOS\UserBundle\Controller\ProfileController as Controller;
-use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 

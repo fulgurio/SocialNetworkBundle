@@ -28,3 +28,10 @@ Fulgurio\SocialNetworkBundle\Entity\User:
     postPersist: [ upload ]
     postUpdate: [ upload ]
     postRemove: [ removeUpload ]
+  oneToMany:
+    msgSender:
+      targetEntity: Message
+      mappedBy: sender
+    msgTarget:
+      targetEntity: MessageTarget
+      mappedBy: target

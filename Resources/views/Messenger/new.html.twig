@@ -1,0 +1,117 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+
+{% block title %}{% trans from 'messenger' %}fulgurio.socialnetwork.messenger.new_message.title{% endtrans %}{% endblock %}
+
+{% block content %}
+		<h1>{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.legend{% endtrans %}</h1>
+		<form action="{{ path('fulgurio_social_network_messenger_new_message') }}" method="post" class="form-horizontal" id="messengerForm">
+			<fieldset>
+{%   if form.get('errors')
+       or form.getChild('username_target').get('errors')
+       or form.getChild('subject').get('errors')
+       or form.getChild('content').get('errors') %}
+				<div class="alert alert-error">
+{%     for error in form.get('errors') %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
+{%     for error in form.getChild('username_target').get('errors') %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
+{%     for error in form.getChild('subject').get('errors') %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
+{%     for error in form.getChild('content').get('errors') %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
+				</div>
+{%   endif %}
+				<div class="control-group">
+					<label class="control-label" for="{{ form.getChild('username_target').get('id') }}">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.to.label{% endtrans %}</label>
+					<div class="controls posrel" id="targetUser">
+						<input type="text" id="{{ form.getChild('username_target').get('id') }}" class="input-xlarge" name="{{ form.getChild('username_target').get('full_name') }}" value="{{ form.getChild('username_target').get('value') }}" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="{{ form.getChild('subject').get('id') }}">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.subject.label{% endtrans %}</label>
+					<div class="controls">
+						<input type="text" id="{{ form.getChild('subject').get('id') }}" class="input-xlarge" name="{{ form.getChild('subject').get('full_name') }}" value="{{ form.getChild('subject').get('value') }}" required="required" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="{{ form.getChild('content').get('id') }}">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.content.label{% endtrans %}</label>
+					<div class="controls">
+						<textarea class="input-xlarge" id="{{ form.getChild('content').get('id') }}" name="{{ form.getChild('content').get('full_name') }}" required="required">{{ form.getChild('content').get('value') }}</textarea>
+					</div>
+				</div>
+				<div class="form-actions">
+					<input type="hidden" name="{{ form.getChild('_token').get('full_name') }}" value="{{ form.getChild('_token').get('value') }}" />
+					<button type="submit" class="btn btn-primary">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.send{% endtrans %}</button>
+					<a href="{{ path('fulgurio_social_network_messenger_list') }}" class="btn">{% trans from 'messenger' %}fulgurio.socialnetwork.back_to_messages_list{% endtrans %}</a>
+				</div>
+			</fieldset>
+		</form>
+{% endblock %}
+
+{% block javascriptTop %}
+	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/styles_messenger.css') }}" />
+{% endblock %}
+
+{% block javascriptBottom %}
+<script>
+var searchResult, selectedFriends;
+$('#{{ form.getChild('username_target').get('id') }}').keyup(function() {
+	var tgt = this;
+	var s = $(tgt).attr('value');
+	if (s.length > 0) {
+		$.ajax('{{ path('fulgurio_social_network_friendship_search') }}', {
+			data: {'q': s},
+			success: function(d) {
+				var nb = d.friends.length;
+				if (searchResult == undefined) {
+					searchResult = $('<ol id="searchResult"></ol>');
+					selectedFriends = $('<ul id="selectedFriends"></ul>');
+
+					$(searchResult).appendTo('#targetUser');
+					$(selectedFriends).appendTo($('#targetUser').parent());
+				}
+				else {
+					searchResult.empty();
+				}
+				for (var i = 0; i < nb; ++i) {
+					var exists = false;
+					$(selectedFriends).find('li').each(function() {
+						if (d.friends[i].id == $(this).data('infos').id) {
+							exists = true;
+							return;
+						}
+					});
+					if (exists == false) {
+						var li = $('<li><img src="' + (d.friends[i].avatar ? d.friends[i].avatar : '{{ asset('bundles/fulguriosocialnetwork/images/avatar.png') }}') + '" class="pull-left" alt="" />' + d.friends[i].username + '</li>');
+						li.data('infos', d.friends[i]);
+						li.click(function() {
+							var aClose = $('<a class="close">&times;</a>');
+							aClose.click(function() {
+								if ($(this).parent().parent().children().length == 1) {
+									$('#m_tgt').attr('required', 'required');
+								}
+								$(this).parent().remove();
+							});
+							var d = $(this).data('infos');
+							var li2 = $('<li><span>' + d.username + '</span></li>');
+							li2.data('infos', d);
+							aClose.appendTo(li2);
+							li2.appendTo(selectedFriends);
+							$(tgt).attr('value', '');
+							searchResult.empty();
+							$('#m_tgt').removeAttr('required');
+						});
+						li.appendTo(searchResult);
+					}
+				}
+			},
+			error: function() {
+				console.log('error');
+			}
+		});
+	}
+});
+$('#messengerForm').submit(function() {
+	var form = this;
+	$(selectedFriends).find('li').each(function() {
+		$('<input type="hidden" name="{{ form.getChild('id_targets').get('full_name') }}" value="' + $(this).data('infos').id + '" />').appendTo($(form));
+	});
+});
+</script>
+{% endblock %}

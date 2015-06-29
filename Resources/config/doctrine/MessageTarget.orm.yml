@@ -1,0 +1,38 @@
+Fulgurio\SocialNetworkBundle\Entity\MessageTarget:
+  type: entity
+  table: message_target
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    has_read:
+      type: boolean
+      options:
+        default: 0
+    created_at:
+      type: datetime
+      gedmo:
+        timestampable:
+          on: create
+    updated_at:
+      type: datetime
+      gedmo:
+        timestampable:
+          on: update
+  manyToOne:
+    message:
+      targetEntity: Message
+      inversedBy: target
+      joinColumn:
+        name: message_id
+        referencedColumnName: id
+        onDelete: cascade
+    target:
+      targetEntity: User
+      inversedBy: msgTarget
+      joinColumn:
+        name: target_id
+        referencedColumnName: id
+        onDelete: cascade
