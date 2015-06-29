@@ -1,0 +1,32 @@
+fulgurio:
+  socialnetwork:
+    header_link:              Messenger
+    title:                    Messenger
+    legend:                   Messenger
+    new_message_button:       New message
+    remove_button:            Remove
+    no_message:               You have no message
+    back_to_messages_list:    Back
+    new_message:
+      title:                  New message
+      legend:                 New message
+      to:
+        label:                To
+        required:             Please type a target name
+      subject:
+        label:                Message subject
+        not_blank:            Subject is required
+      content:
+        label:                Message content
+        not_blank:            Content is required
+      send:                   Send
+      no_friend_found:        No friend with that name has been found
+      success_msg:            Your message has been sent successfully !
+    answer_message:
+      title:                  Message
+      answer_label:           Your answer
+      send_button:            Send
+      success_msg:            Your answer has been sent successfully !
+    remove_message:
+      confirm_msg:            Do you really want to remove this message ?
+      success_msg:            Your message has been removed successfully !

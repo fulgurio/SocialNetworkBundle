@@ -11,6 +11,7 @@
 namespace Fulgurio\SocialNetworkBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Fulgurio\SocialNetworkBundle\Entity\User;
 
 /**
  * UserRepository
@@ -94,7 +95,8 @@ class UserRepository extends EntityRepository
     /**
      * Find enabled user from a part of their username
      *
-     * @todo : add pagination
+     * @param string $username
+     * @param array $excludeIDs
      */
     public function findOnlyInEnabledSubscribers($username, $excludeIDs)
     {
@@ -115,5 +117,17 @@ class UserRepository extends EntityRepository
         $query->setParameter('username', $username . '%');
         $query->setParameter('ids', $excludeIDs);
         return $query->getResult();
+    }
+
+    public function getAcceptedFriendsQuery(User $user)
+    {
+        return $this->createQueryBuilder('u')
+                ->join('u.friends', 'uf')
+                ->where('uf.user_src=:user')
+                ->andWhere('uf.status=:status')
+                ->orderBy('u.username')
+                ->setParameter('user', $user)
+                ->setParameter('status', 'accepted')
+                ;
     }
 }

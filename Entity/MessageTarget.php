@@ -13,31 +13,14 @@ namespace Fulgurio\SocialNetworkBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fulgurio\SocialNetworkBundle\Entity\UserFriendship
+ * Fulgurio\SocialNetworkBundle\Entity\MessageTarget
  */
-class UserFriendship
+class MessageTarget
 {
     /**
-     * @var array
+     * @var boolean $has_read
      */
-    private $availableStatus = array('asking', 'accepted', 'pending', 'refused', 'removed');
-
-    /**
-     * Set status
-     *
-     * @param string $status
-     */
-    public function setStatus($status)
-    {
-        if (in_array($status, $this->availableStatus))
-        {
-            $this->status = $status;
-        }
-        else
-        {
-            $this->status = 'pending';
-        }
-    }
+    private $has_read = 0;
 
     /***************************************************************************
      *                             GENERATED CODE                              *
@@ -47,16 +30,6 @@ class UserFriendship
      * @var integer
      */
     private $id;
-
-    /**
-     * @var string
-     */
-    private $status;
-
-    /**
-     * @var integer
-     */
-    private $nb_refusals = 0;
 
     /**
      * @var \DateTime
@@ -69,14 +42,14 @@ class UserFriendship
     private $updated_at;
 
     /**
-     * @var \Fulgurio\SocialNetworkBundle\Entity\User
+     * @var \Fulgurio\SocialNetworkBundle\Entity\Message
      */
-    private $user_src;
+    private $message;
 
     /**
      * @var \Fulgurio\SocialNetworkBundle\Entity\User
      */
-    private $user_tgt;
+    private $target;
 
 
     /**
@@ -90,43 +63,33 @@ class UserFriendship
     }
 
     /**
-     * Get status
+     * Set has_read
      *
-     * @return string
+     * @param boolean $hasRead
+     * @return MessageTarget
      */
-    public function getStatus()
+    public function setHasRead($hasRead)
     {
-        return $this->status;
-    }
-
-    /**
-     * Set nb_refusals
-     *
-     * @param integer $nbRefusals
-     * @return UserFriendship
-     */
-    public function setNbRefusals($nbRefusals)
-    {
-        $this->nb_refusals = $nbRefusals;
+        $this->has_read = $hasRead;
 
         return $this;
     }
 
     /**
-     * Get nb_refusals
+     * Get has_read
      *
-     * @return integer
+     * @return boolean
      */
-    public function getNbRefusals()
+    public function getHasRead()
     {
-        return $this->nb_refusals;
+        return $this->has_read;
     }
 
     /**
      * Set created_at
      *
      * @param \DateTime $createdAt
-     * @return UserFriendship
+     * @return MessageTarget
      */
     public function setCreatedAt($createdAt)
     {
@@ -149,7 +112,7 @@ class UserFriendship
      * Set updated_at
      *
      * @param \DateTime $updatedAt
-     * @return UserFriendship
+     * @return MessageTarget
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -169,48 +132,48 @@ class UserFriendship
     }
 
     /**
-     * Set user_src
+     * Set message
      *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\User $userSrc
-     * @return UserFriendship
+     * @param \Fulgurio\SocialNetworkBundle\Entity\Message $message
+     * @return MessageTarget
      */
-    public function setUserSrc(\Fulgurio\SocialNetworkBundle\Entity\User $userSrc = null)
+    public function setMessage(\Fulgurio\SocialNetworkBundle\Entity\Message $message = null)
     {
-        $this->user_src = $userSrc;
+        $this->message = $message;
 
         return $this;
     }
 
     /**
-     * Get user_src
+     * Get message
      *
-     * @return \Fulgurio\SocialNetworkBundle\Entity\User
+     * @return \Fulgurio\SocialNetworkBundle\Entity\Message
      */
-    public function getUserSrc()
+    public function getMessage()
     {
-        return $this->user_src;
+        return $this->message;
     }
 
     /**
-     * Set user_tgt
+     * Set target
      *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\User $userTgt
-     * @return UserFriendship
+     * @param \Fulgurio\SocialNetworkBundle\Entity\User $target
+     * @return MessageTarget
      */
-    public function setUserTgt(\Fulgurio\SocialNetworkBundle\Entity\User $userTgt = null)
+    public function setTarget(\Fulgurio\SocialNetworkBundle\Entity\User $target = null)
     {
-        $this->user_tgt = $userTgt;
+        $this->target = $target;
 
         return $this;
     }
 
     /**
-     * Get user_tgt
+     * Get target
      *
      * @return \Fulgurio\SocialNetworkBundle\Entity\User
      */
-    public function getUserTgt()
+    public function getTarget()
     {
-        return $this->user_tgt;
+        return $this->target;
     }
 }

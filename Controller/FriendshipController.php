@@ -9,10 +9,13 @@
  */
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
+use Fulgurio\SocialNetworkBundle\Entity\User;
 use Fulgurio\SocialNetworkBundle\Entity\UserFriendship;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Friendship controller
@@ -287,4 +290,33 @@ class FriendshipController extends Controller
             )
         ));
     }
+
+    /**
+     * Search friend with ajax call
+     *
+     * @param Request $request
+     * @throws AccessDeniedException
+     */
+    public function searchAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest())
+        {
+            $foundedFriends = $this->getDoctrine()
+                    ->getRepository('FulgurioSocialNetworkBundle:UserFriendship')
+                    ->searchFriend(
+                            $this->getUser(),
+                            $request->get('q')
+            );
+            foreach ($foundedFriends as &$friend)
+            {
+                $friend['avatar'] = User::getAvatarUrl($friend);
+            }
+            $response = new Response(json_encode(
+                    array('friends' => $foundedFriends)));
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+        throw new AccessDeniedException();
+    }
+
 }

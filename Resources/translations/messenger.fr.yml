@@ -1,0 +1,32 @@
+fulgurio:
+  socialnetwork:
+    header_link:              Messagerie
+    title:                    Messagerie
+    legend:                   Messagerie
+    new_message_button:       Nouveau message
+    remove_button:            Supprimer
+    no_message:               Vous n'avez aucun message
+    back_to_messages_list:    Retour
+    new_message:
+      title:                  Nouveau message
+      legend:                 Nouveau message
+      to:
+        label:                A
+        required:             Veuillez saisir le nom d'un ami
+      subject:
+        label:                Sujet du message
+        not_blank:            Le sujet est obligatoire
+      content:
+        label:                Corps du message
+        not_blank:            Le corps du message est obligatoire
+      send:                   Envoyer
+      no_friend_found:        Aucun ami de ce nom trouvé
+      success_msg:            Votre message a bien été envoyé
+    answer_message:
+      title:                  Message
+      answer_label:           Votre réponse
+      send_button:            Envoyer
+      success_msg:            Votre réponse a bien été envoyée
+    remove_message:
+      confirm_msg:            Etes-vous sûr de vouloir supprimer ce message ?
+      success_msg:            Votre message a bien été effacé

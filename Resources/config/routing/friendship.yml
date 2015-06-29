@@ -22,6 +22,10 @@ fulgurio_social_network_friendship_search_to_add:
     pattern:  /friends/searchToAdd
     defaults: { _controller: FulgurioSocialNetworkBundle:Friendship:searchToAdd }
 
+fulgurio_social_network_friendship_search:
+    pattern:  /friends/search
+    defaults: { _controller: FulgurioSocialNetworkBundle:Friendship:search }
+
 fulgurio_social_network_friendship_list:
     pattern:  /friends/
     defaults: { _controller: FulgurioSocialNetworkBundle:Friendship:list }

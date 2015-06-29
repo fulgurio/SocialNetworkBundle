@@ -175,25 +175,60 @@ class User extends BaseUser
         return getimagesize($destfile);
     }
 
+    /**
+     * Get avatar url from an array of data
+     *
+     * @param array $user
+     * @return string
+     */
+    static function getAvatarUrl(array $user)
+    {
+        return '/uploads/' . $user['id'] . '/' . $user['avatar'];
+    }
+
     /***************************************************************************
      *                             GENERATED CODE                              *
      **************************************************************************/
 
     /**
-     * @var string $avatar
+     * @var string
      */
     private $avatar;
 
     /**
-     * @var datetime $created_at
+     * @var \DateTime
      */
     private $created_at;
 
     /**
-     * @var datetime $updated_at
+     * @var \DateTime
      */
     private $updated_at;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $friends;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $msgSender;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $msgTarget;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->friends = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->msgSender = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->msgTarget = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -209,10 +244,13 @@ class User extends BaseUser
      * Set avatar
      *
      * @param string $avatar
+     * @return User
      */
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
+
+        return $this;
     }
 
     /**
@@ -228,17 +266,20 @@ class User extends BaseUser
     /**
      * Set created_at
      *
-     * @param datetime $createdAt
+     * @param \DateTime $createdAt
+     * @return User
      */
     public function setCreatedAt($createdAt)
     {
         $this->created_at = $createdAt;
+
+        return $this;
     }
 
     /**
      * Get created_at
      *
-     * @return datetime
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -248,20 +289,122 @@ class User extends BaseUser
     /**
      * Set updated_at
      *
-     * @param datetime $updatedAt
+     * @param \DateTime $updatedAt
+     * @return User
      */
     public function setUpdatedAt($updatedAt)
     {
         $this->updated_at = $updatedAt;
+
+        return $this;
     }
 
     /**
      * Get updated_at
      *
-     * @return datetime
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
         return $this->updated_at;
+    }
+
+    /**
+     * Add friends
+     *
+     * @param \Fulgurio\SocialNetworkBundle\Entity\UserFriendship $friends
+     * @return User
+     */
+    public function addFriend(\Fulgurio\SocialNetworkBundle\Entity\UserFriendship $friends)
+    {
+        $this->friends[] = $friends;
+
+        return $this;
+    }
+
+    /**
+     * Remove friends
+     *
+     * @param \Fulgurio\SocialNetworkBundle\Entity\UserFriendship $friends
+     */
+    public function removeFriend(\Fulgurio\SocialNetworkBundle\Entity\UserFriendship $friends)
+    {
+        $this->friends->removeElement($friends);
+    }
+
+    /**
+     * Get friends
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFriends()
+    {
+        return $this->friends;
+    }
+
+    /**
+     * Add msgSender
+     *
+     * @param \Fulgurio\SocialNetworkBundle\Entity\Message $msgSender
+     * @return User
+     */
+    public function addMsgSender(\Fulgurio\SocialNetworkBundle\Entity\Message $msgSender)
+    {
+        $this->msgSender[] = $msgSender;
+
+        return $this;
+    }
+
+    /**
+     * Remove msgSender
+     *
+     * @param \Fulgurio\SocialNetworkBundle\Entity\Message $msgSender
+     */
+    public function removeMsgSender(\Fulgurio\SocialNetworkBundle\Entity\Message $msgSender)
+    {
+        $this->msgSender->removeElement($msgSender);
+    }
+
+    /**
+     * Get msgSender
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMsgSender()
+    {
+        return $this->msgSender;
+    }
+
+    /**
+     * Add msgTarget
+     *
+     * @param \Fulgurio\SocialNetworkBundle\Entity\MessageTarget $msgTarget
+     * @return User
+     */
+    public function addMsgTarget(\Fulgurio\SocialNetworkBundle\Entity\MessageTarget $msgTarget)
+    {
+        $this->msgTarget[] = $msgTarget;
+
+        return $this;
+    }
+
+    /**
+     * Remove msgTarget
+     *
+     * @param \Fulgurio\SocialNetworkBundle\Entity\MessageTarget $msgTarget
+     */
+    public function removeMsgTarget(\Fulgurio\SocialNetworkBundle\Entity\MessageTarget $msgTarget)
+    {
+        $this->msgTarget->removeElement($msgTarget);
+    }
+
+    /**
+     * Get msgTarget
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMsgTarget()
+    {
+        return $this->msgTarget;
     }
 }

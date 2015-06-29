@@ -10,6 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Twig\Extension;
 
+use Fulgurio\SocialNetworkBundle\Entity\User;
 
 /**
  * User avatar function for Twig.
@@ -52,7 +53,7 @@ class AvatarExtension extends \Twig_Extension
     {
         if (is_array($user))
         {
-            return '/uploads/' . $user['id'] . '/' . $user['avatar'];
+            return User::getAvatarUrl($user);
         }
         if ($user->getAvatar() != '')
         {

@@ -1,0 +1,25 @@
+fulgurio_social_network_messenger_new_message:
+    pattern:  /new
+    defaults: { _controller: FulgurioSocialNetworkBundle:Messenger:new }
+
+fulgurio_social_network_messenger_remove_message:
+    pattern:  /{msgId}/remove
+    defaults: { _controller: FulgurioSocialNetworkBundle:Messenger:remove }
+    requirements:
+        msgId:  \d+
+
+fulgurio_social_network_messenger_reply_message:
+    pattern:  /{msgId}/reply
+    defaults: { _controller: FulgurioSocialNetworkBundle:Messenger:show }
+    requirements:
+        msgId:  \d+
+
+fulgurio_social_network_messenger_show_message:
+    pattern:  /{msgId}/
+    defaults: { _controller: FulgurioSocialNetworkBundle:Messenger:show }
+    requirements:
+        msgId:  \d+
+
+fulgurio_social_network_messenger_list:
+    pattern:  /
+    defaults: { _controller: FulgurioSocialNetworkBundle:Messenger:list }

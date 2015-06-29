@@ -28,3 +28,4 @@ Fulgurio\SocialNetworkBundle\Entity\UserFriendship:
       targetEntity: User
     user_tgt:
       targetEntity: User
+      inversedBy: friends

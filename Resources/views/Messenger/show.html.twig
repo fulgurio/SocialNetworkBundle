@@ -1,0 +1,67 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+
+{% block title %}{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.title{% endtrans %} - {{ message.subject }}{% endblock %}
+
+{% block content %}
+<div class="row-fluid messenger">
+	<h1>{{ message.subject }}</h1>
+	<div class="span8">
+		<ol>
+			<li>
+				<img src="{{ avatar(message.sender) }}" alt="" />
+				<div>
+					<span>{{ message.sender.username|trans }}</span>:<br />
+					{{ message.content|nl2br }}
+				</div>
+			</li>
+{%   for response in message.children %}
+			<li>
+				<img src="{{ avatar(response.sender) }}" alt="" />
+				<div>
+					<span>{{ response.sender.username|trans }}</span>:<br />
+					{{ response.content|nl2br }}
+				</div>
+			</li>
+{%   endfor %}
+		</ol>
+		<form action="{{ path('fulgurio_social_network_messenger_reply_message', {msgId: message.id }) }}" method="post" class="form-horizontal">
+			<fieldset>
+{%   if form.vars.errors
+       or form.content.vars.errors %}
+				<div class="alert alert-error">
+{%     for error in form.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
+{%     for error in form.content.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
+				</div>
+{%   endif %}
+				<div class="control-group">
+					<label class="control-label" for="{{ form.content.vars.id }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.answer_label{% endtrans %}</label>
+					<div class="controls">
+						<textarea class="input-xlarge" id="{{ form.content.vars.id }}" name="{{ form.content.vars.full_name }}">{{ form.content.vars.value }}</textarea>
+					</div>
+				</div>
+				<div class="form-actions">
+					<input type="hidden" name="{{ form._token.vars.full_name }}" value="{{ form._token.vars.value }}" />
+					<button type="submit" class="btn btn-primary">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.send_button{% endtrans %}</button>
+					<a href="{{ path('fulgurio_social_network_messenger_list') }}" class="btn">{% trans from 'messenger' %}fulgurio.socialnetwork.back_to_messages_list{% endtrans %}</a>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+	<div class="span3">
+		<h2>Participants</h2>
+		<ol class="participants">
+{%   for participant in participants %}
+{%     if app.user == participant %}
+			<li><img sr="{{ avatar(participant) }}" alt="" /></li>
+{%     else %}
+			<li><a href="{{ path('fulgurio_social_network_friendship_profil', { userId: participant.id }) }}" title="{{ participant.username }}"{% if not friends[participant.id] %} class="notAFriend"{% endif %}><img src="{{ avatar(participant) }}" alt="" /></a></li>
+{%     endif %}
+{%   endfor %}
+		</ol>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascriptTop %}
+	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/styles_messenger.css') }}" />
+{% endblock %}

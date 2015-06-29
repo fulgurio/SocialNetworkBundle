@@ -1,0 +1,48 @@
+Fulgurio\SocialNetworkBundle\Entity\Message:
+  type: entity
+  repositoryClass: Fulgurio\SocialNetworkBundle\Repository\MessageRepository
+  table: message
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    subject:
+      type: string
+      length: 255
+      notBlank: true
+    content:
+      type: text
+    created_at:
+      type: datetime
+      gedmo:
+        timestampable:
+          on: create
+    updated_at:
+      type: datetime
+      gedmo:
+        timestampable:
+          on: update
+  manyToOne:
+    parent:
+      targetEntity: Message
+      inversedBy: children
+      joinColumn:
+        name: parent_id
+        referencedColumnName: id
+        onDelete: cascade
+    sender:
+      targetEntity: User
+      inversedBy: msgSender
+      joinColumn:
+        name: sender_id
+        referencedColumnName: id
+        onDelete: set null
+  oneToMany:
+    target:
+      targetEntity: MessageTarget
+      mappedBy: message
+    children:
+      targetEntity: Message
+      mappedBy: parent
