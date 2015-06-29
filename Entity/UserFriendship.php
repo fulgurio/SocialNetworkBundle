@@ -59,7 +59,7 @@ class UserFriendship
     private $nb_refusals = 0;
 
     /**
-     * @var date $created_at
+     * @var datetime $created_at
      */
     private $created_at;
 
@@ -122,7 +122,7 @@ class UserFriendship
     /**
      * Set created_at
      *
-     * @param date $createdAt
+     * @param datetime $createdAt
      */
     public function setCreatedAt($createdAt)
     {
@@ -132,7 +132,7 @@ class UserFriendship
     /**
      * Get created_at
      *
-     * @return date
+     * @return datetime
      */
     public function getCreatedAt()
     {
