@@ -58,8 +58,8 @@
 	</header>
 {% if app.session.getFlashBag.has('notice') or app.session.getFlashBag.has('fos_user_success') %}
 	<div class="alert alert-info">
-{%   for flashMessage in app.session.flashbag.get('fos_user_success') %}{{ flashMessage|trans }}{%   endfor %}
-{%   for flashMessage in app.session.flashbag.get('fos_user_success') %}{{ flashMessage|trans }}{%   endfor %}
+{%   for flashMessage in app.session.flashbag.get('notice') %}{{ flashMessage|trans }}{% endfor %}
+{%   for flashMessage in app.session.flashbag.get('fos_user_success') %}{{ flashMessage|trans }}{% endfor %}
 	</div>
 {% endif %}
 {% if app.session.getFlashBag.has('success') %}
