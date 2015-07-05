@@ -208,17 +208,17 @@ class User extends BaseUser
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $friends;
+    protected $friends;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $msgSender;
+    protected $msgSender;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $msgTarget;
+    protected $msgTarget;
 
     /**
      * Constructor

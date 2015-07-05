@@ -29,13 +29,13 @@ Fulgurio\SocialNetworkBundle\Entity\User:
     postPersist: [ upload ]
     postUpdate: [ upload ]
     postRemove: [ removeUpload ]
-  oneToMany:
-    friends:
-      targetEntity: UserFriendship
-      mappedBy: user_tgt
-    msgSender:
-      targetEntity: Message
-      mappedBy: sender
-    msgTarget:
-      targetEntity: MessageTarget
-      mappedBy: target
+#  oneToMany:
+#    friends:
+#      targetEntity: Fulgurio\SocialNetworkBundle\Entity\UserFriendship
+#      mappedBy: user_tgt
+#    msgSender:
+#      targetEntity: Fulgurio\SocialNetworkBundle\Entity\Message
+#      mappedBy: sender
+#    msgTarget:
+#      targetEntity: Fulgurio\SocialNetworkBundle\Entity\MessageTarget
+#      mappedBy: target
