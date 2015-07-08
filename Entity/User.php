@@ -32,6 +32,17 @@ class User extends BaseUser
 
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->friends = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->msgSender = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->msgTarget = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Set avatarFile
      *
      * @param string $avatarFile
@@ -220,15 +231,6 @@ class User extends BaseUser
      */
     protected $msgTarget;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->friends = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->msgSender = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->msgTarget = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Get id
