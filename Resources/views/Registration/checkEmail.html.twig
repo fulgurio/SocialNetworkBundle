@@ -1,0 +1,7 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+
+{% block title %}{{ parent() }} - {% trans %}fulgurio.socialnetwork.register.title{% endtrans %}{% endblock %}
+
+{% block content %}
+	<div class="alert alert-info">{{ 'registration.check_email'|trans({'%email%': user.email}, 'FOSUserBundle') }}</div>
+{% endblock %}

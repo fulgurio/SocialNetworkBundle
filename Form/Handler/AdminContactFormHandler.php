@@ -62,7 +62,7 @@ class AdminContactFormHandler
             if ($this->form->isValid())
             {
                 $data = $this->form->getData();
-                $this->mailer->sendContactMessage(
+                $this->mailer->sendAdminMessage(
                         $user,
                         $data['subject'],
                         $data['message']

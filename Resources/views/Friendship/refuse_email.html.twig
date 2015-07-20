@@ -1,3 +1,7 @@
+{% extends 'FulgurioSocialNetworkBundle:Mail:base.html.twig' %}
+
+{% block content %}
 {% trans with { '%username%' : user.username } from 'friendship' %}fulgurio.socialnetwork.refuse.email.html.msg1{% endtrans %}
 <br />
 <p>{% trans with { '%current_username%' : app.user.username } from 'friendship' %}fulgurio.socialnetwork.refuse.email.html.msg2{% endtrans %}</p>
+{% endblock %}

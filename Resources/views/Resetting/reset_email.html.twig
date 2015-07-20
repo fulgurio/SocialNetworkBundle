@@ -1,0 +1,11 @@
+{% extends 'FulgurioSocialNetworkBundle:Mail:base.html.twig' %}
+
+{% block subject %}
+    AAA
+{{ 'resetting.email.subject'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}, 'FOSUserBundle') }}
+{% endblock %}
+
+{% block content %}
+    BBB
+{{ 'resetting.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}, 'FOSUserBundle') }}
+{% endblock %}

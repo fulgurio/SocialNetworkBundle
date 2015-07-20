@@ -29,50 +29,182 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('fulgurio_social_network');
-        $this->addAdminUserMailsSection($rootNode);
+        $this->addEmailSection($rootNode);
+        $this->addResettingSection($rootNode);
+        $this->addConfirmationSection($rootNode);
+        $this->addAvatarSection($rootNode);
+        $this->addContactSection($rootNode);
         $this->addFriendsSection($rootNode);
         return $treeBuilder;
     }
 
     /**
-     * Admin user mails configuration
+     * Default email configuration
      *
      * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
      */
-    private function addAdminUserMailsSection(ArrayNodeDefinition $node)
+    private function addEmailSection(ArrayNodeDefinition $node)
     {
         $node
             ->children()
-                ->arrayNode('admin_email')
+                ->arrayNode('from_email')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('contact')
+                        ->scalarNode('address')->defaultNull()->end()
+                    ->end()
+                    ->children()
+                        ->scalarNode('sender_name')->defaultNull()->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    /**
+     * Default email configuration
+     *
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addResettingSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('resetting')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('email')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('from')->end()
+                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Resetting:reset_email_subject.txt.twig')->end()
                             ->end()
                             ->children()
-                                ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:contact-email.txt.twig')->end()
+                                ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Resetting:reset_email.txt.twig')->end()
                             ->end()
                             ->children()
-                                ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:contact-email.html.twig')->end()
+                                ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Resetting:reset_email.html.twig')->end()
                             ->end()
                         ->end()
                     ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    /**
+     * Default email configuration
+     *
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addConfirmationSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('confirmation')
+                    ->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('remove_avatar')
+                        ->arrayNode('email')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('from')->end()
+                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Registration:confirmation_email_subject.txt.twig')->end()
                             ->end()
                             ->children()
-                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar-email.subject.twig')->end()
+                                ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Registration:confirmation_email.txt.twig')->end()
                             ->end()
                             ->children()
-                                ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar-email.txt.twig')->end()
+                                ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Registration:confirmation_email.html.twig')->end()
                             ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    /**
+     * User avatar configuration
+     *
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addAvatarSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('avatar')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('default')->defaultValue('bundles/fulguriosocialnetwork/images/avatar.png')->end()
+                    ->end()
+                    ->children()
+                        ->scalarNode('width')->defaultValue(50)->end()
+                    ->end()
+                    ->children()
+                        ->scalarNode('height')->defaultValue(50)->end()
+                    ->end()
+                    ->children()
+                        ->arrayNode('admin')
+                            ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar-email.html.twig')->end()
+                                ->arrayNode('remove')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->arrayNode('email')
+                                            ->addDefaultsIfNotSet()
+                                            ->children()
+                                                ->scalarNode('address')->defaultNull()->end()
+                                            ->end()
+                                            ->children()
+                                                ->scalarNode('sender_name')->defaultNull()->end()
+                                            ->end()
+                                            ->children()
+                                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar-email.subject.twig')->end()
+                                            ->end()
+                                            ->children()
+                                                ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar-email.txt.twig')->end()
+                                            ->end()
+                                            ->children()
+                                                ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar-email.html.twig')->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    /**
+     * Contact configuration
+     *
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addContactSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('contact')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('admin')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->arrayNode('email')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('address')->defaultNull()->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('sender_name')->defaultNull()->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:contact-email.txt.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:contact-email.html.twig')->end()
+                                    ->end()
+                                ->end()
                             ->end()
                         ->end()
                     ->end()
@@ -80,7 +212,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Admin user mails configuration
+     * Admin friendship configuration
      *
      * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
      */
@@ -97,7 +229,10 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('email')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('from')->end()
+                                ->scalarNode('address')->defaultNull()->end()
+                            ->end()
+                            ->children()
+                                ->scalarNode('sender_name')->defaultNull()->end()
                             ->end()
                             ->children()
                                 ->arrayNode('invit')

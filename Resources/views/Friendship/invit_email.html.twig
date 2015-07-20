@@ -1,4 +1,8 @@
+{% extends 'FulgurioSocialNetworkBundle:Mail:base.html.twig' %}
+
+{% block content %}
 {% trans with { '%username%' : user.username } from 'friendship' %}fulgurio.socialnetwork.invitation.email.html.msg1{% endtrans %}
 <br />
 <p>{% trans with { '%current_username%' : app.user.username } from 'friendship' %}fulgurio.socialnetwork.invitation.email.html.msg2{% endtrans %}</p>
 <p>{% trans with {'%tag%' : '<a href="' ~ url('fulgurio_social_network_friendship_list' ) ~ '">', '%endtag%' : '</a>'} from 'friendship' %}fulgurio.socialnetwork.invitation.email.html.msg3{% endtrans %}</p>
+{% endblock %}

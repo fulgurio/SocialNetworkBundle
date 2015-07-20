@@ -92,7 +92,7 @@ class FriendshipController extends Controller
                 {
                     if ($usersFriendship[0]->getUserSrc() == $currentUser)
                     {
-                        if ($usersFriendship[0]->getNbRefusals() >= $this->container->getParameter('fulgurio_social_network.friendship_nb_refusals'))
+                        if ($usersFriendship[0]->getNbRefusals() >= $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals'))
                         {
                             continue;
                         }
@@ -101,7 +101,7 @@ class FriendshipController extends Controller
                     }
                     else
                     {
-                        if ($usersFriendship[1]->getNbRefusals() >= $this->container->getParameter('fulgurio_social_network.friendship_nb_refusals'))
+                        if ($usersFriendship[1]->getNbRefusals() >= $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals'))
                         {
                             continue;
                         }
@@ -244,7 +244,7 @@ class FriendshipController extends Controller
             if ($userFriendship->getUserTgt() == $currentUser)
             {
                 $nbRefusals = $userFriendship->getNbRefusals();
-                if ($nbRefusals >= $this->container->getParameter('fulgurio_social_network.friendship_nb_refusals'))
+                if ($nbRefusals >= $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals'))
                 {
                     $userFriendship->setStatus('removed');
                 }

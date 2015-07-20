@@ -7,44 +7,59 @@ services:
             session:       "@session"
             csrf_provider: "@form.csrf_provider"
 
-    fulgurio_social_network.twig.avatar_extension:
-        class: Fulgurio\SocialNetworkBundle\Twig\Extension\AvatarExtension
-        tags:
-            -  { name: twig.extension }
-
     fulgurio_social_network.registration.form.type:
         class: Fulgurio\SocialNetworkBundle\Form\Type\RegistrationFormType
         arguments: [ %fos_user.model.user.class% ]
         tags:
-            - { name: form.type, alias: fulgurio_social_network_registration }
+            - { name: form.type, alias: fulgurio_social_network_registration_type }
 
     fulgurio_social_network.resetting.form.type:
         class: Fulgurio\SocialNetworkBundle\Form\Type\ResettingFormType
         tags:
-            - { name: form.type, alias: fulgurio_social_network_resetting }
+            - { name: form.type, alias: fulgurio_social_network_resetting_type }
 
     fulgurio_social_network.profile.form.type:
         class: Fulgurio\SocialNetworkBundle\Form\Type\ProfileFormType
         tags:
-            - { name: form.type, alias: fulgurio_social_network_profile }
+            - { name: form.type, alias: fulgurio_social_network_profile_type }
         arguments: [ %fos_user.model.user.class% ]
 
-    # Admin Mailer
-    fulgurio_social_network.admin_mailer:
-        class: Fulgurio\SocialNetworkBundle\Mailer\AdminMailer
+    fulgurio_social_network.profile.form.handler:
+        class: Fulgurio\SocialNetworkBundle\Form\Handler\ProfileFormHandler
+        scope: request
+        arguments:
+            - @fos_user.profile.form
+            - @request
+            - @fos_user.user_manager
+
+    # Contact mailer
+    fulgurio_social_network.contact_mailer:
+        class: Fulgurio\SocialNetworkBundle\Mailer\ContactMailer
         arguments:
             0: "@mailer"
             1: "@router"
             2: "@templating"
             3:
-                contact.from               : %fulgurio_social_network.admin_email_contact.from%
-                contact.textTemplate       : %fulgurio_social_network.admin_email_contact.text%
-                contact.htmlTemplate       : %fulgurio_social_network.admin_email_contact.html%
-                remove_avatar.from         : %fulgurio_social_network.admin_email_remove_avatar.from%
-                remove_avatar.subject      : %fulgurio_social_network.admin_email_remove_avatar.subject%
-                remove_avatar.textTemplate : %fulgurio_social_network.admin_email_remove_avatar.text%
-                remove_avatar.htmlTemplate : %fulgurio_social_network.admin_email_remove_avatar.html%
+                admin.from               : %fulgurio_social_network.contact.admin.email.from%
+                admin.from_name          : %fulgurio_social_network.contact.admin.email.from_name%
+                admin.template.txt       : %fulgurio_social_network.contact.admin.email.text%
+                admin.template.html      : %fulgurio_social_network.contact.admin.email.html%
 
+    # Avatar mailer
+    fulgurio_social_network.avatar_mailer:
+        class: Fulgurio\SocialNetworkBundle\Mailer\AvatarMailer
+        arguments:
+            0: "@mailer"
+            1: "@router"
+            2: "@templating"
+            3:
+                admin.from          : %fulgurio_social_network.avatar.admin.remove.email.from%
+                admin.from_name     : %fulgurio_social_network.avatar.admin.remove.email.from_name%
+                admin.subject       : %fulgurio_social_network.avatar.admin.remove.email.subject%
+                admin.template.txt  : %fulgurio_social_network.avatar.admin.remove.email.text%
+                admin.template.html : %fulgurio_social_network.avatar.admin.remove.email.html%
+
+    # Friendship mail
     fulgurio_social_network.friendship_mailer:
         class: Fulgurio\SocialNetworkBundle\Mailer\FriendshipMailer
         arguments:
@@ -52,16 +67,35 @@ services:
             1: "@router"
             2: "@templating"
             4:
-                from               :    %fulgurio_social_network.friendship_email_from%
-                invit.subjectTemplate:  %fulgurio_social_network.friendship_email_invit.subject%
-                invit.textTemplate:     %fulgurio_social_network.friendship_email_invit.text%
-                invit.htmlTemplate:     %fulgurio_social_network.friendship_email_invit.html%
-                accept.subjectTemplate: %fulgurio_social_network.friendship_email_accept.subject%
-                accept.textTemplate:    %fulgurio_social_network.friendship_email_accept.text%
-                accept.htmlTemplate:    %fulgurio_social_network.friendship_email_accept.html%
-                refuse.subjectTemplate: %fulgurio_social_network.friendship_email_refuse.subject%
-                refuse.textTemplate:    %fulgurio_social_network.friendship_email_refuse.text%
-                refuse.htmlTemplate:    %fulgurio_social_network.friendship_email_refuse.html%
-                remove.subjectTemplate: %fulgurio_social_network.friendship_email_remove.subject%
-                remove.textTemplate:    %fulgurio_social_network.friendship_email_remove.text%
-                remove.htmlTemplate:    %fulgurio_social_network.friendship_email_remove.html%
+                from                 : %fulgurio_social_network.friendship.email.from%
+                from_name            : %fulgurio_social_network.friendship.email.from_name%
+                invit.subject        : %fulgurio_social_network.friendship.email.invit.subject%
+                invit.template.txt   : %fulgurio_social_network.friendship.email.invit.text%
+                invit.template.html  : %fulgurio_social_network.friendship.email.invit.html%
+                accept.subject       : %fulgurio_social_network.friendship.email.accept.subject%
+                accept.template.txt  : %fulgurio_social_network.friendship.email.accept.text%
+                accept.template.html : %fulgurio_social_network.friendship.email.accept.html%
+                refuse.subject       : %fulgurio_social_network.friendship.email.refuse.subject%
+                refuse.template.txt  : %fulgurio_social_network.friendship.email.refuse.text%
+                refuse.template.html : %fulgurio_social_network.friendship.email.refuse.html%
+                remove.subject       : %fulgurio_social_network.friendship.email.remove.subject%
+                remove.template.txt  : %fulgurio_social_network.friendship.email.remove.text%
+                remove.template.html : %fulgurio_social_network.friendship.email.remove.html%
+
+    # FOS mailer override
+    fulgurio_social_network.fos_mailer:
+        class: Fulgurio\SocialNetworkBundle\Mailer\FosMailer
+        arguments:
+        arguments:
+            0: "@mailer"
+            1: "@router"
+            2: "@templating"
+            4:
+                confirmation.from_mail     : %fos_user.registration.confirmation.from_email%
+                confirmation.subject       : %fulgurio_social_network.confirmation.email.subject%
+                confirmation.template.txt  : %fulgurio_social_network.confirmation.email.text%
+                confirmation.template.html : %fulgurio_social_network.confirmation.email.html%
+                resetting.from_mail        : %fos_user.resetting.email.from_email%
+                resetting.subject          : %fulgurio_social_network.resetting.email.subject%
+                resetting.template.txt     : %fulgurio_social_network.resetting.email.text%
+                resetting.template.html    : %fulgurio_social_network.resetting.email.html%
