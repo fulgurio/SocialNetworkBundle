@@ -211,13 +211,13 @@ fos_user:
     user_class:    Fulgurio\SocialNetworkBundle\Entity\User
     registration:
         form:
-            type:  fulgurio_social_network_registration
+            type:  fulgurio_social_network_registration_type
     resetting:
         form:
-            type:  fulgurio_social_network_resetting
+            type:  fulgurio_social_network_resetting_type
     profile:
         form:
-            type:  fulgurio_social_network_profile
+            type:  fulgurio_social_network_profile_type
 
 stof_doctrine_extensions:
     orm:
@@ -233,11 +233,16 @@ bundle sent email)
 ``` yaml
 # app/config/config.yml
 fulgurio_social_network:
-    admin_email:
-        contact:
-            from: contact@example.com
-        remove_avatar:
-            from: contact@example.com
+    contact:
+        admin:
+            email:
+                address: contact@example.com
+                sender_name: Contact
+    avatar:
+        admin:
+            remove:
+                email:
+                    address: contact@example.com
 ```
 
 ### Step 7: Import FulgurioSocialNetworkBundle routing

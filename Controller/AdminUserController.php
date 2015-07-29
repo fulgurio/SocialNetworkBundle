@@ -94,7 +94,7 @@ class AdminUserController extends Controller
     {
         if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))
         {
-            throw new AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
         $user = is_null($userId) ? new User() : $this->getSpecifiedUser($userId);
         $form = $this->createForm(new AdminAccountFormType($this->container), $user);
@@ -213,7 +213,7 @@ class AdminUserController extends Controller
     {
         $user = $this->getSpecifiedUser($userId);
         $form = $this->createForm(new AdminContactFormType());
-        $formHandler = new AdminContactFormHandler($this->container->get('fulgurio_social_network.admin_mailer'), $form, $this->getRequest());
+        $formHandler = new AdminContactFormHandler($this->container->get('fulgurio_social_network.contact_mailer'), $form, $this->getRequest());
         if ($formHandler->process($user))
         {
             $this->container->get('session')->setFlash(
@@ -278,8 +278,8 @@ class AdminUserController extends Controller
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($user);
             $em->flush();
-                $this->container->get('fulgurio_social_network.admin_mailer')
-                        ->sendRemovedAvatarMessage($user);
+                $this->container->get('fulgurio_social_network.avatar_mailer')
+                        ->sendAdminMessage($user);
             $this->container->get('session')->setFlash(
                     'success',
                     $this->get('translator')->trans(

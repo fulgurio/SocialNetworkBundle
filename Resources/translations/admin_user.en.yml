@@ -31,10 +31,6 @@ fulgurio:
       username:
         label:              Username
         not_blank:          Username required
-#      lastname:
-#        label:              Lastname
-#      firstname:
-#        label:              Firstname
       email:
         label:              Email
         not_blank:          Email required
@@ -50,11 +46,7 @@ fulgurio:
         remove:             Delete
         change:             Change
       save_button:          Save
-#      role_label:           Rights
       success:              User added !
-#      roles:
-#        ROLE_ADMIN:         Administrator
-#        ROLE_SUPER_ADMIN:   Super Administrator
     edit:
       title:                Edit user
       success:              User updated !

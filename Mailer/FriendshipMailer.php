@@ -27,15 +27,15 @@ class FriendshipMailer extends AbstractMailer
     public function sendInvitMessage(UserInterface $user)
     {
         $subject = $this->templating->render(
-                $this->parameters['invit.subjectTemplate'],
+                $this->parameters['invit.subject'],
                 array('user' => $user)
         );
         $bodyText = $this->templating->render(
-                $this->parameters['invit.textTemplate'],
+                $this->parameters['invit.template.txt'],
                 array('user' => $user)
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['invit.htmlTemplate'],
+                $this->parameters['invit.template.html'],
                 array('user' => $user)
         );
         $this->sendEmailMessage(
@@ -43,7 +43,8 @@ class FriendshipMailer extends AbstractMailer
                 $user->getEmail(),
                 $subject,
                 $bodyText,
-                $bodyHTML
+                $bodyHTML,
+                $this->parameters['from_name']
         );
     }
 
@@ -55,15 +56,15 @@ class FriendshipMailer extends AbstractMailer
     public function sendAcceptMessage(UserInterface $user)
     {
         $subject = $this->templating->render(
-                $this->parameters['accept.subjectTemplate'],
+                $this->parameters['accept.subject'],
                 array('user' => $user)
         );
         $bodyText = $this->templating->render(
-                $this->parameters['accept.textTemplate'],
+                $this->parameters['accept.template.txt'],
                 array('user' => $user)
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['accept.htmlTemplate'],
+                $this->parameters['accept.template.html'],
                 array('user' => $user)
         );
         $this->sendEmailMessage(
@@ -71,7 +72,8 @@ class FriendshipMailer extends AbstractMailer
                 $user->getEmail(),
                 $subject,
                 $bodyText,
-                $bodyHTML
+                $bodyHTML,
+                $this->parameters['from_name']
         );
     }
 
@@ -84,15 +86,15 @@ class FriendshipMailer extends AbstractMailer
     public function sendRemoveInvitMessage(UserInterface $user)
     {
         $subject = $this->templating->render(
-                $this->parameters['remove.subjectTemplate'],
+                $this->parameters['remove.subject'],
                 array('user' => $user)
         );
         $bodyText = $this->templating->render(
-                $this->parameters['remove.textTemplate'],
+                $this->parameters['remove.template.txt'],
                 array('user' => $user)
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['remove.htmlTemplate'],
+                $this->parameters['remove.template.html'],
                 array('user' => $user)
         );
         $this->sendEmailMessage(
@@ -100,7 +102,8 @@ class FriendshipMailer extends AbstractMailer
                 $user->getEmail(),
                 $subject,
                 $bodyText,
-                $bodyHTML
+                $bodyHTML,
+                $this->parameters['from_name']
             );
     }
 
@@ -112,15 +115,15 @@ class FriendshipMailer extends AbstractMailer
     public function sendRefusalMessage(UserInterface $user)
     {
         $subject = $this->templating->render(
-                $this->parameters['refuse.subjectTemplate'],
+                $this->parameters['refuse.subject'],
                 array('user' => $user)
         );
         $bodyText = $this->templating->render(
-                $this->parameters['refuse.textTemplate'],
+                $this->parameters['refuse.template.txt'],
                 array('user' => $user)
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['refuse.htmlTemplate'],
+                $this->parameters['refuse.template.html'],
                 array('user' => $user)
         );
         $this->sendEmailMessage(
@@ -128,7 +131,8 @@ class FriendshipMailer extends AbstractMailer
                 $user->getEmail(),
                 $subject,
                 $bodyText,
-                $bodyHTML
+                $bodyHTML,
+                $this->parameters['from_name']
         );
     }
 }

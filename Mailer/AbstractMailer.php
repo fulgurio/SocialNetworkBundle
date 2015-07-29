@@ -65,12 +65,18 @@ abstract class AbstractMailer
      * @param string $subject
      * @param string $bodyHTML
      * @param string $bodyText
+     * @param string $fromName
      */
-    protected function sendEmailMessage($from, $to, $subject, $bodyHTML, $bodyText)
+    protected function sendEmailMessage($from, $to, $subject, $bodyHTML, $bodyText, $fromName = NULL)
     {
+        if (is_array($from))
+        {
+            $fromName = current($from);
+            $from = key($from);
+        }
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($from)
+            ->setFrom($from, $fromName)
             ->setTo($to)
             ->setBody($bodyHTML, 'text/html')
             ->addPart($bodyText, 'text/plain');

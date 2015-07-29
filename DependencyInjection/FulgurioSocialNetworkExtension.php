@@ -22,6 +22,8 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class FulgurioSocialNetworkExtension extends Extension
 {
+    private $defaultEmailValue;
+
     /**
      * {@inheritDoc}
      */
@@ -33,39 +35,105 @@ class FulgurioSocialNetworkExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $this->addEmailsConfig($container, $config['admin_email']['contact'], 'admin_email_contact');
-        $this->addEmailsConfig($container, $config['admin_email']['remove_avatar'], 'admin_email_remove_avatar');
+        $this->defaultEmailValue = $config['from_email'];
+        $this->addAvatarConfig($container, $config['avatar']);
+        $this->addResettingConfig($container, $config['resetting']);
+        $this->addConfirmationConfig($container, $config['confirmation']);
+        $this->addContactConfig($container, $config['contact']);
         $this->addFriendshipConfig($container, $config['friendship']);
+    }
+
+    /**
+     * Adding avatar data config
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function addAvatarConfig(ContainerBuilder $container, array $config)
+    {
+        $container->setParameter('fulgurio_social_network.avatar.default', $config['default']);
+        $container->setParameter('fulgurio_social_network.avatar.width', $config['width']);
+        $container->setParameter('fulgurio_social_network.avatar.height', $config['height']);
+        $this->addEmailsConfig($container, 'avatar.admin.remove.email', $config['admin']['remove']['email']);
+    }
+
+    /**
+     * Adding resetting data config
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function addResettingConfig(ContainerBuilder $container, array $config)
+    {
+        $this->addEmailsConfig($container, 'resetting.email', $config['email']);
+    }
+
+    /**
+     * Adding confirmation data config
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function addConfirmationConfig(ContainerBuilder $container, array $config)
+    {
+        $this->addEmailsConfig($container, 'confirmation.email', $config['email']);
+    }
+
+    /**
+     * Adding avatar data config
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function addContactConfig(ContainerBuilder $container, array $config)
+    {
+        $this->addEmailsConfig($container, 'contact.admin.email', $config['admin']['email']);
+    }
+
+    /**
+     * Add friendship config
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function addFriendshipConfig(ContainerBuilder $container, array $config)
+    {
+        $container->setParameter('fulgurio_social_network.friendship.nb_refusals', $config['nb_refusals']);
+        $this->addEmailsConfig($container, 'friendship.email', $config['email']);
+        $this->addEmailsConfig($container, 'friendship.email.invit', $config['email']['invit']);
+        $this->addEmailsConfig($container, 'friendship.email.accept', $config['email']['accept']);
+        $this->addEmailsConfig($container, 'friendship.email.refuse', $config['email']['refuse']);
+        $this->addEmailsConfig($container, 'friendship.email.remove', $config['email']['remove']);
     }
 
     /**
      * Adding email data config
      *
      * @param ContainerBuilder $container
-     * @param array $config
      * @param string $parameterName
+     * @param array $config
      */
-    private function addEmailsConfig(ContainerBuilder $container, array $config, $parameterName)
+    private function addEmailsConfig(ContainerBuilder $container, $parameterName, array $config)
     {
-        if (isset($config['from']))
-        {
-            $container->setParameter('fulgurio_social_network.' . $parameterName . '.from', $config['from']);
-        }
+        $container->setParameter(
+                'fulgurio_social_network.' . $parameterName . '.from',
+                isset($config['address']) ? $config['address'] : $this->defaultEmailValue['address']
+        );
+        $container->setParameter(
+                'fulgurio_social_network.' . $parameterName . '.from_name',
+                isset($config['sender_name']) ? $config['sender_name'] : $this->defaultEmailValue['sender_name']
+        );
         if (isset($config['subject']))
         {
             $container->setParameter('fulgurio_social_network.' . $parameterName . '.subject', $config['subject']);
         }
-        $container->setParameter('fulgurio_social_network.' . $parameterName . '.text', $config['text']);
-        $container->setParameter('fulgurio_social_network.' . $parameterName . '.html', $config['html']);
-    }
-
-    private function addFriendshipConfig(ContainerBuilder $container, array $config)
-    {
-        $container->setParameter('fulgurio_social_network.friendship_email_from', $config['email']['from']);
-        $container->setParameter('fulgurio_social_network.friendship_nb_refusals', $config['nb_refusals']);
-        $this->addEmailsConfig($container, $config['email']['invit'],  'friendship_email_invit');
-        $this->addEmailsConfig($container, $config['email']['accept'], 'friendship_email_accept');
-        $this->addEmailsConfig($container, $config['email']['refuse'], 'friendship_email_refuse');
-        $this->addEmailsConfig($container, $config['email']['remove'], 'friendship_email_remove');
+        if (isset($config['text']))
+        {
+            $container->setParameter('fulgurio_social_network.' . $parameterName . '.text', $config['text']);
+        }
+        if (isset($config['html']))
+        {
+            $container->setParameter('fulgurio_social_network.' . $parameterName . '.html', $config['html']);
+        }
     }
 }
