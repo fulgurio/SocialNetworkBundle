@@ -32,6 +32,16 @@ class User extends BaseUser
 
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->msgSender = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->msgTarget = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Set avatarFile
      *
      * @param string $avatarFile
@@ -214,12 +224,6 @@ class User extends BaseUser
      * @var Fulgurio\SocialNetworkBundle\Entity\MessageTarget
      */
     private $msgTarget;
-
-    public function __construct()
-    {
-        $this->msgSender = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->msgTarget = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Get id
