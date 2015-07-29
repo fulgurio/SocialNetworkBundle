@@ -71,7 +71,7 @@
 {% block javascriptBottom %}{% endblock %}
 <script>
 $('.dropdown-toggle').dropdown();
-{% if is_granted("IS_AUTHENTICATED_REMEMBERED") == false %}
+{% if is_granted("IS_AUTHENTICATED_FULLY") == false %}
 $('#connect a').click(function() {
 	$('#connect form').show();
 	return false;

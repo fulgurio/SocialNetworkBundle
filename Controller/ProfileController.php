@@ -26,6 +26,11 @@ class ProfileController extends Controller
      */
     public function showAction($userId = null)
     {
+        if (!$this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
+        }
+
         $currentUser = $this->getUser();
         if (is_null($userId))
         {

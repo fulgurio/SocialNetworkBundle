@@ -36,7 +36,7 @@ class ProfileControllerTest extends WebTestCase
     {
         $client = self::createClient();
         $crawler = $client->request('GET', '/profile/');
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
 
         $client = $this->getLoggedClient();
         $crawler = $client->request('GET', '/profile/');
@@ -51,7 +51,7 @@ class ProfileControllerTest extends WebTestCase
     {
         $client = self::createClient();
         $crawler = $client->request('GET', '/profile/');
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
 
         $client = $this->getLoggedClient();
         $crawler = $client->request('GET', '/profile/edit');
@@ -175,7 +175,7 @@ class ProfileControllerTest extends WebTestCase
     {
         $client = self::createClient();
         $crawler = $client->request('GET', '/profile/');
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
 
         $client = $this->getLoggedClient();
         $crawler = $client->followRedirect();

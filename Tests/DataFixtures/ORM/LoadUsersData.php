@@ -12,61 +12,73 @@ namespace Fulgurio\SocialNetworkBundle\Tests\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Fulgurio\SocialNetworkBundle\Entity\User;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Users data fixtures for tests
  *
  * @author Vincent GUERARD <v.guerard@fulgurio.net>
  */
-class LoadUsersData implements FixtureInterface
+class LoadUsersData implements FixtureInterface, ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
     /**
      * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
     {
-        $user1 = new User();
+        $userManager = $this->container->get('fos_user.user_manager');
+
+        $user1 = $userManager->createUser();//new User();
         $user1->setUsername('user1');
         $user1->setPlainPassword('user1');
         $user1->setEmail('user1@example.com');
         $user1->setEnabled(TRUE);
-        $manager->persist($user1);
-        $manager->flush();
+        $userManager->updateUser($user1);
 
-        $user2 = new User();
+        $user2 = $userManager->createUser();
         $user2->setUsername('user2');
         $user2->setPlainPassword('user2');
         $user2->setEmail('user2@example.com');
         $user2->setEnabled(FALSE);
-        $manager->persist($user2);
-        $manager->flush();
+        $userManager->updateUser($user2);
 
-        $user3 = new User();
+        $user3 = $userManager->createUser();
         $user3->setUsername('user3');
         $user3->setPlainPassword('user3');
         $user3->setEmail('user3@example.com');
         $user3->setEnabled(TRUE);
         $user3->setAvatar('myAvatar.png');
-        $manager->persist($user3);
-        $manager->flush();
+        $userManager->updateUser($user3);
 
-        $admin = new User();
+        $admin = $userManager->createUser();
         $admin->setUsername('admin');
         $admin->setPlainPassword('admin');
         $admin->setEmail('admin@example.com');
         $admin->setEnabled(TRUE);
         $admin->addRole('ROLE_ADMIN');
-        $manager->persist($admin);
-        $manager->flush();
+        $userManager->updateUser($admin);
 
-        $superadmin = new User();
+        $superadmin = $userManager->createUser();
         $superadmin->setUsername('superadmin');
         $superadmin->setPlainPassword('superadmin');
         $superadmin->setEmail('superadmin@example.com');
         $superadmin->setEnabled(TRUE);
         $superadmin->addRole('ROLE_SUPER_ADMIN');
-        $manager->persist($superadmin);
-        $manager->flush();
+        $userManager->updateUser($superadmin);
     }
 }
