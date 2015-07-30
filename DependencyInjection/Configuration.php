@@ -91,7 +91,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Default email configuration
+     * Confirmation email configuration
      *
      * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
      */

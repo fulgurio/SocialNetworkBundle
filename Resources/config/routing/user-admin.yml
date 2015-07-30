@@ -1,39 +1,39 @@
 fulgurio_social_network_admin_users:
-    pattern:  /admin/users/
+    pattern:  /
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:list }
 
 fulgurio_social_network_admin_users_ban:
-    pattern:  /admin/users/{userId}/ban
+    pattern:  /{userId}/ban
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:ban }
 
 fulgurio_social_network_admin_users_unban:
-    pattern:  /admin/users/{userId}/unban
+    pattern:  /{userId}/unban
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:ban }
 
 fulgurio_social_network_admin_users_remove_avatar:
-    pattern:  /admin/users/{userId}/remove_avatar
+    pattern:  /{userId}/remove_avatar
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:removeAvatar }
 
 fulgurio_social_network_admin_users_init_password:
-    pattern:  /admin/users/{userId}/init-password
+    pattern:  /{userId}/init-password
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:initPassword }
 
 fulgurio_social_network_admin_users_contact:
-    pattern:  /admin/users/{userId}/contact
+    pattern:  /{userId}/contact
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:contact }
 
 fulgurio_social_network_admin_users_add:
-    pattern:  /admin/users/add
+    pattern:  /add
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:add }
 
 fulgurio_social_network_admin_users_edit:
-    pattern:  /admin/users/{userId}/edit
+    pattern:  /{userId}/edit
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:add }
 
 fulgurio_social_network_admin_users_remove:
-    pattern:  /admin/users/{userId}/remove
+    pattern:  /{userId}/remove
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:remove }
 
 fulgurio_social_network_admin_users_view:
-    pattern:  /admin/users/{userId}/view
+    pattern:  /{userId}/view
     defaults: { _controller: FulgurioSocialNetworkBundle:AdminUser:view }

@@ -10,6 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Form\Type;
 
+use Fulgurio\SocialNetworkBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormError;
@@ -21,7 +22,7 @@ class AdminAccountFormType extends AbstractType
     private $container;
 
     /**
-     * Construtor
+     * Constructor
      *
      * @param object $container
      */
@@ -32,7 +33,7 @@ class AdminAccountFormType extends AbstractType
 
     /**
      * (non-PHPdoc)
-     * @see Symfony\Component\Form.AbstractType::buildForm()
+     * @see Symfony\Component\Form\FormTypeInterface::buildForm()
      */
     public function buildForm(FormBuilder $builder, array $options)
     {
@@ -75,7 +76,7 @@ class AdminAccountFormType extends AbstractType
 
     /**
      * (non-PHPdoc)
-     * @see Symfony\Component\Form.FormTypeInterface::getName()
+     * @see Symfony\Component\Form\FormTypeInterface::getName()
      */
     public function getName()
     {

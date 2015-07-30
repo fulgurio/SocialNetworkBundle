@@ -22,7 +22,7 @@ class ProfileFormType extends BaseType
 {
     /**
      * (non-PHPdoc)
-     * @see FOS\UserBundle\Form\Type\ProfileFormType::buildUserForm()
+     * @see Symfony\Component\Form\FormTypeInterface::getName()
      */
     protected function buildUserForm(FormBuilder $builder, array $options)
     {

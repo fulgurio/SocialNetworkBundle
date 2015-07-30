@@ -16,17 +16,20 @@ use Symfony\Component\Form\FormBuilder;
 class AnswerMessageFormType extends AbstractType
 {
     /**
-     * @see Symfony\Component\Form.AbstractType::buildForm()
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form\FormTypeInterface::buildForm()
      */
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
             ->add('content', 'text')
+//            ->add('file', 'file', array('required' => FALSE))
         ;
     }
 
     /**
-     * @see Symfony\Component\Form.FormTypeInterface::getName()
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form\FormTypeInterface::getName()
      */
     public function getName()
     {

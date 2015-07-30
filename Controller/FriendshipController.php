@@ -280,7 +280,7 @@ class FriendshipController extends Controller
         {
             return $this->redirect($this->generateUrl('fulgurio_social_network_friendship_list'));
         }
-        $templateName = $request->isXmlHttpRequest() ? 'FulgurioSocialNetworkBundle::confirmAjax.html.twig' : 'FulgurioSocialNetworkBundle::confirm.html.twig';
+        $templateName = 'FulgurioSocialNetworkBundle::confirm' . ($request->isXmlHttpRequest() ? 'Ajax' : '') . '.html.twig';
         return $this->render($templateName, array(
             'action' => $this->generateUrl('fulgurio_social_network_friendship_refuse', array('userId' => $userId)),
             'confirmationMessage' => $this->get('translator')->trans(

@@ -17,6 +17,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Message
 {
+    /***************************************************************************
+     *                             GENERATED CODE                              *
+     **************************************************************************/
+
     /**
      * @var integer $id
      */
@@ -65,7 +69,7 @@ class Message
     public function __construct()
     {
         $this->target = new \Doctrine\Common\Collections\ArrayCollection();
-    $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

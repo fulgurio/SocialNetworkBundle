@@ -31,7 +31,7 @@ class FriendshipMailer extends AbstractMailer
                 array('user' => $user)
         );
         $bodyText = $this->templating->render(
-                $this->parameters['invit.template.txt'],
+                $this->parameters['invit.template.text'],
                 array('user' => $user)
         );
         $bodyHTML = $this->templating->render(
@@ -60,7 +60,7 @@ class FriendshipMailer extends AbstractMailer
                 array('user' => $user)
         );
         $bodyText = $this->templating->render(
-                $this->parameters['accept.template.txt'],
+                $this->parameters['accept.template.text'],
                 array('user' => $user)
         );
         $bodyHTML = $this->templating->render(
@@ -90,7 +90,7 @@ class FriendshipMailer extends AbstractMailer
                 array('user' => $user)
         );
         $bodyText = $this->templating->render(
-                $this->parameters['remove.template.txt'],
+                $this->parameters['remove.template.text'],
                 array('user' => $user)
         );
         $bodyHTML = $this->templating->render(
@@ -119,7 +119,7 @@ class FriendshipMailer extends AbstractMailer
                 array('user' => $user)
         );
         $bodyText = $this->templating->render(
-                $this->parameters['refuse.template.txt'],
+                $this->parameters['refuse.template.text'],
                 array('user' => $user)
         );
         $bodyHTML = $this->templating->render(

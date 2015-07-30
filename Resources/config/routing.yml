@@ -1,23 +1,23 @@
+FulgurioSocialNeworkBundle_user_admin:
+    resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/user-admin.yml"
+    prefix:   /admin/users
+
+FulgurioSocialNeworkBundle_admin:
+    resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/admin.yml"
+    prefix:   /admin
+
 FulgurioSocialNeworkBundle_friendship:
     resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/friendship.yml"
     prefix:   /friends/
 
 FulgurioSocialNeworkBundle_messenger:
     resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/messenger.yml"
-    prefix:   /messenger/
+    prefix:	  /messenger/
 
 FulgurioSocialNeworkBundle_user:
     resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/user.yml"
     prefix:   /
 
-FulgurioSocialNeworkBundle_user_admin:
-    resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/user-admin.yml"
-    prefix:   /
-
 FulgurioSocialNeworkBundle_front:
     resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/front.yml"
-    prefix:   /
-
-FulgurioSocialNeworkBundle_admin:
-    resource: "@FulgurioSocialNetworkBundle/Resources/config/routing/admin.yml"
     prefix:   /

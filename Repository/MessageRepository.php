@@ -55,7 +55,7 @@ class MessageRepository extends EntityRepository
                     AND u.enabled = 1
                 ORDER BY u.username');
         $query->setParameter('message', $message);
-        return ($query->getResult());
+        return $query->getResult();
     }
 
     /**

@@ -19,11 +19,10 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\CallbackValidator;
 use Symfony\Bundle\DoctrineBundle\Registry;
 
-
 class NewMessageFormType extends AbstractType
 {
     /**
-     * @var Fulgurio\SocialNetworkBundle\Entity\User $currentUSer
+     * @var Fulgurio\SocialNetworkBundle\Entity\User $currentUser
      */
     private $currentUser;
 
@@ -46,7 +45,8 @@ class NewMessageFormType extends AbstractType
     }
 
     /**
-     * @see Symfony\Component\Form.AbstractType::buildForm()
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form\FormTypeInterface::buildForm()
      */
     public function buildForm(FormBuilder $builder, array $options)
     {
@@ -139,7 +139,8 @@ class NewMessageFormType extends AbstractType
     }
 
     /**
-     * @see Symfony\Component\Form.FormTypeInterface::getName()
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form\FormTypeInterface::getName()
      */
     public function getName()
     {

@@ -18,9 +18,17 @@ use Doctrine\ORM\Mapping as ORM;
 class UserFriendship
 {
     /**
+     * Available status
+     *
      * @var array
      */
     private $availableStatus = array('asking', 'accepted', 'pending', 'refused', 'removed');
+
+    /**
+     * @var smallint $nb_refusals
+     */
+    private $nb_refusals = 0;
+
 
     /**
      * Set status
@@ -52,11 +60,6 @@ class UserFriendship
      * @var string $status
      */
     private $status;
-
-    /**
-     * @var smallint $nb_refusals
-     */
-    private $nb_refusals = 0;
 
     /**
      * @var datetime $created_at

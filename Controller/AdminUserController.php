@@ -55,7 +55,10 @@ class AdminUserController extends Controller
         }
         if (count($users) == 0 && $page > 1)
         {
-            return new RedirectResponse($this->generateUrl('fulgurio_social_network_admin_users', array('page' => $page - 1)));
+            return $this->redirect($this->generateUrl(
+                    'fulgurio_social_network_admin_users',
+                    array('page' => $page - 1))
+            );
         }
         return $this->render(
                 'FulgurioSocialNetworkBundle:AdminUsers:list.html.twig',
@@ -85,10 +88,11 @@ class AdminUserController extends Controller
 
 
     /**
-     * Add or edit user page
+     * Add or edit user action
      *
-     * @param User $userId
-     * @throws AccessDeniedException
+     * @param number $userId
+     * @return Response
+     * @throws AccessDeniedHttpException
      */
     public function addAction($userId = null)
     {
@@ -97,8 +101,12 @@ class AdminUserController extends Controller
             throw new AccessDeniedHttpException();
         }
         $user = is_null($userId) ? new User() : $this->getSpecifiedUser($userId);
-        $form = $this->createForm(new AdminAccountFormType($this->container), $user);
-        $formHandler = new AdminAccountFormHandler($this->container->get('fos_user.user_manager'), $form, $this->getRequest());
+        $form = $this->createForm(new AdminAccountFormType($this->container),
+                $user);
+        $formHandler = new AdminAccountFormHandler(
+                $this->container->get('fos_user.user_manager'),
+                $form,
+        $this->getRequest());
         if ($formHandler->process($user))
         {
             $this->get('session')->setFlash('notice',
@@ -116,14 +124,14 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Users remove action
+     * User remove action
      *
-     * @todo : XmlRequest ?
-     * @todo : back to initial user page (with pagination)
+     * @param number $userId
+     * @return Response
      */
     public function removeAction($userId)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN'))
+        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))
         {
             throw new AccessDeniedHttpException();
         }
@@ -205,9 +213,10 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Users contact action
+     * User contact action
      *
-     * @todo : back to initial user page (with pagination)
+     * @param number $userId
+     * @return Response
      */
     public function contactAction($userId)
     {
@@ -253,7 +262,7 @@ class AdminUserController extends Controller
                         'admin_user'
                 )
         );
-        return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
+        return $this->redirect($this->generateUrl('fulgurio_social_network_admin_user'));
     }
 
     /**
@@ -278,8 +287,8 @@ class AdminUserController extends Controller
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($user);
             $em->flush();
-                $this->container->get('fulgurio_social_network.avatar_mailer')
-                        ->sendAdminMessage($user);
+            $this->container->get('fulgurio_social_network.avatar_mailer')
+                    ->sendAdminMessage($user);
             $this->container->get('session')->setFlash(
                     'success',
                     $this->get('translator')->trans(

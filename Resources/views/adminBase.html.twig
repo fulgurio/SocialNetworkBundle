@@ -15,7 +15,7 @@
 		<div class="navbar">
 			<div class="navbar-inner">
 				<div class="container">
-					<a class="brand" href="{{ path('fulgurio_social_network_homepage') }}">Social network</a>
+					<a class="brand" href="{{ path('fulgurio_social_network_homepage') }}">{% trans from 'admin' %}fulgurio.socialnetwork.social_network_title{% endtrans %}</a>
 					<div class="nav-collapse">
 						<ul class="nav">
 {#							<li{% if app.request.attributes.get('_route')|slice(0, 10) == 'AdminPages' %} class="active"{% endif %}><a href="{{ path('AdminPages') }}">{% trans from "admin" %}fulgurio.lightcms.header_link.pages_link{% endtrans %}</a></li>#}
@@ -24,10 +24,10 @@
 						<ul class="nav pull-right">
 {#							<li{% if app.request.attributes.get('_route')|slice(0, 9) == 'Messenger' %} class="active"{% endif %}><a href="{{ path('MessengerList') }}"><i class="icon-envelope icon-white"></i> {% trans %}fulgurio.socialnetwork.header_link.messenger{% endtrans %}</a></li>#}
 							<li class="dropdown" id="profil">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans with {'%username%': app.user.username}%}fulgurio.socialnetwork.header_link.logged_as{% endtrans %} <b class="caret"></b></a>
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans with {'%username%': app.user.username} from 'admin' %}fulgurio.socialnetwork.header_link.logged_as{% endtrans %} <b class="caret"></b></a>
 								<ul class="dropdown-menu">
 {#									<li><a href="{{ path('UserProfilShow') }}">{% trans %}fulgurio.socialnetwork.header_link.profile{% endtrans %}</a></li>#}
-									<li><a href="{{ path('fos_user_security_logout') }}">{%trans %}fulgurio.socialnetwork.header_link.disconnect{% endtrans %}</a></li>
+									<li><a href="{{ path('fos_user_security_logout') }}">{%trans from 'admin' %}fulgurio.socialnetwork.header_link.disconnect{% endtrans %}</a></li>
 								</ul>
 							</li>
 						</ul>

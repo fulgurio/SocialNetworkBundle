@@ -30,7 +30,6 @@ class ProfileController extends Controller
         {
             return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
         }
-
         $currentUser = $this->getUser();
         if (is_null($userId))
         {

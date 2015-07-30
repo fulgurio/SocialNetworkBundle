@@ -20,11 +20,12 @@ class MessageTarget
     /**
      * @var boolean $has_read
      */
-    private $has_read = 0;
+    private $has_read = FALSE;
 
     /***************************************************************************
      *                             GENERATED CODE                              *
      **************************************************************************/
+
     /**
      * @var integer $id
      */

@@ -31,7 +31,7 @@ class AvatarMailer extends AbstractMailer
         );
         $data = array('user' => $user, 'subject' => $subject);
         $bodyText = $this->templating->render(
-                $this->parameters['admin.template.txt'], $data
+                $this->parameters['admin.template.text'], $data
         );
         $bodyHTML = $this->templating->render(
                 $this->parameters['admin.template.html'], $data
