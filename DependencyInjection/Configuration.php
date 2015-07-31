@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('fulgurio_social_network');
         $this->addEmailSection($rootNode);
+        $this->addRegistrationSection($rootNode);
         $this->addResettingSection($rootNode);
         $this->addConfirmationSection($rootNode);
         $this->addAvatarSection($rootNode);
@@ -61,7 +62,37 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Default email configuration
+     * Registration email configuration
+     *
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addRegistrationSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('registration')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('email')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Registration:register_success_email.subject.twig')->end()
+                            ->end()
+                            ->children()
+                                ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Registration:register_success_email.txt.twig')->end()
+                            ->end()
+                            ->children()
+                                ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Registration:register_success_email.html.twig')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    /**
+     * Resetting email configuration
      *
      * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
      */
@@ -75,7 +106,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('email')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Resetting:reset_email_subject.txt.twig')->end()
+                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Resetting:reset_email.subject.twig')->end()
                             ->end()
                             ->children()
                                 ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Resetting:reset_email.txt.twig')->end()
@@ -105,7 +136,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('email')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Registration:confirmation_email_subject.txt.twig')->end()
+                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Registration:confirmation_email.subject.twig')->end()
                             ->end()
                             ->children()
                                 ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Registration:confirmation_email.txt.twig')->end()

@@ -21,6 +21,31 @@ use FOS\UserBundle\Mailer\MailerInterface;
 class FosMailer extends AbstractMailer implements MailerInterface
 {
     /**
+     * Welcome message email
+     *
+     * @param UserInterface $user
+     */
+    public function sendRegistrationEmailMessage(UserInterface $user)
+    {
+        $subject = $this->templating->render(
+                $this->parameters['registration.subject'],
+                array('user' => $user));
+        $bodyText = $this->templating->render(
+                $this->parameters['registration.template.text'],
+                array('user' => $user));
+        $bodyHTML = $this->templating->render(
+                $this->parameters['registration.template.html'],
+                array('user' => $user));
+        $this->sendEmailMessage(
+                $this->parameters['registration.from_mail'],
+                $user->getEmail(),
+                $subject,
+                $bodyText,
+                $bodyHTML
+                );
+    }
+
+    /**
      * Confirmation email sender
      *
      * @param UserInterface $user
@@ -66,7 +91,7 @@ class FosMailer extends AbstractMailer implements MailerInterface
                 $this->parameters['resetting.subject']
         );
         $bodyText = $this->templating->render(
-                $this->parameters['resetting.template.txt'], $data
+                $this->parameters['resetting.template.text'], $data
         );
         $bodyHTML = $this->templating->render(
                 $this->parameters['resetting.template.html'], $data

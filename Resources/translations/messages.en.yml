@@ -36,6 +36,30 @@ fulgurio:
       password_placeholder:    Your password
       submit:                  Sign up
       link_to_signin:          Or sign in by clicking %tag%here%endtag%
+      welcome_msg:             Welcome to Social network !
+      email:
+        subject:               Welcome to Social Network
+        content:
+          text:
+            welcome:           Welcome to Social Network, and thanks for signing up!
+            footer:            Remember that you can change email notification on profil page
+          html:
+            welcome:           Welcome to Social Network, and thanks for signing up!
+            footer:            Remember that you can change email notification on %tag%profil%endtag% page
+    resetting:
+      email:
+        subject:               Reset password
+        content:
+          text:
+            msg0:              Hello %username%!
+            msg1:              To reset your password - please visit %confirmationUrl%
+            msg2:              Regards,
+            msg3:              the Team.
+          html:
+            msg0:              Hello %username%!
+            msg1:              To reset your password - please visit %confirmationUrl%
+            msg2:              Regards,
+            msg3:              the Team.
     profile:
       title:                    Profile
       username:                 Your login

@@ -37,6 +37,7 @@ class FulgurioSocialNetworkExtension extends Extension
 
         $this->defaultEmailValue = $config['from_email'];
         $this->addAvatarConfig($container, $config['avatar']);
+        $this->addRegistrationConfig($container, $config['registration']);
         $this->addResettingConfig($container, $config['resetting']);
         $this->addConfirmationConfig($container, $config['confirmation']);
         $this->addContactConfig($container, $config['contact']);
@@ -55,6 +56,17 @@ class FulgurioSocialNetworkExtension extends Extension
         $container->setParameter('fulgurio_social_network.avatar.width', $config['width']);
         $container->setParameter('fulgurio_social_network.avatar.height', $config['height']);
         $this->addEmailsConfig($container, 'avatar.admin.remove.email', $config['admin']['remove']['email']);
+    }
+
+    /**
+     * Adding registration data config
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function addRegistrationConfig(ContainerBuilder $container, array $config)
+    {
+        $this->addEmailsConfig($container, 'registration.email', $config['email']);
     }
 
     /**

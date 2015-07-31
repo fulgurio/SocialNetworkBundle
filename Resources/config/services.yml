@@ -96,6 +96,10 @@ services:
             1: "@router"
             2: "@templating"
             4:
+                registration.from_mail     : %fos_user.registration.confirmation.from_email%
+                registration.subject       : %fulgurio_social_network.registration.email.subject%
+                registration.template.text : %fulgurio_social_network.registration.email.text%
+                registration.template.html : %fulgurio_social_network.registration.email.html%
                 confirmation.from_mail     : %fos_user.registration.confirmation.from_email%
                 confirmation.subject       : %fulgurio_social_network.confirmation.email.subject%
                 confirmation.template.text : %fulgurio_social_network.confirmation.email.text%

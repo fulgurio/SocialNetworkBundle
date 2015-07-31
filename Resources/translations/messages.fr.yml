@@ -36,6 +36,30 @@ fulgurio:
       password_placeholder:    Votre mot de passe
       submit:                  S'inscrire
       link_to_signin:          Ou connectez-vous en cliquant %tag%ici%endtag%
+      welcome_msg:             Bienvenue dans Réseau social !
+      email:
+        subject:               Bienvenue à Réseau Social
+        content:
+          text:
+            welcome:           Bienvenue sur le site Réseau Social, et merci de votre inscription !
+            footer:            Vous pouvez modifier à tout moment vos notifications sur votre profil
+          html:
+            welcome:           Bienvenue à Réseau Social, et merci de votre inscription !
+            footer:            Vous pouvez modifier à tout moment vos notifications sur votre %tag%profil%endtag%
+    resetting:
+      email:
+        subject:               Ré-initialisation de votre mot de passe
+        content:
+          text:
+            msg0:              Bonjour %username% !
+            msg1:              Pour réinitialiser votre mot de passe, merci de vous rendre sur %confirmationUrl%
+            msg2:              Cordialement,
+            msg3:              L'équipe.
+          html:
+            msg0:              Bonjour %username% !
+            msg1:              Pour réinitialiser votre mot de passe, cliquez %tag%ici%endtag%
+            msg2:              Cordialement,
+            msg3:              L'équipe.
     profile:
       title:                    Profil
       username:                 Votre identifiant
