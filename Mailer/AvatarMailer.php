@@ -44,5 +44,6 @@ class AvatarMailer extends AbstractMailer
                 $bodyText,
                 $this->parameters['admin.from_name']
         );
+        $this->messenger->sendMessage($user, $subject, $bodyHTML, TRUE);
     }
 }

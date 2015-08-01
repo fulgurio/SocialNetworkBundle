@@ -81,6 +81,8 @@ fulgurio:
           select:               Select a picture
           remove:               Remove
           change:               Change
+        send_msg_to_email:
+          label:                Get notification on email address
         password_no_match:      The password fields must match.
       unsubscribe:
         link:                   Unsubscribe

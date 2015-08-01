@@ -28,7 +28,11 @@ class ContactMailer extends AbstractMailer
      */
     public function sendAdminMessage(UserInterface $user, $subject, $message)
     {
-        $data = array('user' => $user, 'subject' => $subject, 'content' => $message);
+        $data = array(
+            'user' => $user,
+            'subject' => $subject,
+            'content' => $message
+        );
         $bodyText = $this->templating->render(
                 $this->parameters['admin.template.text'], $data
         );
@@ -43,5 +47,6 @@ class ContactMailer extends AbstractMailer
                 $bodyText,
                 $this->parameters['admin.from_name']
         );
+        $this->messenger->sendMessage($user, $subject, $bodyHTML, TRUE);
     }
 }

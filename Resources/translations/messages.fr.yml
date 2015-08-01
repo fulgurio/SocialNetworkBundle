@@ -81,6 +81,8 @@ fulgurio:
           select:               Sélectionner une image
           remove:               Supprimer
           change:               Changer
+        send_msg_to_email:
+          label:                Recevoir les notifications par email
         password_no_match:      Les nouveaux mots de passe ne sont pas identiques
       unsubscribe:
         link:                   Se désinscrire

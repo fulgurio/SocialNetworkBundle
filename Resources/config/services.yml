@@ -50,6 +50,8 @@ services:
                 admin.from_name          : %fulgurio_social_network.contact.admin.email.from_name%
                 admin.template.text      : %fulgurio_social_network.contact.admin.email.text%
                 admin.template.html      : %fulgurio_social_network.contact.admin.email.html%
+        calls:
+            - [ setMessenger, [ "@fulgurio_social_network.messenger.messagebox" ] ]
 
     # Avatar mailer
     fulgurio_social_network.avatar_mailer:
@@ -64,6 +66,8 @@ services:
                 admin.subject       : %fulgurio_social_network.avatar.admin.remove.email.subject%
                 admin.template.text : %fulgurio_social_network.avatar.admin.remove.email.text%
                 admin.template.html : %fulgurio_social_network.avatar.admin.remove.email.html%
+        calls:
+            - [ setMessenger, [ "@fulgurio_social_network.messenger.messagebox" ] ]
 
     # Friendship mail
     fulgurio_social_network.friendship_mailer:
@@ -72,7 +76,7 @@ services:
             0: "@mailer"
             1: "@router"
             2: "@templating"
-            4:
+            3:
                 from                 : %fulgurio_social_network.friendship.email.from%
                 from_name            : %fulgurio_social_network.friendship.email.from_name%
                 invit.subject        : %fulgurio_social_network.friendship.email.invit.subject%
@@ -87,6 +91,8 @@ services:
                 remove.subject       : %fulgurio_social_network.friendship.email.remove.subject%
                 remove.template.text : %fulgurio_social_network.friendship.email.remove.text%
                 remove.template.html : %fulgurio_social_network.friendship.email.remove.html%
+        calls:
+            - [ setMessenger, [ "@fulgurio_social_network.messenger.messagebox" ] ]
 
     # FOS mailer override
     fulgurio_social_network.fos_mailer:
@@ -95,7 +101,7 @@ services:
             0: "@mailer"
             1: "@router"
             2: "@templating"
-            4:
+            3:
                 registration.from_mail     : %fos_user.registration.confirmation.from_email%
                 registration.subject       : %fulgurio_social_network.registration.email.subject%
                 registration.template.text : %fulgurio_social_network.registration.email.text%
@@ -108,3 +114,10 @@ services:
                 resetting.subject          : %fulgurio_social_network.resetting.email.subject%
                 resetting.template.text     : %fulgurio_social_network.resetting.email.text%
                 resetting.template.html    : %fulgurio_social_network.resetting.email.html%
+
+    # Messenger service
+    fulgurio_social_network.messenger.messagebox:
+        class: Fulgurio\SocialNetworkBundle\Service\Messenger
+        arguments:
+            doctrine: "@doctrine"
+            securityContext: "@security.context"

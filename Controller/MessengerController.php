@@ -48,10 +48,12 @@ class MessengerController extends Controller
         $message = new Message();
 
         $selectedUsers = array();
-        if (!is_null($userId)) {
+        if (!is_null($userId))
+        {
             $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $userId));
         }
-        else if ($selectedUsers = $request->get('users')) {
+        elseif ($selectedUsers = $request->get('users'))
+        {
             $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $selectedUsers));
         }
         $form = $this->createForm(new NewMessageFormType($currentUser, $this->getDoctrine()), $message);

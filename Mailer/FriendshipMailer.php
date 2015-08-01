@@ -10,7 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Mailer;
 
-use FOS\UserBundle\Model\UserInterface;
+use Fulgurio\SocialNetworkBundle\Entity\User;
 
 /**
  * Friendship mailer
@@ -22,9 +22,9 @@ class FriendshipMailer extends AbstractMailer
     /**
      * Invit invitation message
      *
-     * @param UserInterface $user
+     * @param User $user
      */
-    public function sendInvitMessage(UserInterface $user)
+    public function sendInvitMessage(User $user)
     {
         $subject = $this->templating->render(
                 $this->parameters['invit.subject'],
@@ -38,22 +38,25 @@ class FriendshipMailer extends AbstractMailer
                 $this->parameters['invit.template.html'],
                 array('user' => $user)
         );
-        $this->sendEmailMessage(
-                $this->parameters['from'],
-                $user->getEmail(),
-                $subject,
-                $bodyText,
-                $bodyHTML,
-                $this->parameters['from_name']
-        );
+        if ($user->getSendMsgToEmail())
+        {
+            $this->sendEmailMessage(
+                    $this->parameters['from'],
+                    $user->getEmail(),
+                    $subject,
+                    $bodyText,
+                    $bodyHTML
+            );
+        }
+        $this->messenger->sendMessage($user, $subject, $bodyHTML, TRUE);
     }
 
     /**
      * Accept invitation message
      *
-     * @param UserInterface $user
+     * @param User $user
      */
-    public function sendAcceptMessage(UserInterface $user)
+    public function sendAcceptMessage(User $user)
     {
         $subject = $this->templating->render(
                 $this->parameters['accept.subject'],
@@ -67,23 +70,26 @@ class FriendshipMailer extends AbstractMailer
                 $this->parameters['accept.template.html'],
                 array('user' => $user)
         );
-        $this->sendEmailMessage(
-                $this->parameters['from'],
-                $user->getEmail(),
-                $subject,
-                $bodyText,
-                $bodyHTML,
-                $this->parameters['from_name']
-        );
+        if ($user->getSendMsgToEmail())
+        {
+            $this->sendEmailMessage(
+                    $this->parameters['from'],
+                    $user->getEmail(),
+                    $subject,
+                    $bodyText,
+                    $bodyHTML
+            );
+        }
+        $this->messenger->sendMessage($user, $subject, $bodyHTML, TRUE);
     }
 
 
     /**
      * Remove invitation message
      *
-     * @param UserInterface $user
+     * @param User $user
      */
-    public function sendRemoveInvitMessage(UserInterface $user)
+    public function sendRemoveInvitMessage(User $user)
     {
         $subject = $this->templating->render(
                 $this->parameters['remove.subject'],
@@ -97,22 +103,25 @@ class FriendshipMailer extends AbstractMailer
                 $this->parameters['remove.template.html'],
                 array('user' => $user)
         );
-        $this->sendEmailMessage(
-                $this->parameters['from'],
-                $user->getEmail(),
-                $subject,
-                $bodyText,
-                $bodyHTML,
-                $this->parameters['from_name']
-            );
+        if ($user->getSendMsgToEmail())
+        {
+            $this->sendEmailMessage(
+                    $this->parameters['from'],
+                    $user->getEmail(),
+                    $subject,
+                    $bodyText,
+                    $bodyHTML
+                );
+        }
+        $this->messenger->sendMessage($user, $subject, $bodyHTML, TRUE);
     }
 
     /**
      * Refusal invitation message
      *
-     * @param UserInterface $user
+     * @param User $user
      */
-    public function sendRefusalMessage(UserInterface $user)
+    public function sendRefusalMessage(User $user)
     {
         $subject = $this->templating->render(
                 $this->parameters['refuse.subject'],
@@ -126,13 +135,16 @@ class FriendshipMailer extends AbstractMailer
                 $this->parameters['refuse.template.html'],
                 array('user' => $user)
         );
-        $this->sendEmailMessage(
-                $this->parameters['from'],
-                $user->getEmail(),
-                $subject,
-                $bodyText,
-                $bodyHTML,
-                $this->parameters['from_name']
-        );
+        if ($user->getSendMsgToEmail())
+        {
+            $this->sendEmailMessage(
+                    $this->parameters['from'],
+                    $user->getEmail(),
+                    $subject,
+                    $bodyText,
+                    $bodyHTML
+            );
+        }
+        $this->messenger->sendMessage($user, $subject, $bodyHTML, TRUE);
     }
 }

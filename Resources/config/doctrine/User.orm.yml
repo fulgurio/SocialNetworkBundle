@@ -12,6 +12,8 @@ Fulgurio\SocialNetworkBundle\Entity\User:
       type: string
       length: 255
       nullable: true
+    send_msg_to_email:
+      type: boolean
     created_at:
       type: datetime
       gedmo:

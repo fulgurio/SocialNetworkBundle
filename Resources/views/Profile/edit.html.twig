@@ -11,7 +11,8 @@
        or form.getChild('user').getChild('email').get('errors')
        or form.getChild('current').get('errors')
        or form.getChild('user').getChild('plainPassword').get('errors')
-       or form.getChild('user').getChild('avatarFile').get('errors')%}
+       or form.getChild('user').getChild('avatarFile').get('errors')
+       or form.getChild('user').getChild('send_msg_to_email').get('errors') %}
 			<div class="alert alert-error">
 {%     for error in form.get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
 {%     for error in form.getChild('user').getChild('username').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
@@ -19,6 +20,7 @@
 {%     for error in form.getChild('current').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
 {%     for error in form.getChild('user').getChild('plainPassword').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
 {%     for error in form.getChild('user').getChild('avatarFile').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
+{%     for error in form.getChild('user').getChild('send_msg_to_email').get('errors') %}{{ error.messageTemplate|trans }}<br />{% endfor %}
 			</div>
 {%   endif %}
 			<div class="control-group">
@@ -58,6 +60,12 @@
 					<div class="fileupload-preview fileupload-exists thumbnail"><img src="{{ avatar(app.user) }}" /></div>
 					<span class="btn btn-file"><span class="fileupload-new">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.select{% endtrans %}</span><span class="fileupload-exists">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.change{% endtrans %}</span><input type="file" id="{{ form.getChild('user').getChild('avatarFile').get('id') }}" name="{{ form.getChild('user').getChild('avatarFile').get('full_name') }}" /></span>
 					<a class="btn fileupload-exists" data-dismiss="fileupload">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.remove{% endtrans %}</a>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="{{ form.getChild('user').getChild('send_msg_to_email').get('id') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.send_msg_to_email.label{% endtrans %}</label>
+				<div class="controls">
+					<input type="checkbox" id="{{ form.getChild('user').getChild('send_msg_to_email').get('id') }}" name="{{ form.getChild('user').getChild('send_msg_to_email').get('full_name') }}" value="{{ form.getChild('user').getChild('send_msg_to_email').get('value') }}" {% if form.getChild('user').getChild('send_msg_to_email').get('checked') %} checked="cheacked"{% endif %}/>
 				</div>
 			</div>
 			<div class="form-actions">
