@@ -30,13 +30,12 @@ class FriendshipMailer extends AbstractMailer
                 $this->parameters['invit.subject'],
                 array('user' => $user)
         );
+        $data = array('user' => $user, 'subject' => $subject);
         $bodyText = $this->templating->render(
-                $this->parameters['invit.template.text'],
-                array('user' => $user)
+                $this->parameters['invit.template.text'], $data
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['invit.template.html'],
-                array('user' => $user)
+                $this->parameters['invit.template.html'], $data
         );
         if ($user->getSendMsgToEmail())
         {
@@ -62,13 +61,12 @@ class FriendshipMailer extends AbstractMailer
                 $this->parameters['accept.subject'],
                 array('user' => $user)
         );
+        $data = array('user' => $user, 'subject' => $subject);
         $bodyText = $this->templating->render(
-                $this->parameters['accept.template.text'],
-                array('user' => $user)
+                $this->parameters['accept.template.text'], $data
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['accept.template.html'],
-                array('user' => $user)
+                $this->parameters['accept.template.html'], $data
         );
         if ($user->getSendMsgToEmail())
         {
@@ -95,13 +93,12 @@ class FriendshipMailer extends AbstractMailer
                 $this->parameters['remove.subject'],
                 array('user' => $user)
         );
+        $data = array('user' => $user, 'subject' => $subject);
         $bodyText = $this->templating->render(
-                $this->parameters['remove.template.text'],
-                array('user' => $user)
+                $this->parameters['remove.template.text'], $data
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['remove.template.html'],
-                array('user' => $user)
+                $this->parameters['remove.template.html'], $data
         );
         if ($user->getSendMsgToEmail())
         {
@@ -127,13 +124,12 @@ class FriendshipMailer extends AbstractMailer
                 $this->parameters['refuse.subject'],
                 array('user' => $user)
         );
+        $data = array('user' => $user, 'subject' => $subject);
         $bodyText = $this->templating->render(
-                $this->parameters['refuse.template.text'],
-                array('user' => $user)
+                $this->parameters['refuse.template.text'], $data
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['refuse.template.html'],
-                array('user' => $user)
+                $this->parameters['refuse.template.html'], $data
         );
         if ($user->getSendMsgToEmail())
         {
