@@ -38,7 +38,7 @@ class ProfileControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/profile/');
         $this->assertTrue($client->getResponse()->isRedirect('/login'));
 
-        $client = $this->getLoggedClient();
+        $client = $this->getUserLoggedClient($this->userData['username'], $this->userData['password']);
         $crawler = $client->request('GET', '/profile/');
         $this->assertEquals('fulgurio.socialnetwork.profile.username: ' . $this->userData['username'], $crawler->filter('section p')->first()->text());
         $this->assertEquals('fulgurio.socialnetwork.profile.email: ' . $this->userData['email'], $crawler->filter('section p:nth-child(3)')->text());
@@ -53,7 +53,7 @@ class ProfileControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/profile/');
         $this->assertTrue($client->getResponse()->isRedirect('/login'));
 
-        $client = $this->getLoggedClient();
+        $client = $this->getUserLoggedClient($this->userData['username'], $this->userData['password']);
         $crawler = $client->request('GET', '/profile/edit');
 
         $data = array(
@@ -74,12 +74,12 @@ class ProfileControllerTest extends WebTestCase
      */
     public function testEditWithExistingUserAction()
     {
-        $client = $this->getLoggedClient();
+        $client = $this->getUserLoggedClient($this->userData['username'], $this->userData['password']);
         $crawler = $client->request('GET', '/profile/edit');
 
         $data = array(
-            'fos_user_profile_form[user][username]' => 'user2',
-            'fos_user_profile_form[user][email]' => 'user2@example.com',
+            'fos_user_profile_form[user][username]' => 'userDisabled',
+            'fos_user_profile_form[user][email]' => 'userDisabled@example.com',
             'fos_user_profile_form[current]' => $this->userData['password']
         );
         $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();
@@ -94,7 +94,7 @@ class ProfileControllerTest extends WebTestCase
      */
     public function testEditWithoutPasswordChangeAction()
     {
-        $client = $this->getLoggedClient();
+        $client = $this->getUserLoggedClient($this->userData['username'], $this->userData['password']);
         $crawler = $client->request('GET', '/profile/edit');
 
         $data = array(
@@ -120,7 +120,7 @@ class ProfileControllerTest extends WebTestCase
      */
     public function testEditAction()
     {
-        $client = $this->getLoggedClient();
+        $client = $this->getUserLoggedClient($this->userData['username'], $this->userData['password']);
         $crawler = $client->request('GET', '/profile/edit');
 
         $userBeforeSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $this->userData['username']));
@@ -153,7 +153,7 @@ class ProfileControllerTest extends WebTestCase
      */
     public function testEditWithUploadAction()
     {
-        $client = $this->getLoggedClient();
+        $client = $this->getUserLoggedClient($this->userData['username'], $this->userData['password']);
         $crawler = $client->request('GET', '/profile/edit');
 
         $userBeforeSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $this->userData['username']));
@@ -177,7 +177,7 @@ class ProfileControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/profile/');
         $this->assertTrue($client->getResponse()->isRedirect('/login'));
 
-        $client = $this->getLoggedClient();
+        $client = $this->getUserLoggedClient($this->userData['username'], $this->userData['password']);
         $crawler = $client->followRedirect();
 
         // Authentified
@@ -194,6 +194,7 @@ class ProfileControllerTest extends WebTestCase
         $buttonYes = $crawler->selectButton('fulgurio.socialnetwork.yes');
         $form = $buttonYes->form();
         $client->submit($form);
+
         $this->assertTrue($client->getResponse()->isRedirect('/logout'));
         $client->followRedirect();
         $this->assertTrue($client->getResponse()->isRedirect('http://localhost/'));
@@ -203,29 +204,11 @@ class ProfileControllerTest extends WebTestCase
         $this->assertFalse($security->isGranted('ROLE_USER'));
 
         // Try to reconnect
-        $client = $this->getLoggedClient();
+        $client = $this->getUserLoggedClient($this->userData['username'], $this->userData['password']);
         $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
         $client->followRedirect();
 
         $security = $client->getContainer()->get('security.context');
         $this->assertFalse($security->isGranted('ROLE_USER'));
-    }
-
-    /**
-     * Get a logged client
-     *
-     * @return Symfony\Bundle\FrameworkBundle\Client
-     */
-    private function getLoggedClient()
-    {
-        $data = array(
-            '_username' => $this->userData['username'],
-            '_password' => $this->userData['password']
-        );
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/login');
-        $form = $crawler->filter('form[action$="login_check"].form-horizontal button[type="submit"]')->form();
-        $client->submit($form, $data);
-        return $client;
     }
 }

@@ -27,6 +27,26 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
+     * Get a logged client
+     *
+     * @param string $userName
+     * @param string $userPassword
+     * @return Symfony\Bundle\FrameworkBundle\Client
+     */
+    protected function getUserLoggedClient($userName, $userPassword)
+    {
+        $data = array(
+            '_username' => $userName,
+            '_password' => $userPassword
+        );
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->filter('form[action$="login_check"].form-horizontal button[type="submit"]')->form();
+        $client->submit($form, $data);
+        return $client;
+    }
+
+    /**
      * Get a admin logged client
      *
      * @return \Symfony\Bundle\FrameworkBundle\Client

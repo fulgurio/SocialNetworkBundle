@@ -93,8 +93,8 @@ class SecurityControllerTest extends WebTestCase
     public function testLoginActionWithDisabledUser()
     {
         $data = array(
-            '_username' => 'user2',
-            '_password' => 'user2'
+            '_username' => 'userDisabled',
+            '_password' => 'userDisabled'
         );
         $client = static::createClient();
 

@@ -10,6 +10,8 @@
 
 namespace Fulgurio\SocialNetworkBundle\Tests\DataFixtures\ORM;
 
+use Fulgurio\SocialNetworkBundle\Entity\User;
+use Fulgurio\SocialNetworkBundle\Entity\UserFriendship;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -43,42 +45,83 @@ class LoadUsersData implements FixtureInterface, ContainerAwareInterface
     {
         $userManager = $this->container->get('fos_user.user_manager');
 
-        $user1 = $userManager->createUser();//new User();
-        $user1->setUsername('user1');
-        $user1->setPlainPassword('user1');
-        $user1->setEmail('user1@example.com');
-        $user1->setEnabled(TRUE);
-        $userManager->updateUser($user1);
+        $userDisabled = $this->createUser('userDisabled', NULL, FALSE);
 
-        $user2 = $userManager->createUser();
-        $user2->setUsername('user2');
-        $user2->setPlainPassword('user2');
-        $user2->setEmail('user2@example.com');
-        $user2->setEnabled(FALSE);
+        $user1 = $this->createUser('user1');
+        $user2 = $this->createUser('user2');
+        $user2->setAvatar('myAvatar.png');
         $userManager->updateUser($user2);
 
-        $user3 = $userManager->createUser();
-        $user3->setUsername('user3');
-        $user3->setPlainPassword('user3');
-        $user3->setEmail('user3@example.com');
-        $user3->setEnabled(TRUE);
-        $user3->setAvatar('myAvatar.png');
-        $userManager->updateUser($user3);
+        $user3 = $this->createUser('user3');
+        $user4 = $this->createUser('user4');
+        $user5 = $this->createUser('user5');
 
-        $admin = $userManager->createUser();
-        $admin->setUsername('admin');
-        $admin->setPlainPassword('admin');
-        $admin->setEmail('admin@example.com');
-        $admin->setEnabled(TRUE);
-        $admin->addRole('ROLE_ADMIN');
-        $userManager->updateUser($admin);
+        $this->createFriendship($user1, $user3, UserFriendship::ACCEPTED_STATUS);
+        $this->createFriendship($user4, $user1, UserFriendship::ASKING_STATUS);
 
-        $superadmin = $userManager->createUser();
-        $superadmin->setUsername('superadmin');
-        $superadmin->setPlainPassword('superadmin');
-        $superadmin->setEmail('superadmin@example.com');
-        $superadmin->setEnabled(TRUE);
-        $superadmin->addRole('ROLE_SUPER_ADMIN');
-        $userManager->updateUser($superadmin);
+        $admin = $this->createUser('admin', array('ROLE_ADMIN'));
+
+        $superadmin = $this->createUser('superadmin', array('ROLE_SUPER_ADMIN'));
+    }
+
+    /**
+     * Create a user
+     *
+     * @param string $username
+     * @param array $roles
+     * @param boolean $enabled
+     * @return User
+     */
+    private function createUser($username, array $roles = NULL, $enabled = TRUE)
+    {
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $userManager->createUser();
+        $user->setUsername($username);
+        $user->setPlainPassword($username);
+        $user->setEmail($username . '@example.com');
+        $user->setEnabled($enabled);
+        if ($roles)
+        {
+            foreach ($roles as $role)
+            {
+                $user->addRole($role);
+            }
+        }
+        $userManager->updateUser($user);
+        return $user;
+    }
+
+    /**
+     * Create a friendship between two users
+     *
+     * @param User $userSource
+     * @param User  $userTarget
+     * @param string $status
+     */
+    private function createFriendship(User $userSource, User $userTarget, $status)
+    {
+        $em = $this->container->get('doctrine')->getEntityManager();
+        if ($status == UserFriendship::ACCEPTED_STATUS)
+        {
+            $status1 = UserFriendship::ACCEPTED_STATUS;
+            $status2 = UserFriendship::ACCEPTED_STATUS;
+        }
+        elseif ($status == UserFriendship::ASKING_STATUS)
+        {
+            $status1 = UserFriendship::PENDING_STATUS;
+            $status2 = UserFriendship::ASKING_STATUS;
+        }
+        $friendship1 = new UserFriendship();
+        $friendship1->setUserSrc($userSource);
+        $friendship1->setUserTgt($userTarget);
+        $friendship1->setStatus($status1);
+
+        $friendship2 = new UserFriendship();
+        $friendship2->setUserSrc($userTarget);
+        $friendship2->setUserTgt($userSource);
+        $friendship2->setStatus($status2);
+        $em->persist($friendship1);
+        $em->persist($friendship2);
+        $em->flush();
     }
 }
