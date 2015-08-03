@@ -81,25 +81,39 @@ class FriendshipControllerTest extends WebTestCase
      */
     public function testAddFriendAction()
     {
-        $client = $this->getUserLoggedClient('user1', 'user1');
-        $crawler = $client->request('GET', '/friends/searchToAdd');
+        $client2 = $this->getUserLoggedClient('user2', 'user2');
+        $user2 = $client2->getContainer()->get('security.context')->getToken()->getUser();
+        $messengerExtension = $client2->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user2));
+
+        $client1 = $this->getUserLoggedClient('user1', 'user1');
+        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        $crawler = $client1->request('GET', '/friends/searchToAdd');
         $formSearch = $crawler->filter('form[action$="friends/searchToAdd"] button[name="searchSubmit"]')->form();
-        $crawler = $client->submit($formSearch, array('search' => 'user2'));
+        $crawler = $client1->submit($formSearch, array('search' => 'user2'));
+
+        // Messenger message
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user1));
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user2));
 
         $this->assertCount(1, $crawler->filter('ol.addFriendsList li'));
         $formAdd = $crawler->filter('form[action$="friends/add"] button[name="addSubmit"]')->form();
         $formAdd['friends_id[]']->tick();
-        $crawler = $client->submit($formAdd);
+        $crawler = $client1->submit($formAdd);
 
         // we check invitation email
-        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        $mailCollector = $client1->getProfile()->getCollector('swiftmailer');
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
         $this->assertEquals('fulgurio.socialnetwork.invitation.email.subject', $message->getSubject());
 
-        $this->assertTrue($client->getResponse()->isRedirect('/friends/'));
-        $crawler = $client->followRedirect();
+        // Messenger message
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user1));
+        $this->assertEquals(1, $messengerExtension->nbOfUnreadMessage($user2));
+
+        $this->assertTrue($client1->getResponse()->isRedirect('/friends/'));
+        $crawler = $client1->followRedirect();
 
         $this->assertCount(1, $crawler->filter('body:contains("fulgurio.socialnetwork.invitation.success_msg")'));
     }
@@ -111,15 +125,23 @@ class FriendshipControllerTest extends WebTestCase
     {
         $client2 = $this->getUserLoggedClient('user2', 'user2');
 //        $client2->enableProfiler();
+        $user2 = $client2->getContainer()->get('security.context')->getToken()->getUser();
         $crawler2 = $client2->request('GET', '/friends/');
         $this->assertCount(0, $crawler2->filter('body:contains("fulgurio.socialnetwork.invitation.asking")'));
         $this->assertCount(0, $crawler2->filter('ol.askingFriends li'));
 
         $client1 = $this->getUserLoggedClient('user1', 'user1');
+        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        $messengerExtension = $client1->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
 //        $client1->enableProfiler();
         $crawler1 = $client1->request('GET', '/friends/');
         $this->assertCount(1, $crawler1->filter('ol.myFriends li'));
         $this->assertCount(0, $crawler1->filter('ol.myFriends li span:contains("fulgurio.socialnetwork.pending")'));
+
+        // Messenger message
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user1));
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user2));
+
         $crawler1 = $client1->request('GET', '/friends/searchToAdd');
         $formSearch = $crawler1->filter('form[action$="friends/searchToAdd"] button[name="searchSubmit"]')->form();
         $crawler1 = $client1->submit($formSearch, array('search' => 'user2'));
@@ -130,8 +152,12 @@ class FriendshipControllerTest extends WebTestCase
         $this->assertCount(2, $crawler1->filter('ol.myFriends li'));
         $this->assertCount(1, $crawler1->filter('ol.myFriends li span:contains("fulgurio.socialnetwork.pending")'));
 
-        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        // Messenger message
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user1));
+        $this->assertEquals(1, $messengerExtension->nbOfUnreadMessage($user2));
+
         $crawler2 = $client2->request('GET', '/friends/');
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user1));
         $this->assertCount(1, $crawler2->filter('body:contains("fulgurio.socialnetwork.invitation.asking")'));
         $this->assertCount(1, $crawler2->filter('ol.askingFriends li'));
         $acceptLink = $crawler2->filter('ol.askingFriends li a[href="/friends/' . $user1->getId() . '/accept"]')->link();
@@ -143,6 +169,10 @@ class FriendshipControllerTest extends WebTestCase
         $collectedMessages = $mailCollector2->getMessages();
         $message = $collectedMessages[0];
         $this->assertEquals('fulgurio.socialnetwork.accept.email.subject', $message->getSubject());
+
+        // Messenger message
+        $this->assertEquals(1, $messengerExtension->nbOfUnreadMessage($user1));
+        $this->assertEquals(1, $messengerExtension->nbOfUnreadMessage($user2));
 
         // One new friend on each user
         $crawler1 = $client1->request('GET', '/friends/');
@@ -161,14 +191,22 @@ class FriendshipControllerTest extends WebTestCase
     public function testRefuseFriendshipAction()
     {
         $client2 = $this->getUserLoggedClient('user2', 'user2');
+        $user2 = $client2->getContainer()->get('security.context')->getToken()->getUser();
         $crawler2 = $client2->request('GET', '/friends/');
         $this->assertCount(0, $crawler2->filter('body:contains("fulgurio.socialnetwork.invitation.asking")'));
         $this->assertCount(0, $crawler2->filter('ol.askingFriends li'));
 
         $client1 = $this->getUserLoggedClient('user1', 'user1');
+        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        $messengerExtension = $client1->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
         $crawler1 = $client1->request('GET', '/friends/');
         $this->assertCount(1, $crawler1->filter('ol.myFriends li'));
         $this->assertCount(0, $crawler1->filter('ol.myFriends li span:contains("fulgurio.socialnetwork.pending")'));
+
+        // Messenger message
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user1));
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user2));
+
         $crawler1 = $client1->request('GET', '/friends/searchToAdd');
         $formSearch = $crawler1->filter('form[action$="friends/searchToAdd"] button[name="searchSubmit"]')->form();
         $crawler1 = $client1->submit($formSearch, array('search' => 'user2'));
@@ -179,7 +217,10 @@ class FriendshipControllerTest extends WebTestCase
         $this->assertCount(2, $crawler1->filter('ol.myFriends li'));
         $this->assertCount(1, $crawler1->filter('ol.myFriends li span:contains("fulgurio.socialnetwork.pending")'));
 
-        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        // Messenger message
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user1));
+        $this->assertEquals(1, $messengerExtension->nbOfUnreadMessage($user2));
+
         $crawler2 = $client2->request('GET', '/friends/');
         $this->assertCount(1, $crawler2->filter('body:contains("fulgurio.socialnetwork.invitation.asking")'));
         $this->assertCount(1, $crawler2->filter('ol.askingFriends li'));
@@ -198,6 +239,10 @@ class FriendshipControllerTest extends WebTestCase
         $message = $collectedMessages[0];
         $this->assertEquals('fulgurio.socialnetwork.refuse.email.subject', $message->getSubject());
 
+        // Messenger message
+        $this->assertEquals(1, $messengerExtension->nbOfUnreadMessage($user1));
+        $this->assertEquals(1, $messengerExtension->nbOfUnreadMessage($user2));
+
         // No more friend than begin
         $crawler1 = $client1->request('GET', '/friends/');
         $this->assertCount(1, $crawler1->filter('ol.myFriends li'));
@@ -215,12 +260,19 @@ class FriendshipControllerTest extends WebTestCase
     public function testRemoveFriendshipAction()
     {
         $client3 = $this->getUserLoggedClient('user3', 'user3');
+        $user3 = $client3->getContainer()->get('security.context')->getToken()->getUser();
         $crawler3 = $client3->request('GET', '/friends/');
         $this->assertCount(1, $crawler3->filter('ol.myFriends li'));
-        $user3 = $client3->getContainer()->get('security.context')->getToken()->getUser();
 
         $client1 = $this->getUserLoggedClient('user1', 'user1');
+        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        $messengerExtension = $client3->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
         $crawler1 = $client1->request('GET', '/friends/');
+
+        // Messenger message
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user1));
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user3));
+
         $this->assertCount(1, $crawler1->filter('ol.myFriends li'));
         $removeLink = $crawler1->filter('ol.myFriends li a[href="/friends/' . $user3->getId() . '/refuse"]')->link();
         $crawler1 = $client1->click($removeLink);
@@ -236,6 +288,10 @@ class FriendshipControllerTest extends WebTestCase
         $collectedMessages = $mailCollector1->getMessages();
         $message = $collectedMessages[0];
         $this->assertEquals('fulgurio.socialnetwork.remove.email.subject', $message->getSubject());
+
+        // Messenger message
+        $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user1));
+        $this->assertEquals(1, $messengerExtension->nbOfUnreadMessage($user3));
 
         // No more friend than begin
         $crawler1 = $client1->request('GET', '/friends/');
