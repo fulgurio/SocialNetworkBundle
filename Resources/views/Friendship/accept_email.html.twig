@@ -1,7 +1,7 @@
 {% extends 'FulgurioSocialNetworkBundle:Mail:base.html.twig' %}
 
 {% block subject %}
-{{ 'registration.email.subject'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}, 'FOSUserBundle') }}
+{% trans with { '%current_username%' : app.user.username, '%username%' : user.username } from 'friendship' %}fulgurio.socialnetwork.accept.email.subject{% endtrans %}
 {% endblock %}
 
 {% block content %}

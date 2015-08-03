@@ -91,6 +91,13 @@ class FriendshipControllerTest extends WebTestCase
         $formAdd['friends_id[]']->tick();
         $crawler = $client->submit($formAdd);
 
+        // we check invitation email
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        $this->assertEquals(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+        $this->assertEquals('fulgurio.socialnetwork.invitation.email.subject', $message->getSubject());
+
         $this->assertTrue($client->getResponse()->isRedirect('/friends/'));
         $crawler = $client->followRedirect();
 
@@ -103,11 +110,13 @@ class FriendshipControllerTest extends WebTestCase
     public function testAcceptFriendshipAction()
     {
         $client2 = $this->getUserLoggedClient('user2', 'user2');
+//        $client2->enableProfiler();
         $crawler2 = $client2->request('GET', '/friends/');
         $this->assertCount(0, $crawler2->filter('body:contains("fulgurio.socialnetwork.invitation.asking")'));
         $this->assertCount(0, $crawler2->filter('ol.askingFriends li'));
 
         $client1 = $this->getUserLoggedClient('user1', 'user1');
+//        $client1->enableProfiler();
         $crawler1 = $client1->request('GET', '/friends/');
         $this->assertCount(1, $crawler1->filter('ol.myFriends li'));
         $this->assertCount(0, $crawler1->filter('ol.myFriends li span:contains("fulgurio.socialnetwork.pending")'));
@@ -127,6 +136,13 @@ class FriendshipControllerTest extends WebTestCase
         $this->assertCount(1, $crawler2->filter('ol.askingFriends li'));
         $acceptLink = $crawler2->filter('ol.askingFriends li a[href="/friends/' . $user1->getId() . '/accept"]')->link();
         $crawler2 = $client2->click($acceptLink);
+
+        // we check accept email
+        $mailCollector2 = $client2->getProfile()->getCollector('swiftmailer');
+        $this->assertEquals(1, $mailCollector2->getMessageCount());
+        $collectedMessages = $mailCollector2->getMessages();
+        $message = $collectedMessages[0];
+        $this->assertEquals('fulgurio.socialnetwork.accept.email.subject', $message->getSubject());
 
         // One new friend on each user
         $crawler1 = $client1->request('GET', '/friends/');
@@ -174,6 +190,13 @@ class FriendshipControllerTest extends WebTestCase
         $buttonYes = $crawler2->selectButton('fulgurio.socialnetwork.yes');
         $form = $buttonYes->form();
         $client2->submit($form);
+
+        // we check accept email
+        $mailCollector2 = $client2->getProfile()->getCollector('swiftmailer');
+        $this->assertEquals(1, $mailCollector2->getMessageCount());
+        $collectedMessages = $mailCollector2->getMessages();
+        $message = $collectedMessages[0];
+        $this->assertEquals('fulgurio.socialnetwork.refuse.email.subject', $message->getSubject());
 
         // No more friend than begin
         $crawler1 = $client1->request('GET', '/friends/');
