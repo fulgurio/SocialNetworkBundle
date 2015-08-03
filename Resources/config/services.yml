@@ -13,6 +13,13 @@ services:
             session:       "@session"
             csrf_provider: "@form.csrf_provider"
 
+    fulgurio_social_network.twig.messenger_extension:
+        class: Fulgurio\SocialNetworkBundle\Twig\Extension\MessengerExtension
+        arguments:
+            doctrine: "@doctrine"
+        tags:
+            -  { name: twig.extension }
+
     fulgurio_social_network.registration.form.type:
         class: Fulgurio\SocialNetworkBundle\Form\Type\RegistrationFormType
         arguments: [ %fos_user.model.user.class% ]
