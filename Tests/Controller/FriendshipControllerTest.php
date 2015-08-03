@@ -208,4 +208,40 @@ class FriendshipControllerTest extends WebTestCase
         $this->assertCount(0, $crawler2->filter('ol.askingFriends li'));
         $this->assertCount(0, $crawler2->filter('ol.myFriends li'));
     }
+
+    /**
+     * "Remove a friend" workflow test
+     */
+    public function testRemoveFriendshipAction()
+    {
+        $client3 = $this->getUserLoggedClient('user3', 'user3');
+        $crawler3 = $client3->request('GET', '/friends/');
+        $this->assertCount(1, $crawler3->filter('ol.myFriends li'));
+        $user3 = $client3->getContainer()->get('security.context')->getToken()->getUser();
+
+        $client1 = $this->getUserLoggedClient('user1', 'user1');
+        $crawler1 = $client1->request('GET', '/friends/');
+        $this->assertCount(1, $crawler1->filter('ol.myFriends li'));
+        $removeLink = $crawler1->filter('ol.myFriends li a[href="/friends/' . $user3->getId() . '/refuse"]')->link();
+        $crawler1 = $client1->click($removeLink);
+
+        // We confirm refusal action
+        $buttonYes = $crawler1->selectButton('fulgurio.socialnetwork.yes');
+        $form = $buttonYes->form();
+        $client1->submit($form);
+
+        // we check accept email
+        $mailCollector1 = $client1->getProfile()->getCollector('swiftmailer');
+        $this->assertEquals(1, $mailCollector1->getMessageCount());
+        $collectedMessages = $mailCollector1->getMessages();
+        $message = $collectedMessages[0];
+        $this->assertEquals('fulgurio.socialnetwork.remove.email.subject', $message->getSubject());
+
+        // No more friend than begin
+        $crawler1 = $client1->request('GET', '/friends/');
+        $this->assertCount(0, $crawler1->filter('ol.myFriends li'));
+
+        $crawler3 = $client3->request('GET', '/friends/');
+        $this->assertCount(0, $crawler3->filter('ol.myFriends li'));
+    }
 }
