@@ -44,14 +44,14 @@
 			<td>{% if user.lastLogin %}{{ user.lastLogin|date('fulgurio.socialnetwork.format_date_time'|trans({}, 'admin')) }}{% endif %}</td>
 			<td>
 {%     if user.isEnabled %}
-				<a href="{{ path('fulgurio_social_network_admin_users_ban', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.ban{% endtrans %}"><i class="icon-ban-circle"></i></a>
+				<a href="{{ path('fulgurio_social_network_admin_users_ban', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.ban{% endtrans %}" data-toggle="modal" data-target="#myModal"><i class="icon-ban-circle"></i></a>
 {%     else %}
-				<a href="{{ path('fulgurio_social_network_admin_users_unban', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.unban{% endtrans %}"><i class="icon-ok-circle"></i></a>
+				<a href="{{ path('fulgurio_social_network_admin_users_unban', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.unban{% endtrans %}" data-toggle="modal" data-target="#myModal"><i class="icon-ok-circle"></i></a>
 {%     endif %}
 				<a href="{{ path('fulgurio_social_network_admin_users_contact', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.contact{% endtrans %}"><i class="icon-envelope"></i></a>
 {%     if is_granted('ROLE_SUPER_ADMIN') %}
 				<a href="{{ path('fulgurio_social_network_admin_users_edit', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.edit{% endtrans %}"><i class=" icon-pencil"></i></a>
-				<a href="{{ path('fulgurio_social_network_admin_users_remove', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.remove{% endtrans %}"><i class="icon-trash"></i></a>
+				<a href="{{ path('fulgurio_social_network_admin_users_remove', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.remove{% endtrans %}" data-toggle="modal" data-target="#myModal"><i class="icon-trash"></i></a>
 {%     endif %}
 				<a href="{{ path('fulgurio_social_network_admin_users_view', {userId: user.id}) }}" title="{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.infos{% endtrans %}"><i class=" icon-info-sign"></i></a>
 			</td>

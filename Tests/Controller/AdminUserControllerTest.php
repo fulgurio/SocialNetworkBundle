@@ -146,10 +146,8 @@ class AdminUserControllerTest extends WebTestCase
         $link = $firstLine->filter('a[href$="/ban"]')->link();
         $crawler = $client->click($link);
 
-        $buttonNo = $crawler->selectButton('fulgurio.socialnetwork.no');
-        $form = $buttonNo->form();
-        $client->submit($form);
-        $crawler = $client->followRedirect();
+        $buttonNo = $crawler->filter('a:contains("fulgurio.socialnetwork.no")')->link();
+        $crawler = $client->click($buttonNo);
         $firstLine = $crawler->filter('table tbody tr')->first();
 
         $this->assertCount(1, $firstLine->filter('a[href$="/ban"]'));

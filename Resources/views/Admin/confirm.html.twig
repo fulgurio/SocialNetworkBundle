@@ -1,11 +1,4 @@
 {% extends 'FulgurioSocialNetworkBundle::adminBase.html.twig' %}
-
 {% block content %}
-<form action="" method="post">
-	<p>{{ confirmationMessage|trans }}</p>
-	<p>
-		<button type="submit" name="confirm" class="btn btn-primary btn-large" value="yes">{% trans from 'admin' %}fulgurio.socialnetwork.yes{% endtrans %}</button>
-		<button type="submit" name="confirm" class="btn btn-large" value="no">{% trans from 'admin' %}fulgurio.socialnetwork.no{% endtrans %}</button>
-	</p>
-</form>
+{% include 'FulgurioSocialNetworkBundle:Admin:confirmAjax.html.twig' %}
 {% endblock %}

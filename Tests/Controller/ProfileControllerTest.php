@@ -185,12 +185,8 @@ class ProfileControllerTest extends WebTestCase
         $this->assertTrue($security->isGranted('ROLE_USER'));
 
         $crawler = $client->request('GET', '/unsubscribe');
-        $buttonNo = $crawler->selectButton('fulgurio.socialnetwork.no');
-        $form = $buttonNo->form();
-        $client->submit($form);
-
-        $this->assertTrue($client->getResponse()->isRedirect('/profile/'));
-        $crawler = $client->followRedirect();
+        $buttonNo = $crawler->filter('a:contains("fulgurio.socialnetwork.no")')->link();
+        $crawler = $client->click($buttonNo);
         $security = $client->getContainer()->get('security.context');
         $this->assertTrue($security->isGranted('ROLE_USER'));
 
