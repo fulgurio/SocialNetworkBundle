@@ -55,7 +55,7 @@ class MessengerControllerTest extends WebTestCase
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
-        $this->assertEquals('fulgurio.socialnetwork.messenger.email.message.subject', $message->getSubject());
+        $this->assertEquals('fulgurio.socialnetwork.email.message.subject', $message->getSubject());
 
         // New message created by user 1
         $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user1));
@@ -101,7 +101,7 @@ class MessengerControllerTest extends WebTestCase
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
-        $this->assertEquals('fulgurio.socialnetwork.messenger.email.message.subject', $message->getSubject());
+        $this->assertEquals('fulgurio.socialnetwork.email.message.subject', $message->getSubject());
 
         // New message created by user 1
         $this->assertEquals(1, $messengerExtension->nbOfUnreadMessage($user1));
