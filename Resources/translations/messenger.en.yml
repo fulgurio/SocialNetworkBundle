@@ -43,3 +43,13 @@ fulgurio:
     remove_message:
       confirm_msg:            Do you really want to remove this message ?
       success_msg:            Your message has been removed successfully !
+    email:
+      message:
+        subject:              New message from %username%
+        text:                 %username% wrotes
+        html:                 %username% wrotes
+      answer:
+        subject:              New answer of "%message_subject%" message
+        text:                 |
+                              %username% has answered to "%message_subject%"
+        html:                 %username% has answered to "%message_subject%"
