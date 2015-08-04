@@ -57,7 +57,12 @@ class MessengerController extends Controller
             $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $selectedUsers));
         }
         $form = $this->createForm(new NewMessageFormType($currentUser, $this->getDoctrine()), $message);
-        $formHandler = new NewMessageFormHandler($form, $this->getRequest(), $this->getDoctrine());
+        $formHandler = new NewMessageFormHandler(
+                $form,
+                $this->getRequest(),
+                $this->getDoctrine(),
+                $this->container->get('fulgurio_social_network.messenger_mailer')
+        );
         if ($formHandler->process($currentUser))
         {
             $this->get('session')->setFlash(
@@ -85,47 +90,49 @@ class MessengerController extends Controller
     {
         $currentUser = $this->getUser();
         $message = $this->getMessage($msgId, TRUE);
+        $data = array('message' => $message);
         $messageRepository = $this->getDoctrine()
                 ->getRepository('FulgurioSocialNetworkBundle:Message');
-        $participants = $messageRepository->findParticipants($message);
-        $answer = new Message();
-        $answer->setSubject('###RESPONSE###');
-        $form = $this->createForm(new AnswerMessageFormType(), $answer);
-        $formHandler = new AnswerMessageFormHandler(
-                $form,
-                $this->getRequest(),
-                $this->getDoctrine()
-        );
-        if ($formHandler->process($message, $currentUser, $participants))
+        $data['participants'] = $messageRepository->findParticipants($message);
+        if ($message->getAllowAnswer())
         {
-            $this->get('session')->setFlash(
-                    'success',
-                    $this->get('translator')->trans(
-                            'fulgurio.socialnetwork.answer_message.success_msg',
-                            array(),
-                            'messenger'));
-            return $this->redirect(
-                    $this->generateUrl(
-                            'fulgurio_social_network_messenger_show_message',
-                            array('msgId' => $msgId))
+            $answer = new Message();
+            $answer->setSubject('###RESPONSE###');
+            $form = $this->createForm(new AnswerMessageFormType(), $answer);
+            $formHandler = new AnswerMessageFormHandler(
+                    $form,
+                    $this->getRequest(),
+                    $this->getDoctrine(),
+                    $this->container->get('fulgurio_social_network.messenger_mailer')
             );
+            if ($formHandler->process($message, $currentUser, $data['participants']))
+            {
+                $this->get('session')->setFlash(
+                        'success',
+                        $this->get('translator')->trans(
+                                'fulgurio.socialnetwork.answer_message.success_msg',
+                                array(),
+                                'messenger'));
+                return $this->redirect(
+                        $this->generateUrl(
+                                'fulgurio_social_network_messenger_show_message',
+                                array('msgId' => $msgId))
+                );
+            }
+            $data['form'] = $form->createView();
         }
         $tmpFriends = $this->getDoctrine()
                 ->getRepository('FulgurioSocialNetworkBundle:UserFriendship')
                 ->findAcceptedFriends($currentUser);
-        $friends = array();
+        $data['friends'] = array();
         foreach ($tmpFriends as &$tmpFriend)
         {
-            $friends[$tmpFriend['id']] = $tmpFriend;
+            $data['friends'][$tmpFriend['id']] = $tmpFriend;
         }
         return $this->render(
                 'FulgurioSocialNetworkBundle:Messenger:show.html.twig',
-                array(
-                    'message' =>      $message,
-                    'participants' => $participants,
-                    'friends' =>      $friends,
-                    'form' =>         $form->createView()
-        ));
+                $data
+        );
     }
 
     /**

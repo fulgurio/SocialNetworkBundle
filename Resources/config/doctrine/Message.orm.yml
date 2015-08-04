@@ -14,6 +14,14 @@ Fulgurio\SocialNetworkBundle\Entity\Message:
       notBlank: true
     content:
       type: text
+    allowAnswer:
+      type: boolean
+      column: allow_answer
+    typeOfMessage:
+      type: string
+      length: 90
+      nullable: true
+      column: type_of_message
     created_at:
       type: datetime
       gedmo:

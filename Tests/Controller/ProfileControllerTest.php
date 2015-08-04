@@ -98,8 +98,8 @@ class ProfileControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/profile/edit');
 
         $data = array(
-            'fos_user_profile_form[user][username]' => 'user10',
-            'fos_user_profile_form[user][email]' => 'user10@example.com',
+            'fos_user_profile_form[user][username]' => 'foobar',
+            'fos_user_profile_form[user][email]' => 'foobar@example.com',
             'fos_user_profile_form[user][plainPassword][first]' => '',
             'fos_user_profile_form[user][plainPassword][second]' => '',
             'fos_user_profile_form[current]' => $this->userData['password']
@@ -125,10 +125,10 @@ class ProfileControllerTest extends WebTestCase
 
         $userBeforeSave = $client->getContainer()->get('doctrine')->getEntityManager()->getRepository('FulgurioSocialNetworkBundle:User')->findOneBy(array('username' => $this->userData['username']));
         $data = array(
-            'fos_user_profile_form[user][username]' => 'user10',
-            'fos_user_profile_form[user][email]' => 'user10@example.com',
-            'fos_user_profile_form[user][plainPassword][first]' => 'user10',
-            'fos_user_profile_form[user][plainPassword][second]' => 'user10',
+            'fos_user_profile_form[user][username]' => 'foobar',
+            'fos_user_profile_form[user][email]' => 'foobar@example.com',
+            'fos_user_profile_form[user][plainPassword][first]' => 'foobar',
+            'fos_user_profile_form[user][plainPassword][second]' => 'foobar',
             'fos_user_profile_form[current]' => $this->userData['password']
         );
         $form = $crawler->filter('form[action$="profile/edit"] button[name="_submit"]')->form();

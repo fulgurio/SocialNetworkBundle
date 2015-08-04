@@ -135,7 +135,7 @@ class FriendshipControllerTest extends WebTestCase
         $messengerExtension = $client1->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
 //        $client1->enableProfiler();
         $crawler1 = $client1->request('GET', '/friends/');
-        $this->assertCount(1, $crawler1->filter('ol.myFriends li'));
+        $this->assertCount(6, $crawler1->filter('ol.myFriends li'));
         $this->assertCount(0, $crawler1->filter('ol.myFriends li span:contains("fulgurio.socialnetwork.pending")'));
 
         // Messenger message
@@ -149,7 +149,7 @@ class FriendshipControllerTest extends WebTestCase
         $formAdd['friends_id[]']->tick();
         $crawler1 = $client1->submit($formAdd);
         $crawler1 = $client1->followRedirect();
-        $this->assertCount(2, $crawler1->filter('ol.myFriends li'));
+        $this->assertCount(7, $crawler1->filter('ol.myFriends li'));
         $this->assertCount(1, $crawler1->filter('ol.myFriends li span:contains("fulgurio.socialnetwork.pending")'));
 
         // Messenger message
@@ -176,7 +176,7 @@ class FriendshipControllerTest extends WebTestCase
 
         // One new friend on each user
         $crawler1 = $client1->request('GET', '/friends/');
-        $this->assertCount(2, $crawler1->filter('ol.myFriends li'));
+        $this->assertCount(7, $crawler1->filter('ol.myFriends li'));
         $this->assertCount(0, $crawler1->filter('ol.myFriends li span:contains("fulgurio.socialnetwork.pending")'));
 
         $crawler2 = $client2->request('GET', '/friends/');
@@ -200,7 +200,7 @@ class FriendshipControllerTest extends WebTestCase
         $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
         $messengerExtension = $client1->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
         $crawler1 = $client1->request('GET', '/friends/');
-        $this->assertCount(1, $crawler1->filter('ol.myFriends li'));
+        $this->assertCount(6, $crawler1->filter('ol.myFriends li'));
         $this->assertCount(0, $crawler1->filter('ol.myFriends li span:contains("fulgurio.socialnetwork.pending")'));
 
         // Messenger message
@@ -214,7 +214,7 @@ class FriendshipControllerTest extends WebTestCase
         $formAdd['friends_id[]']->tick();
         $crawler1 = $client1->submit($formAdd);
         $crawler1 = $client1->followRedirect();
-        $this->assertCount(2, $crawler1->filter('ol.myFriends li'));
+        $this->assertCount(7, $crawler1->filter('ol.myFriends li'));
         $this->assertCount(1, $crawler1->filter('ol.myFriends li span:contains("fulgurio.socialnetwork.pending")'));
 
         // Messenger message
@@ -245,7 +245,7 @@ class FriendshipControllerTest extends WebTestCase
 
         // No more friend than begin
         $crawler1 = $client1->request('GET', '/friends/');
-        $this->assertCount(1, $crawler1->filter('ol.myFriends li'));
+        $this->assertCount(6, $crawler1->filter('ol.myFriends li'));
         $this->assertCount(0, $crawler1->filter('ol.myFriends li span:contains("fulgurio.socialnetwork.pending")'));
 
         $crawler2 = $client2->request('GET', '/friends/');
@@ -273,7 +273,7 @@ class FriendshipControllerTest extends WebTestCase
         $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user1));
         $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user3));
 
-        $this->assertCount(1, $crawler1->filter('ol.myFriends li'));
+        $this->assertCount(6, $crawler1->filter('ol.myFriends li'));
         $removeLink = $crawler1->filter('ol.myFriends li a[href="/friends/' . $user3->getId() . '/refuse"]')->link();
         $crawler1 = $client1->click($removeLink);
 
@@ -295,7 +295,7 @@ class FriendshipControllerTest extends WebTestCase
 
         // No more friend than begin
         $crawler1 = $client1->request('GET', '/friends/');
-        $this->assertCount(0, $crawler1->filter('ol.myFriends li'));
+        $this->assertCount(5, $crawler1->filter('ol.myFriends li'));
 
         $crawler3 = $client3->request('GET', '/friends/');
         $this->assertCount(0, $crawler3->filter('ol.myFriends li'));

@@ -30,3 +30,13 @@ fulgurio:
     remove_message:
       confirm_msg:            Etes-vous sûr de vouloir supprimer ce message ?
       success_msg:            Votre message a bien été effacé
+    email:
+      message:
+        subject:              Nouveau message de %username%
+        text:                 %username% a écrit
+        html:                 %username% a écrit
+      answer:
+        subject:              Nouvelle réponse au message "%message_subject%"
+        text:                 |
+                              %username% a répondu au message "%message_subject%"
+        html:                 %username% a répondu au message "%message_subject%"

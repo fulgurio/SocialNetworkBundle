@@ -20,9 +20,14 @@ use Fulgurio\SocialNetworkBundle\Tests\Controller\WebTestCase;
 class AdminUserControllerTest extends WebTestCase
 {
     /**
+     * Pagination
+     */
+    const PAGINATION_LIMIT = 10;
+
+    /**
      * Number of user with ROLE_USER into database
      */
-    const NB_MEMBER = 6;
+    const NB_MEMBER = 11;
 
     /**
      * Users list test
@@ -32,7 +37,7 @@ class AdminUserControllerTest extends WebTestCase
         $client = $this->getAdminLoggedClient();
 
         $crawler = $client->request('GET', '/admin/users/');
-        $this->assertCount(self::NB_MEMBER, $crawler->filter('table tbody tr'));
+        $this->assertCount(self::NB_MEMBER > self::PAGINATION_LIMIT ? self::PAGINATION_LIMIT : self::NB_MEMBER, $crawler->filter('table tbody tr'));
     }
 
     /**
@@ -85,7 +90,7 @@ class AdminUserControllerTest extends WebTestCase
         $form = $crawler->filter('form[action$="/add"] button[type="submit"]')->form();
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
-        $this->assertCount($nbUsers + 1, $crawler->filter('table tbody tr'));
+        $this->assertCount($nbUsers >= self::PAGINATION_LIMIT ? self::PAGINATION_LIMIT : ($nbUsers + 1), $crawler->filter('table tbody tr'));
     }
 
     /**
@@ -130,7 +135,7 @@ class AdminUserControllerTest extends WebTestCase
         $form = $buttonYes->form();
         $client->submit($form);
         $crawler = $client->followRedirect();
-        $this->assertCount($nbUsers - 1, $crawler->filter('table tbody tr'));
+        $this->assertCount($nbUsers >= self::PAGINATION_LIMIT ? self::PAGINATION_LIMIT : ($nbUsers - 1), $crawler->filter('table tbody tr'));
     }
 
     /**
@@ -182,7 +187,7 @@ class AdminUserControllerTest extends WebTestCase
     {
         $client = $this->getAdminLoggedClient();
 
-        $crawler = $client->request('GET', '/admin/users/');
+        $crawler = $client->request('GET', '/admin/users/?page=2');
         $secondLine = $crawler->filter('table tbody tr:contains(userDisabled)')->first();
 
         $link = $secondLine->filter('a[href$="/unban"]')->link();

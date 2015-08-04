@@ -26,5 +26,13 @@ Fulgurio\SocialNetworkBundle\Entity\UserFriendship:
   manyToOne:
     user_src:
       targetEntity: User
+      joinColumn:
+        name: user_src_id
+        referencedColumnName: id
+        onDelete: cascade
     user_tgt:
       targetEntity: User
+      joinColumn:
+        name: user_tgt_id
+        referencedColumnName: id
+        onDelete: cascade

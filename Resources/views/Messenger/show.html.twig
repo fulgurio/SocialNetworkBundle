@@ -14,7 +14,7 @@
 					{{ message.content|nl2br }}
 				</div>
 			</li>
-{%   for response in message.children %}
+{% for response in message.children %}
 			<li>
 				<img src="{{ avatar(response.sender) }}" alt="" />
 				<div>
@@ -22,8 +22,9 @@
 					{{ response.content|nl2br }}
 				</div>
 			</li>
-{%   endfor %}
+{% endfor %}
 		</ol>
+{% if form is defined %}
 		<form action="{{ path('fulgurio_social_network_messenger_reply_message', {msgId: message.id }) }}" method="post" class="form-horizontal">
 			<fieldset>
 {%   if form.get('errors')
@@ -46,17 +47,18 @@
 				</div>
 			</fieldset>
 		</form>
+{% endif %}
 	</div>
 	<div class="span3">
 		<h2>Participants</h2>
 		<ol class="participants">
-{%   for participant in participants %}
-{%     if app.user == participant %}
+{% for participant in participants %}
+{%   if app.user == participant %}
 			<li><img sr="{{ avatar(participant) }}" alt="" /></li>
-{%     else %}
-			<li><a href="{{ path('fulgurio_social_network_friendship_profil', { userId: participant.id }) }}" title="{{ participant.username }}"{% if not friends[participant.id] %} class="notAFriend"{% endif %}><img src="{{ avatar(participant) }}" alt="" /></a></li>
-{%     endif %}
-{%   endfor %}
+{%   else %}
+			<li><a href="{{ path('fulgurio_social_network_friendship_profil', { userId: participant.id }) }}" title="{{ participant.username }}"{% if friends[participant.id] is not defined %} class="notAFriend"{% endif %}><img src="{{ avatar(participant) }}" alt="" /></a></li>
+{%   endif %}
+{% endfor %}
 		</ol>
 	</div>
 </div>

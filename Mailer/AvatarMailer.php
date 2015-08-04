@@ -36,6 +36,9 @@ class AvatarMailer extends AbstractMailer
         $bodyHTML = $this->templating->render(
                 $this->parameters['admin.template.html'], $data
         );
+        $bodyMsn = $this->templating->render(
+                $this->parameters['admin.template.msn'], $data
+        );
         $this->sendEmailMessage(
                 $this->parameters['admin.from'],
                 $user->getEmail(),
@@ -44,6 +47,6 @@ class AvatarMailer extends AbstractMailer
                 $bodyText,
                 $this->parameters['admin.from_name']
         );
-        $this->messenger->sendMessage($user, $subject, $bodyHTML, TRUE);
+        $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'admin-remove-avatar');
     }
 }

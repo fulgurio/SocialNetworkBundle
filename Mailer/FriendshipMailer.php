@@ -37,6 +37,9 @@ class FriendshipMailer extends AbstractMailer
         $bodyHTML = $this->templating->render(
                 $this->parameters['invit.template.html'], $data
         );
+        $bodyMsn = $this->templating->render(
+                $this->parameters['invit.template.html'], $data
+        );
         if ($user->getSendMsgToEmail())
         {
             $this->sendEmailMessage(
@@ -47,7 +50,7 @@ class FriendshipMailer extends AbstractMailer
                     $bodyHTML
             );
         }
-        $this->messenger->sendMessage($user, $subject, $bodyHTML, TRUE);
+        $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-invit');
     }
 
     /**
@@ -68,6 +71,9 @@ class FriendshipMailer extends AbstractMailer
         $bodyHTML = $this->templating->render(
                 $this->parameters['accept.template.html'], $data
         );
+        $bodyMsn = $this->templating->render(
+                $this->parameters['accept.template.msn'], $data
+        );
         if ($user->getSendMsgToEmail())
         {
             $this->sendEmailMessage(
@@ -78,7 +84,7 @@ class FriendshipMailer extends AbstractMailer
                     $bodyHTML
             );
         }
-        $this->messenger->sendMessage($user, $subject, $bodyHTML, TRUE);
+        $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-accept');
     }
 
 
@@ -100,6 +106,9 @@ class FriendshipMailer extends AbstractMailer
         $bodyHTML = $this->templating->render(
                 $this->parameters['remove.template.html'], $data
         );
+        $bodyMsn = $this->templating->render(
+                $this->parameters['remove.template.msn'], $data
+        );
         if ($user->getSendMsgToEmail())
         {
             $this->sendEmailMessage(
@@ -110,7 +119,7 @@ class FriendshipMailer extends AbstractMailer
                     $bodyHTML
                 );
         }
-        $this->messenger->sendMessage($user, $subject, $bodyHTML, TRUE);
+        $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-remove');
     }
 
     /**
@@ -131,6 +140,9 @@ class FriendshipMailer extends AbstractMailer
         $bodyHTML = $this->templating->render(
                 $this->parameters['refuse.template.html'], $data
         );
+        $bodyMsn = $this->templating->render(
+                $this->parameters['refuse.template.msn'], $data
+        );
         if ($user->getSendMsgToEmail())
         {
             $this->sendEmailMessage(
@@ -141,6 +153,6 @@ class FriendshipMailer extends AbstractMailer
                     $bodyHTML
             );
         }
-        $this->messenger->sendMessage($user, $subject, $bodyHTML, TRUE);
+        $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-refusal');
     }
 }

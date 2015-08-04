@@ -49,7 +49,7 @@ class LoadUsersData implements FixtureInterface, ContainerAwareInterface
 
         $user1 = $this->createUser('user1');
         $user2 = $this->createUser('user2');
-        $user2->setAvatar('myAvatar.png');
+        $user2->setAvatar('icon.png');
         $userManager->updateUser($user2);
 
         $user3 = $this->createUser('user3');
@@ -58,6 +58,18 @@ class LoadUsersData implements FixtureInterface, ContainerAwareInterface
 
         $this->createFriendship($user1, $user3, UserFriendship::ACCEPTED_STATUS);
         $this->createFriendship($user4, $user1, UserFriendship::ASKING_STATUS);
+
+        $user10 = $this->createUser('user10');
+        $this->createFriendship($user1, $user10, UserFriendship::ACCEPTED_STATUS);
+        $user11 = $this->createUser('user11');
+        $this->createFriendship($user1, $user11, UserFriendship::ACCEPTED_STATUS);
+        $user12 = $this->createUser('user12');
+        $this->createFriendship($user1, $user12, UserFriendship::ACCEPTED_STATUS);
+        $user13 = $this->createUser('user13');
+        $this->createFriendship($user1, $user13, UserFriendship::ACCEPTED_STATUS);
+        $user14 = $this->createUser('user14');
+        $this->createFriendship($user1, $user14, UserFriendship::ACCEPTED_STATUS);
+
 
         $admin = $this->createUser('admin', array('ROLE_ADMIN'));
 

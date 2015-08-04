@@ -17,10 +17,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Message
 {
+    /**
+     * @var boolean $allowAnswer
+     */
+    private $allowAnswer = TRUE;
+
+
     /***************************************************************************
      *                             GENERATED CODE                              *
      **************************************************************************/
-
     /**
      * @var integer $id
      */
@@ -35,6 +40,11 @@ class Message
      * @var text $content
      */
     private $content;
+
+    /**
+     * @var string $typeOfMessage
+     */
+    private $typeOfMessage;
 
     /**
      * @var datetime $created_at
@@ -120,6 +130,46 @@ class Message
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * Set allowAnswer
+     *
+     * @param boolean $allowAnswer
+     */
+    public function setAllowAnswer($allowAnswer)
+    {
+        $this->allowAnswer = $allowAnswer;
+    }
+
+    /**
+     * Get allowAnswer
+     *
+     * @return boolean
+     */
+    public function getAllowAnswer()
+    {
+        return $this->allowAnswer;
+    }
+
+    /**
+     * Set typeOfMessage
+     *
+     * @param string $typeOfMessage
+     */
+    public function setTypeOfMessage($typeOfMessage)
+    {
+        $this->typeOfMessage = $typeOfMessage;
+    }
+
+    /**
+     * Get typeOfMessage
+     *
+     * @return string
+     */
+    public function getTypeOfMessage()
+    {
+        return $this->typeOfMessage;
     }
 
     /**

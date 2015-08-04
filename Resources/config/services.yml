@@ -5,6 +5,13 @@ services:
         tags:
             -  { name: twig.extension }
 
+    fulgurio_social_network.twig.friendship_extension:
+        class: Fulgurio\SocialNetworkBundle\Twig\Extension\FriendshipExtension
+        arguments:
+            doctrine: "@doctrine"
+        tags:
+            -  { name: twig.extension }
+
     fulgurio_social_network.twig.login_form_extension:
         class: Fulgurio\SocialNetworkBundle\Twig\Extension\LoginFormExtension
         tags:
@@ -57,6 +64,7 @@ services:
                 admin.from_name          : %fulgurio_social_network.contact.admin.email.from_name%
                 admin.template.text      : %fulgurio_social_network.contact.admin.email.text%
                 admin.template.html      : %fulgurio_social_network.contact.admin.email.html%
+                admin.template.msn       : %fulgurio_social_network.contact.admin.email.msn%
         calls:
             - [ setMessenger, [ "@fulgurio_social_network.messenger.messagebox" ] ]
 
@@ -73,6 +81,7 @@ services:
                 admin.subject       : %fulgurio_social_network.avatar.admin.remove.email.subject%
                 admin.template.text : %fulgurio_social_network.avatar.admin.remove.email.text%
                 admin.template.html : %fulgurio_social_network.avatar.admin.remove.email.html%
+                admin.template.msn  : %fulgurio_social_network.avatar.admin.remove.email.msn%
         calls:
             - [ setMessenger, [ "@fulgurio_social_network.messenger.messagebox" ] ]
 
@@ -89,15 +98,19 @@ services:
                 invit.subject        : %fulgurio_social_network.friendship.email.invit.subject%
                 invit.template.text  : %fulgurio_social_network.friendship.email.invit.text%
                 invit.template.html  : %fulgurio_social_network.friendship.email.invit.html%
+                invit.template.msn   : %fulgurio_social_network.friendship.email.invit.msn%
                 accept.subject       : %fulgurio_social_network.friendship.email.accept.subject%
                 accept.template.text : %fulgurio_social_network.friendship.email.accept.text%
                 accept.template.html : %fulgurio_social_network.friendship.email.accept.html%
+                accept.template.msn  : %fulgurio_social_network.friendship.email.accept.msn%
                 refuse.subject       : %fulgurio_social_network.friendship.email.refuse.subject%
                 refuse.template.text : %fulgurio_social_network.friendship.email.refuse.text%
                 refuse.template.html : %fulgurio_social_network.friendship.email.refuse.html%
+                refuse.template.msn  : %fulgurio_social_network.friendship.email.refuse.msn%
                 remove.subject       : %fulgurio_social_network.friendship.email.remove.subject%
                 remove.template.text : %fulgurio_social_network.friendship.email.remove.text%
                 remove.template.html : %fulgurio_social_network.friendship.email.remove.html%
+                remove.template.msn  : %fulgurio_social_network.friendship.email.remove.msn%
         calls:
             - [ setMessenger, [ "@fulgurio_social_network.messenger.messagebox" ] ]
 
@@ -121,6 +134,27 @@ services:
                 resetting.subject          : %fulgurio_social_network.resetting.email.subject%
                 resetting.template.text     : %fulgurio_social_network.resetting.email.text%
                 resetting.template.html    : %fulgurio_social_network.resetting.email.html%
+
+    # Messenger mailer
+    fulgurio_social_network.messenger_mailer:
+        class: Fulgurio\SocialNetworkBundle\Mailer\MessengerMailer
+        arguments:
+            0: "@mailer"
+            1: "@router"
+            2: "@templating"
+            3:
+                message.from          : %fulgurio_social_network.messenger.message.email.from%
+                message.from_name     : %fulgurio_social_network.messenger.message.email.from_name%
+                message.subject       : %fulgurio_social_network.messenger.message.email.subject%
+                message.template.text : %fulgurio_social_network.messenger.message.email.text%
+                message.template.html : %fulgurio_social_network.messenger.message.email.html%
+                answer.from           : %fulgurio_social_network.messenger.answer.email.from%
+                answer.from_name      : %fulgurio_social_network.messenger.answer.email.from_name%
+                answer.subject        : %fulgurio_social_network.messenger.answer.email.subject%
+                answer.template.text  : %fulgurio_social_network.messenger.answer.email.text%
+                answer.template.html  : %fulgurio_social_network.messenger.answer.email.html%
+        calls:
+            - [ setMessenger, [ "@fulgurio_social_network.messenger.messagebox" ] ]
 
     # Messenger service
     fulgurio_social_network.messenger.messagebox:

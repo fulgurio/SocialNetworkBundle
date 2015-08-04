@@ -1,0 +1,6 @@
+{% autoescape false %}
+{% trans with { '%username%' : user.username } %}fulgurio.socialnetwork.messenger.email.message.text{% endtrans %}
+{{ message.subject }}
+
+{{ message.content }}
+{% endautoescape %}
