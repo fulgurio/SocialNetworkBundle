@@ -30,8 +30,10 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('fulgurio_social_network');
         $this->addEmailSection($rootNode);
+        $this->addRegistrationSection($rootNode);
         $this->addResettingSection($rootNode);
         $this->addConfirmationSection($rootNode);
+        $this->addMessengerSection($rootNode);
         $this->addAvatarSection($rootNode);
         $this->addContactSection($rootNode);
         $this->addFriendsSection($rootNode);
@@ -61,7 +63,37 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Default email configuration
+     * Registration email configuration
+     *
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addRegistrationSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('registration')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('email')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Registration:register_success_email.subject.twig')->end()
+                            ->end()
+                            ->children()
+                                ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Registration:register_success_email.txt.twig')->end()
+                            ->end()
+                            ->children()
+                                ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Registration:register_success_email.html.twig')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    /**
+     * Resetting email configuration
      *
      * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
      */
@@ -75,7 +107,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('email')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Resetting:reset_email_subject.txt.twig')->end()
+                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Resetting:reset_email.subject.twig')->end()
                             ->end()
                             ->children()
                                 ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Resetting:reset_email.txt.twig')->end()
@@ -91,7 +123,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Default email configuration
+     * Confirmation email configuration
      *
      * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
      */
@@ -105,13 +137,77 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('email')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Registration:confirmation_email_subject.txt.twig')->end()
+                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Registration:confirmation_email.subject.twig')->end()
                             ->end()
                             ->children()
                                 ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Registration:confirmation_email.txt.twig')->end()
                             ->end()
                             ->children()
                                 ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Registration:confirmation_email.html.twig')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    /**
+     * Messenger configuration
+     *
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addMessengerSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('messenger')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('message')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->arrayNode('email')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('address')->defaultNull()->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('sender_name')->defaultNull()->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Messenger:message_email.subject.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Messenger:message_email.txt.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Messenger:message_email.html.twig')->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('answer')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->arrayNode('email')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('address')->defaultNull()->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('sender_name')->defaultNull()->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:Messenger:answer_email.subject.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:Messenger:answer_email.txt.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Messenger:answer_email.html.twig')->end()
+                                    ->end()
+                                ->end()
                             ->end()
                         ->end()
                     ->end()
@@ -156,13 +252,16 @@ class Configuration implements ConfigurationInterface
                                                 ->scalarNode('sender_name')->defaultNull()->end()
                                             ->end()
                                             ->children()
-                                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar-email.subject.twig')->end()
+                                                ->scalarNode('subject')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar_email.subject.twig')->end()
                                             ->end()
                                             ->children()
-                                                ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar-email.txt.twig')->end()
+                                                ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar_email.txt.twig')->end()
                                             ->end()
                                             ->children()
-                                                ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar-email.html.twig')->end()
+                                                ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar_email.html.twig')->end()
+                                            ->end()
+                                            ->children()
+                                                ->scalarNode('msn')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:remove-avatar_msn.html.twig')->end()
                                             ->end()
                                         ->end()
                                     ->end()
@@ -199,10 +298,13 @@ class Configuration implements ConfigurationInterface
                                         ->scalarNode('sender_name')->defaultNull()->end()
                                     ->end()
                                     ->children()
-                                        ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:contact-email.txt.twig')->end()
+                                        ->scalarNode('text')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:contact_email.txt.twig')->end()
                                     ->end()
                                     ->children()
-                                        ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:contact-email.html.twig')->end()
+                                        ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:contact_email.html.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('msn')->defaultValue('FulgurioSocialNetworkBundle:AdminUsers:contact_msn.html.twig')->end()
                                     ->end()
                                 ->end()
                             ->end()
@@ -246,6 +348,9 @@ class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Friendship:invit_email.html.twig')->end()
                                     ->end()
+                                    ->children()
+                                        ->scalarNode('msn')->defaultValue('FulgurioSocialNetworkBundle:Friendship:invit_msn.html.twig')->end()
+                                    ->end()
                                 ->end()
                             ->end()
                             ->children()
@@ -259,6 +364,9 @@ class Configuration implements ConfigurationInterface
                                     ->end()
                                     ->children()
                                         ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Friendship:accept_email.html.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('msn')->defaultValue('FulgurioSocialNetworkBundle:Friendship:accept_msn.html.twig')->end()
                                     ->end()
                                 ->end()
                             ->end()
@@ -274,6 +382,9 @@ class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Friendship:refuse_email.html.twig')->end()
                                     ->end()
+                                    ->children()
+                                        ->scalarNode('msn')->defaultValue('FulgurioSocialNetworkBundle:Friendship:refuse_msn.html.twig')->end()
+                                    ->end()
                                 ->end()
                             ->end()
                             ->children()
@@ -287,6 +398,9 @@ class Configuration implements ConfigurationInterface
                                     ->end()
                                     ->children()
                                         ->scalarNode('html')->defaultValue('FulgurioSocialNetworkBundle:Friendship:remove_email.html.twig')->end()
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('msn')->defaultValue('FulgurioSocialNetworkBundle:Friendship:remove_msn.html.twig')->end()
                                     ->end()
                                 ->end()
                             ->end()

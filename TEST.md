@@ -3,19 +3,39 @@ Unit test for FulgurioSocialNetworkBundle
 
 You need Liip/LiipFunctionalTestBundle installed.
 
-Add the following lines in `composer.json` :
+Add the following lines in your `deps` file:
 
 ``` ini
-    "require-dev": {
-        "doctrine/doctrine-fixtures-bundle": "2.2.*",
-        "liip/functional-test-bundle": "^1.2"
-    },
+[doctrine-fixtures]
+    git=http://github.com/doctrine/data-fixtures.git
+    version=v1.0.0
+
+[DoctrineFixturesBundle]
+    git=http://github.com/doctrine/DoctrineFixturesBundle.git
+    target=/bundles/Symfony/Bundle/DoctrineFixturesBundle
+    version=origin/2.0
+
+[liip/functional-test]
+    git=http://github.com/liip/LiipFunctionalTestBundle.git
+    target=/bundles/Liip/FunctionalTestBundle
 ```
 
-Call composer to get the bundle
+Now, run the vendors script to download the bundle:
 
 ``` bash
-$ ./composer update
+$ php bin/vendors install
+```
+
+Add the namespace to your autoloader:
+
+``` php
+<?php
+// app/autoload.php
+
+$loader->registerNamespaces(array(
+    // ...
+    'Liip'             => __DIR__.'/../vendor/bundles',
+));
 ```
 
 Finally, enable the bundles in the kernel:
@@ -29,17 +49,7 @@ public function registerBundles()
     // ...
         if (in_array($this->getEnvironment(), array('dev', 'test')))
         {
-            $bundles[] = new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
             $bundles[] = new Liip\FunctionalTestBundle\LiipFunctionalTestBundle();
         }
 }
-```
-
-To test, you need to turn off translator service
-
-``` yaml
-# app/config/config_test.yml
-framework:
-    translator:
-        enabled: false
 ```

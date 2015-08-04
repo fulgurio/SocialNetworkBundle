@@ -38,6 +38,6 @@ class RegistrationFormType extends BaseType
      */
     public function getName()
     {
-        return 'fulgurio_social_network_registration';
+        return 'fulgurio_social_network_registration_type';
     }
 }

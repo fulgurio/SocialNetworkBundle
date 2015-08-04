@@ -3,9 +3,9 @@
 {% block title %}{{ parent() }} - {% trans %}fulgurio.socialnetwork.lost_password.title{% endtrans %}{% endblock %}
 
 {% block content %}
-<form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="post" class="form-horizontal">
+<form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="post" class="form-horizontal resetting_password">
 	<fieldset>
-		<legend>{% trans %}Lost password{% endtrans %}</legend>
+		<legend>{% trans %}fulgurio.socialnetwork.lost_password.legend{% endtrans %}</legend>
 {%   if form.new.vars.errors or form.new.first.vars.errors %}
 			<div class="alert alert-error">
 {%     for error in form.new.vars.errors %}{{ error.messageTemplate|trans }}<br />{% endfor %}

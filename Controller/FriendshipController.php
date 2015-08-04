@@ -118,15 +118,15 @@ class FriendshipController extends Controller
                     $friendship2->setUserSrc($mayBeFriend);
                     $friendship2->setUserTgt($currentUser);
                 }
-                $friendship->setStatus('pending');
-                $friendship2->setStatus('asking');
+                $friendship->setStatus(UserFriendship::PENDING_STATUS);
+                $friendship2->setStatus(UserFriendship::ASKING_STATUS);
                 $em->persist($friendship);
                 $em->persist($friendship2);
                 $this->get('fulgurio_social_network.friendship_mailer')->sendInvitMessage($mayBeFriend);
             }
             $em->persist($currentUser);
             $em->flush();
-            $this->get('session')->getFlashBag('notice',
+            $this->get('session')->getFlashBag()->add('notice',
                     $this->get('translator')->trans(
                             'fulgurio.socialnetwork.invitation.success_msg',
                             array(),
@@ -154,12 +154,12 @@ class FriendshipController extends Controller
             $friendship = new UserFriendship();
             $friendship->setUserSrc($currentUser);
             $friendship->setUserTgt($user);
-            $friendship->setStatus('pending');
+            $friendship->setStatus(UserFriendship::PENDING_STATUS);
             $em->persist($friendship);
             $friendship2 = new UserFriendship();
             $friendship2->setUserSrc($user);
             $friendship2->setUserTgt($currentUser);
-            $friendship2->setStatus('asking');
+            $friendship2->setStatus(UserFriendship::ASKING_STATUS);
             $em->persist($friendship2);
             $em->flush();
         }
@@ -202,7 +202,7 @@ class FriendshipController extends Controller
         $em->flush();
 
         $this->get('fulgurio_social_network.friendship_mailer')->sendAcceptMessage($user);
-            $this->get('session')->getFlashBag('notice',
+            $this->get('session')->getFlashBag()->add('notice',
                     $this->get('translator')->trans(
                             'fulgurio.socialnetwork.add.accepted_msg',
                             array('%username%' => $user->getUsername()),
@@ -236,17 +236,17 @@ class FriendshipController extends Controller
         $em = $this->getDoctrine()->getManager();
         foreach ($usersFriendship as $userFriendship)
         {
-            if ($userFriendship->getStatus() == 'accepted')
+            if ($userFriendship->getStatus() == UserFriendship::ACCEPTED_STATUS)
             {
                 $hasAcceptedBefore = TRUE;
             }
-            $userFriendship->setStatus('refused');
+            $userFriendship->setStatus(UserFriendship::REFUSED_STATUS);
             if ($userFriendship->getUserTgt() == $currentUser)
             {
                 $nbRefusals = $userFriendship->getNbRefusals();
                 if ($nbRefusals >= $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals'))
                 {
-                    $userFriendship->setStatus('removed');
+                    $userFriendship->setStatus(UserFriendship::REMOVED_STATUS);
                 }
                 else
                 {
@@ -268,7 +268,7 @@ class FriendshipController extends Controller
                 $this->get('fulgurio_social_network.friendship_mailer')->sendRefusalMessage($user);
             }
             $em->flush();
-            $this->get('session')->getFlashBag('notice',
+            $this->get('session')->getFlashBag()->add('notice',
                     $this->get('translator')->trans(
                             $message,
                             array('%username%' => $user->getUsername()),
@@ -280,7 +280,7 @@ class FriendshipController extends Controller
         {
             return $this->redirect($this->generateUrl('fulgurio_social_network_friendship_list'));
         }
-        $templateName = $request->isXmlHttpRequest() ? 'FulgurioSocialNetworkBundle::confirmAjax.html.twig' : 'FulgurioSocialNetworkBundle::confirm.html.twig';
+        $templateName = 'FulgurioSocialNetworkBundle::confirm' . ($request->isXmlHttpRequest() ? 'Ajax' : '') . '.html.twig';
         return $this->render($templateName, array(
             'action' => $this->generateUrl('fulgurio_social_network_friendship_refuse', array('userId' => $userId)),
             'confirmationMessage' => $this->get('translator')->trans(
@@ -318,5 +318,4 @@ class FriendshipController extends Controller
         }
         throw new AccessDeniedException();
     }
-
 }

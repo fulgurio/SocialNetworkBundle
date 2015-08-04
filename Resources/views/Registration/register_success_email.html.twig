@@ -1,0 +1,12 @@
+{% extends 'FulgurioSocialNetworkBundle:Mail:base.html.twig' %}
+
+{% block subject %}
+{% trans %}fulgurio.socialnetwork.register.email.subject{% endtrans %}
+{% endblock %}
+
+{% block content %}
+{{ user.username }},<br />
+<br />
+<p>{% trans %}fulgurio.socialnetwork.register.email.content.html.welcome{% endtrans %}</p>
+<p>{% trans with {'%tag%' : '<a href="' ~ url('fos_user_profile_edit', { 'userId' : user.id} ) ~ '">', '%endtag%' : '</a>'} %}fulgurio.socialnetwork.register.email.content.html.footer{% endtrans %}</p>
+{% endblock%}

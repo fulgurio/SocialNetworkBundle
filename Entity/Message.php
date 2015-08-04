@@ -11,12 +11,131 @@
 namespace Fulgurio\SocialNetworkBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Fulgurio\SocialNetworkBundle\Entity\Message
  */
 class Message
 {
+    const DIRNAME = 'messenger';
+
+    /**
+     * @var boolean $allowAnswer
+     */
+    private $allowAnswer = TRUE;
+
+    /**
+     * @var UploadedFile $file
+     */
+    public $file;
+
+
+    /**
+     * Set file
+     *
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file)
+    {
+        $this->file = $file;
+        $this->filename .= '#CHANGE#';
+    }
+
+    /**
+     * Get file
+     *
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * Return url of file
+     *
+     * @return string
+     */
+    public function displayFile()
+    {
+        return '/' . $this->getUploadDir() . $this->filename;
+    }
+
+    /**
+     * Upload directory
+     *
+     * @return string
+     */
+    public function getUploadDir()
+    {
+        $id = $this->getParent() ? $this->getParent()->getId() : $this->getId();
+        return 'uploads/' . self::DIRNAME . '/' . $id . '/';
+    }
+
+    /**
+     * Get absolut upload directory
+     *
+     * @return string
+     */
+    public function getUploadRootDir()
+    {
+        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
+    }
+
+    /**
+     * Generate new filename if file is uploaded
+     */
+    public function preUpload()
+    {
+        if (null !== $this->file)
+        {
+            $this->removeFile();
+            $this->filename = $this->file->getClientOriginalName();
+        }
+    }
+
+    /**
+     * Move the uploaded file
+     */
+    public function upload()
+    {
+        if (null !== $this->file)
+        {
+            $this->file->move($this->getUploadRootDir(), $this->filename);
+        }
+    }
+
+    /**
+     * Remove uploaded files
+     */
+    public function removeFile()
+    {
+        if ($this->filename != '#CHANGE#' && $this->filename != '')
+        {
+            if (strstr($this->filename, '#CHANGE#'))
+            {
+                unlink($this->getUploadRootDir() . substr($this->filename, 0, -strlen('#CHANGE#')));
+            }
+            else
+            {
+                unlink($this->getUploadRootDir() . $this->filename);
+            }
+        }
+    }
+
+    /**
+     * Remove uploaded files
+     */
+    public function removeUpload()
+    {
+        $this->removeFile();
+    }
+
+    /***************************************************************************
+     *                             GENERATED CODE                              *
+     **************************************************************************/
+
     /**
      * @var integer
      */
@@ -31,6 +150,16 @@ class Message
      * @var string
      */
     private $content;
+
+    /**
+     * @var string
+     */
+    private $filename;
+
+    /**
+     * @var string
+     */
+    private $typeOfMessage;
 
     /**
      * @var \DateTime
@@ -125,6 +254,75 @@ class Message
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * Set allowAnswer
+     *
+     * @param boolean $allowAnswer
+     * @return Message
+     */
+    public function setAllowAnswer($allowAnswer)
+    {
+        $this->allowAnswer = $allowAnswer;
+
+        return $this;
+    }
+
+    /**
+     * Get allowAnswer
+     *
+     * @return boolean
+     */
+    public function getAllowAnswer()
+    {
+        return $this->allowAnswer;
+    }
+
+    /**
+     * Set filename
+     *
+     * @param string $filename
+     * @return Message
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    /**
+     * Get filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * Set typeOfMessage
+     *
+     * @param string $typeOfMessage
+     * @return Message
+     */
+    public function setTypeOfMessage($typeOfMessage)
+    {
+        $this->typeOfMessage = $typeOfMessage;
+
+        return $this;
+    }
+
+    /**
+     * Get typeOfMessage
+     *
+     * @return string
+     */
+    public function getTypeOfMessage()
+    {
+        return $this->typeOfMessage;
     }
 
     /**

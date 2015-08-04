@@ -10,15 +10,14 @@
 
 namespace Fulgurio\SocialNetworkBundle\Form\Handler;
 
-use Fulgurio\SocialNetworkBundle\Mailer\AdminMailer;
+use Fulgurio\SocialNetworkBundle\Mailer\ContactMailer;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdminContactFormHandler
 {
     /**
-     *
-     * @var type
+     * @var Fulgurio\SocialNetworkBundle\Mailer\ContactMailer
      */
     private $mailer;
 
@@ -37,11 +36,11 @@ class AdminContactFormHandler
     /**
      * Constructor
      *
-     * @param Fulgurio\SocialNetworkBundle\Mailer\AdminMailer $mailer
+     * @param Fulgurio\SocialNetworkBundle\Mailer\ContactMailer $mailer
      * @param Symfony\Component\Form\Form $form
      * @param Symfony\Component\HttpFoundation\Request $request
      */
-    public function __construct(AdminMailer $mailer, Form $form, Request $request)
+    public function __construct(ContactMailer $mailer, Form $form, Request $request)
     {
         $this->mailer = $mailer;
         $this->form = $form;

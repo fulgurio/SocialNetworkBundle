@@ -12,6 +12,7 @@ namespace Fulgurio\SocialNetworkBundle\Form\Handler\Messenger;
 
 use Fulgurio\SocialNetworkBundle\Entity\User;
 use Fulgurio\SocialNetworkBundle\Entity\MessageTarget;
+use Fulgurio\SocialNetworkBundle\Mailer\MessengerMailer;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -33,6 +34,11 @@ class NewMessageFormHandler
      */
     private $doctrine;
 
+    /**
+     * @var Fulgurio\SocialNetworkBundle\Mailer\MessengerMailer
+     */
+    private $mailer;
+
 
     /**
      * Constructor
@@ -41,11 +47,12 @@ class NewMessageFormHandler
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param Symfony\Bundle\DoctrineBundle\Registry $doctrine
      */
-    public function __construct(Form $form, Request $request, Registry $doctrine)
+    public function __construct(Form $form, Request $request, Registry $doctrine, MessengerMailer $mailer)
     {
         $this->form = $form;
         $this->request = $request;
         $this->doctrine = $doctrine;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -63,11 +70,16 @@ class NewMessageFormHandler
             {
                 $message = $this->form->getData();
                 $message->setSender($user);
+                $targets = $message->getTarget();
+                foreach ($targets as $target)
+                {
+                    $this->mailer->sendMessageEmailMessage($target->getTarget(), $message);
+                }
                 $messageTarget = new MessageTarget();
                 $messageTarget->setTarget($user);
                 $messageTarget->setMessage($message);
                 $messageTarget->setHasRead(TRUE);
-                $message->addMessageTarget($messageTarget);
+                $message->addTarget($messageTarget);
                 $em = $this->doctrine->getManager();
                 $em->persist($messageTarget);
                 $em->persist($message);

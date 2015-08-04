@@ -63,7 +63,7 @@ fulgurio:
         success:            L'email de réinitialisation de mot de passe a été envoyé à %email%
     remove_avatar:
         confirm:            Etes-vous sûr de vouloir supprimer l'avatar de "%username%" ?
-        success:            L'avatar de "%username%" a été supprimé
+        success:            L'avatar de "%username%" a été supprimé, un email d'avertissement a été envoyé à l'utilisateur
         email:
             subject:        Votre avatar a été effacé
             message:        >

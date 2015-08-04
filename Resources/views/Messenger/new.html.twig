@@ -4,17 +4,19 @@
 
 {% block content %}
 		<h1>{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.legend{% endtrans %}</h1>
-		<form action="{{ path('fulgurio_social_network_messenger_new_message') }}" method="post" class="form-horizontal" id="messengerForm">
+		<form action="{{ path('fulgurio_social_network_messenger_new_message') }}" method="post" class="form-horizontal" id="messengerForm" {{ form_enctype(form) }}>
 			<fieldset>
 {%   if form.vars.errors
        or form.username_target.vars.errors
        or form.subject.vars.errors
-       or form.content.vars.errors %}
+       or form.content.vars.errors
+       or form.file.vars.errors %}
 				<div class="alert alert-error">
 {%     for error in form.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
 {%     for error in form.username_target.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
 {%     for error in form.subject.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
 {%     for error in form.content.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
+{%     for error in form.file.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
 				</div>
 {%   endif %}
 				<div class="control-group">
@@ -35,6 +37,13 @@
 						<textarea class="input-xlarge" id="{{ form.content.vars.id }}" name="{{ form.content.vars.full_name }}" required="required">{{ form.content.vars.value }}</textarea>
 					</div>
 				</div>
+				<div class="control-group">
+					<label class="control-label" for="{{ form.file.vars.id }}">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.label{% endtrans %}</label>
+					<div class="controls fileupload fileupload-new" data-provides="fileupload">
+						<span class="btn btn-file"><span class="fileupload-new">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.select{% endtrans %}</span><span class="fileupload-exists">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.change{% endtrans %}</span><input type="file" id="{{ form.file.vars.id }}" name="{{ form.file.vars.full_name }}" /></span>
+						<a class="btn fileupload-exists" data-dismiss="fileupload">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.remove{% endtrans %}</a>
+					</div>
+				</div>
 				<div class="form-actions">
 					<input type="hidden" name="{{ form._token.vars.full_name }}" value="{{ form._token.vars.value }}" />
 					<button type="submit" class="btn btn-primary">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.send{% endtrans %}</button>
@@ -46,6 +55,8 @@
 
 {% block javascriptTop %}
 	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/styles_messenger.css') }}" />
+	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/jasny-bootstrap.min.css') }}" />
+	<script src="{{ asset('bundles/fulguriosocialnetwork/js/jasny-bootstrap.min.js') }}"></script>
 {% endblock %}
 
 {% block javascriptBottom %}

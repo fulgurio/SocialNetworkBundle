@@ -20,9 +20,14 @@ use Fulgurio\SocialNetworkBundle\Tests\Controller\WebTestCase;
 class AdminUserControllerTest extends WebTestCase
 {
     /**
+     * Pagination
+     */
+    const PAGINATION_LIMIT = 10;
+
+    /**
      * Number of user with ROLE_USER into database
      */
-    const NB_MEMBER = 3;
+    const NB_MEMBER = 11;
 
     /**
      * Users list test
@@ -32,7 +37,7 @@ class AdminUserControllerTest extends WebTestCase
         $client = $this->getAdminLoggedClient();
 
         $crawler = $client->request('GET', '/admin/users/');
-        $this->assertCount(self::NB_MEMBER, $crawler->filter('table tbody tr'));
+        $this->assertCount(self::NB_MEMBER > self::PAGINATION_LIMIT ? self::PAGINATION_LIMIT : self::NB_MEMBER, $crawler->filter('table tbody tr'));
     }
 
     /**
@@ -77,15 +82,15 @@ class AdminUserControllerTest extends WebTestCase
         $crawler = $client->click($link);
 
         $data = array(
-            'user[username]' => 'user4',
-            'user[email]' => 'user4@example.com',
-            'user[newPassword][first]' => 'user4',
-            'user[newPassword][second]' => 'user4',
+            'user[username]' => 'foobar',
+            'user[email]' => 'foobar@example.com',
+            'user[newPassword][first]' => 'foobar',
+            'user[newPassword][second]' => 'foobar',
         );
         $form = $crawler->filter('form[action$="/add"] button[type="submit"]')->form();
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
-        $this->assertCount($nbUsers + 1, $crawler->filter('table tbody tr'));
+        $this->assertCount($nbUsers >= self::PAGINATION_LIMIT ? self::PAGINATION_LIMIT : ($nbUsers + 1), $crawler->filter('table tbody tr'));
     }
 
     /**
@@ -97,19 +102,19 @@ class AdminUserControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/admin/users/');
         $nbUsers = $crawler->filter('table tbody tr')->count();
-        $firstLine = $crawler->filter('table tbody tr:contains(user3)')->first();
+        $firstLine = $crawler->filter('table tbody tr:contains(user2)')->first();
 
         $link = $firstLine->filter('a[href$="/edit"]')->link();
         $crawler = $client->click($link);
 
         $data = array(
-            'user[email]' => 'user33@example.com',
+            'user[email]' => 'user22@example.com',
         );
         $form = $crawler->filter('form[action$="/edit"] button[type="submit"]')->form();
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
         $this->assertCount($nbUsers, $crawler->filter('table tbody tr'));
-        $this->assertCount(1, $crawler->filter('table tbody tr:contains(user3) td:contains(user33)'));
+        $this->assertCount(1, $crawler->filter('table tbody tr:contains(user22) td:contains(user22)'));
     }
 
     /**
@@ -130,7 +135,7 @@ class AdminUserControllerTest extends WebTestCase
         $form = $buttonYes->form();
         $client->submit($form);
         $crawler = $client->followRedirect();
-        $this->assertCount($nbUsers - 1, $crawler->filter('table tbody tr'));
+        $this->assertCount($nbUsers >= self::PAGINATION_LIMIT ? self::PAGINATION_LIMIT : ($nbUsers - 1), $crawler->filter('table tbody tr'));
     }
 
     /**
@@ -146,10 +151,8 @@ class AdminUserControllerTest extends WebTestCase
         $link = $firstLine->filter('a[href$="/ban"]')->link();
         $crawler = $client->click($link);
 
-        $buttonNo = $crawler->selectButton('fulgurio.socialnetwork.no');
-        $form = $buttonNo->form();
-        $client->submit($form);
-        $crawler = $client->followRedirect();
+        $buttonNo = $crawler->filter('a:contains("fulgurio.socialnetwork.no")')->link();
+        $crawler = $client->click($buttonNo);
         $firstLine = $crawler->filter('table tbody tr')->first();
 
         $this->assertCount(1, $firstLine->filter('a[href$="/ban"]'));
@@ -184,8 +187,8 @@ class AdminUserControllerTest extends WebTestCase
     {
         $client = $this->getAdminLoggedClient();
 
-        $crawler = $client->request('GET', '/admin/users/');
-        $secondLine = $crawler->filter('table tbody tr:contains(user2)')->first();
+        $crawler = $client->request('GET', '/admin/users/?page=2');
+        $secondLine = $crawler->filter('table tbody tr:contains(userDisabled)')->first();
 
         $link = $secondLine->filter('a[href$="/unban"]')->link();
         $crawler = $client->click($link);
@@ -194,7 +197,7 @@ class AdminUserControllerTest extends WebTestCase
         $form = $buttonYes->form();
         $client->submit($form);
         $crawler = $client->followRedirect();
-        $secondLine = $crawler->filter('table tbody tr:contains(user2)')->first();
+        $secondLine = $crawler->filter('table tbody tr:contains(userDisabled)')->first();
 
         $this->assertCount(1, $secondLine->filter('a[href$="/ban"]'));
     }
@@ -274,7 +277,7 @@ class AdminUserControllerTest extends WebTestCase
     {
         $client = $this->getAdminLoggedClient();
         $crawler = $client->request('GET', '/admin/users/');
-        $firstLine = $crawler->filter('table tbody tr:contains(user3)')->first();
+        $firstLine = $crawler->filter('table tbody tr:contains(user2)')->first();
         $avatar = $firstLine->filter('img')->first();
         $this->assertNotEquals('/bundles/fulguriosocialnetwork/images/avatar.png', $avatar->attr('src'));
         $viewTag = $firstLine->filter('a[href$="/view"]');
@@ -287,7 +290,7 @@ class AdminUserControllerTest extends WebTestCase
         $form = $buttonYes->form();
         $client->submit($form);
         $crawler = $client->followRedirect();
-        $avatar = $crawler->filter('table tbody tr:contains(user3) img')->first();
+        $avatar = $crawler->filter('table tbody tr:contains(user2) img')->first();
         $this->assertEquals('/bundles/fulguriosocialnetwork/images/avatar.png', $avatar->attr('src'));
     }
 }

@@ -6,3 +6,6 @@ fulgurio:
     yes:                       Yes
     no:                        No
     back:                      Back
+    header_link:
+      logged_as:               Logged as %username%
+      disconnect:              Disconnect

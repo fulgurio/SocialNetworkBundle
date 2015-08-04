@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class NewMessageFormType extends AbstractType
 {
     /**
-     * @var Fulgurio\SocialNetworkBundle\Entity\User $currentUSer
+     * @var Fulgurio\SocialNetworkBundle\Entity\User $currentUser
      */
     private $currentUser;
 
@@ -80,6 +80,7 @@ class NewMessageFormType extends AbstractType
                     new NotBlank(array('message' => 'fulgurio.socialnetwork.new_message.content.not_blank'))
                 )
             ))
+            ->add('file', 'file', array('required' => FALSE))
             ->addEventListener(FormEvents::POST_SUBMIT, array($this, 'checkTarget'))
             ;
     }
@@ -121,7 +122,7 @@ class NewMessageFormType extends AbstractType
                 $target->setTarget($friend);
                 $this->doctrine->getManager()->persist($target);
             }
-            $message->addMessageTarget($target);
+            $message->addTarget($target);
             return;
         }
         $usernameTarget->addError(new FormError('fulgurio.socialnetwork.new_message.no_friend_found'));
@@ -159,7 +160,8 @@ class NewMessageFormType extends AbstractType
     }
 
     /**
-     * @see Symfony\Component\Form.FormTypeInterface::getName()
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form\FormTypeInterface::getName()
      */
     public function getName()
     {

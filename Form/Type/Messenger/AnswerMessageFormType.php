@@ -17,7 +17,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class AnswerMessageFormType extends AbstractType
 {
     /**
-     * @see Symfony\Component\Form.AbstractType::buildForm()
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form\FormTypeInterface::buildForm()
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -27,11 +28,13 @@ class AnswerMessageFormType extends AbstractType
                     new NotBlank(array('message' => 'fulgurio.socialnetwork.new_message.content.not_blank'))
                 )
             ))
+            ->add('file', 'file', array('required' => FALSE))
         ;
     }
 
     /**
-     * @see Symfony\Component\Form.FormTypeInterface::getName()
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form\FormTypeInterface::getName()
      */
     public function getName()
     {

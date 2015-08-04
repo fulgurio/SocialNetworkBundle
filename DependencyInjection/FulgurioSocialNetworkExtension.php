@@ -37,8 +37,10 @@ class FulgurioSocialNetworkExtension extends Extension
 
         $this->defaultEmailValue = $config['from_email'];
         $this->addAvatarConfig($container, $config['avatar']);
+        $this->addRegistrationConfig($container, $config['registration']);
         $this->addResettingConfig($container, $config['resetting']);
         $this->addConfirmationConfig($container, $config['confirmation']);
+        $this->addMessengerConfig($container, $config['messenger']);
         $this->addContactConfig($container, $config['contact']);
         $this->addFriendshipConfig($container, $config['friendship']);
     }
@@ -55,6 +57,17 @@ class FulgurioSocialNetworkExtension extends Extension
         $container->setParameter('fulgurio_social_network.avatar.width', $config['width']);
         $container->setParameter('fulgurio_social_network.avatar.height', $config['height']);
         $this->addEmailsConfig($container, 'avatar.admin.remove.email', $config['admin']['remove']['email']);
+    }
+
+    /**
+     * Adding registration data config
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function addRegistrationConfig(ContainerBuilder $container, array $config)
+    {
+        $this->addEmailsConfig($container, 'registration.email', $config['email']);
     }
 
     /**
@@ -77,6 +90,18 @@ class FulgurioSocialNetworkExtension extends Extension
     private function addConfirmationConfig(ContainerBuilder $container, array $config)
     {
         $this->addEmailsConfig($container, 'confirmation.email', $config['email']);
+    }
+
+    /**
+     * Adding messenger data config
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function addMessengerConfig(ContainerBuilder $container, array $config)
+    {
+        $this->addEmailsConfig($container, 'messenger.message.email', $config['message']['email']);
+        $this->addEmailsConfig($container, 'messenger.answer.email', $config['answer']['email']);
     }
 
     /**
@@ -134,6 +159,10 @@ class FulgurioSocialNetworkExtension extends Extension
         if (isset($config['html']))
         {
             $container->setParameter('fulgurio_social_network.' . $parameterName . '.html', $config['html']);
+        }
+        if (isset($config['msn']))
+        {
+            $container->setParameter('fulgurio_social_network.' . $parameterName . '.msn', $config['msn']);
         }
     }
 }

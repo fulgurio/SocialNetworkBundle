@@ -17,10 +17,24 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserFriendship
 {
+    const ASKING_STATUS = 'asking';
+    const ACCEPTED_STATUS = 'accepted';
+    const PENDING_STATUS = 'pending';
+    const REFUSED_STATUS = 'refused';
+    const REMOVED_STATUS = 'removed';
+
     /**
+     * Available status
+     *
      * @var array
      */
-    private $availableStatus = array('asking', 'accepted', 'pending', 'refused', 'removed');
+    private $availableStatus = array(self::ASKING_STATUS, self::ACCEPTED_STATUS, self::PENDING_STATUS, self::REFUSED_STATUS, self::REMOVED_STATUS);
+
+    /**
+     * @var smallint $nb_refusals
+     */
+    private $nb_refusals = 0;
+
 
     /**
      * Set status
@@ -35,7 +49,7 @@ class UserFriendship
         }
         else
         {
-            $this->status = 'pending';
+            $this->status = self::PENDING_STATUS;
         }
     }
 
@@ -52,11 +66,6 @@ class UserFriendship
      * @var string
      */
     private $status;
-
-    /**
-     * @var integer
-     */
-    private $nb_refusals = 0;
 
     /**
      * @var \DateTime

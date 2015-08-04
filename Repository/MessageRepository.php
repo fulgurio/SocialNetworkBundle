@@ -55,7 +55,7 @@ class MessageRepository extends EntityRepository
                     AND u.enabled = 1
                 ORDER BY u.username');
         $query->setParameter('message', $message);
-        return ($query->getResult());
+        return $query->getResult();
     }
 
     /**
@@ -74,6 +74,19 @@ class MessageRepository extends EntityRepository
         $query->setParameter('message', $message);
         $query->setParameter('users', $users);
         $query->getSingleScalarResult();
+    }
+
+    /**
+     * Get number of unread message
+     *
+     * @param Message $message
+     * @param Collection $users
+     */
+    public function countUnreadMessage($user)
+    {
+        $query = $this->getEntityManager()->createQuery('SELECT COUNT (mt) FROM FulgurioSocialNetworkBundle:MessageTarget mt WHERE mt.has_read = 0 AND mt.target = :user');
+        $query->setParameter('user', $user);
+        return $query->getSingleScalarResult();
     }
 
     /**

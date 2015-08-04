@@ -55,7 +55,10 @@ class AdminUserController extends Controller
         }
         if (count($users) == 0 && $page > 1)
         {
-            return new RedirectResponse($this->generateUrl('fulgurio_social_network_admin_users', array('page' => $page - 1)));
+            return $this->redirect($this->generateUrl(
+                    'fulgurio_social_network_admin_users',
+                    array('page' => $page - 1))
+            );
         }
         return $this->render(
                 'FulgurioSocialNetworkBundle:AdminUsers:list.html.twig',
@@ -85,10 +88,11 @@ class AdminUserController extends Controller
 
 
     /**
-     * Add or edit user page
+     * Add or edit user action
      *
-     * @param User $userId
-     * @throws AccessDeniedException
+     * @param number $userId
+     * @return Response
+     * @throws AccessDeniedHttpException
      */
     public function addAction($userId = null)
     {
@@ -97,8 +101,12 @@ class AdminUserController extends Controller
             throw new AccessDeniedHttpException();
         }
         $user = is_null($userId) ? new User() : $this->getSpecifiedUser($userId);
-        $form = $this->createForm(new AdminAccountFormType($this->container), $user);
-        $formHandler = new AdminAccountFormHandler($this->container->get('fos_user.user_manager'), $form, $this->getRequest());
+        $form = $this->createForm(new AdminAccountFormType($this->container),
+                $user);
+        $formHandler = new AdminAccountFormHandler(
+                $this->container->get('fos_user.user_manager'),
+                $form,
+        $this->getRequest());
         if ($formHandler->process($user))
         {
             $this->get('session')->getFlashBag()->add('notice',
@@ -116,40 +124,46 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Users remove action
+     * User remove action
      *
-     * @todo : XmlRequest ?
-     * @todo : back to initial user page (with pagination)
+     * @param number $userId
+     * @return Response
      */
     public function removeAction($userId)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN'))
+        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))
         {
             throw new AccessDeniedHttpException();
         }
         $user = $this->getSpecifiedUser($userId);
         $request = $this->getRequest();
-        if ($request->get('confirm') === 'yes')
+        if ($request->get('confirm'))
         {
-            $userManager = $this->container->get('fos_user.user_manager');
-            $userManager->deleteUser($user);
-            $this->get('session')->getFlashBag()->add(
-                    'success',
-                    $this->get('translator')->trans(
-                            'fulgurio.socialnetwork.remove.success',
-                            array('%username%' => $user->getUsername()),
-                            'admin_user'
-                    )
-            );
+            if ($request->get('confirm') === 'yes')
+            {
+                $userManager = $this->container->get('fos_user.user_manager');
+                $userManager->deleteUser($user);
+                $this->get('session')->getFlashBag()->add(
+                        'success',
+                        $this->get('translator')->trans(
+                                'fulgurio.socialnetwork.remove.success',
+                                array('%username%' => $user->getUsername()),
+                                'admin_user'
+                        )
+                );
+            }
+            if ($request->get('referer'))
+            {
+                return $this->redirect($request->get('referer'));
+            }
             return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
         }
-        else if ($request->get('confirm') === 'no')
-        {
-            return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
-        }
+        $templateName = 'FulgurioSocialNetworkBundle:Admin:confirm' . ($request->isXmlHttpRequest() ? 'Ajax' : '') . '.html.twig';
         return $this->render(
-                'FulgurioSocialNetworkBundle:Admin:confirm.html.twig',
+                $templateName,
                 array(
+                    'url_referer' => $request->server->get('HTTP_REFERER'),
+                    'action' => $this->generateUrl('fulgurio_social_network_admin_users_remove', array('userId' => $userId)),
                     'confirmationMessage' => $this->get('translator')->trans(
                             'fulgurio.socialnetwork.remove.confirm',
                             array('%username%' => $user->getUsername()),
@@ -162,8 +176,6 @@ class AdminUserController extends Controller
     /**
      * Users ban or unban action
      *
-     * @todo : XmlRequest ?
-     * @todo: back to initial user page (with pagination)
      * @param number $userId
      * @return Response
      */
@@ -172,29 +184,35 @@ class AdminUserController extends Controller
         $request = $this->getRequest();
         $user = $this->getSpecifiedUser($userId);
         $isEnabled = $user->isEnabled();
-        if ($request->get('confirm') === 'yes')
+        if ($request->get('confirm'))
         {
-            $user->setEnabled(!$user->isEnabled());
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($user);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add(
-                    'success',
-                    $this->get('translator')->trans(
-                            'fulgurio.socialnetwork.' . ($isEnabled ? 'ban' : 'unban') . '.success',
-                            array('%username%' => $user->getUsername()),
-                            'admin_user'
-                    )
-            );
+            if ($request->get('confirm') === 'yes')
+            {
+                $user->setEnabled(!$user->isEnabled());
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($user);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add(
+                        'success',
+                        $this->get('translator')->trans(
+                                'fulgurio.socialnetwork.' . ($isEnabled ? 'ban' : 'unban') . '.success',
+                                array('%username%' => $user->getUsername()),
+                                'admin_user'
+                        )
+                );
+            }
+            if ($request->get('referer'))
+            {
+                return $this->redirect($request->get('referer'));
+            }
             return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
         }
-        else if ($request->get('confirm') === 'no')
-        {
-            return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
-        }
+        $templateName = 'FulgurioSocialNetworkBundle:Admin:confirm' . ($request->isXmlHttpRequest() ? 'Ajax' : '') . '.html.twig';
         return $this->render(
-                'FulgurioSocialNetworkBundle:Admin:confirm.html.twig',
+                $templateName,
                 array(
+                    'url_referer' => $request->server->get('HTTP_REFERER'),
+                    'action' => $this->generateUrl('fulgurio_social_network_admin_users_' . ($isEnabled ? 'ban' : 'unban'), array('userId' => $userId)),
                     'confirmationMessage' => $this->get('translator')->trans(
                             'fulgurio.socialnetwork.' . ($isEnabled ? 'ban' : 'unban') . '.confirm',
                             array('%username%' => $user->getUsername()),
@@ -205,9 +223,10 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Users contact action
+     * User contact action
      *
-     * @todo : back to initial user page (with pagination)
+     * @param number $userId
+     * @return Response
      */
     public function contactAction($userId)
     {
@@ -257,7 +276,7 @@ class AdminUserController extends Controller
                         'admin_user'
                 )
         );
-        return $this->redirect($this->generateUrl('fulgurio_social_network_admin_users'));
+        return $this->redirect($this->generateUrl('fulgurio_social_network_admin_user'));
     }
 
     /**
@@ -282,8 +301,8 @@ class AdminUserController extends Controller
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($user);
             $em->flush();
-                $this->container->get('fulgurio_social_network.avatar_mailer')
-                        ->sendAdminMessage($user);
+            $this->container->get('fulgurio_social_network.avatar_mailer')
+                    ->sendAdminMessage($user);
             $this->get('session')->getFlashBag()->add(
                     'success',
                     $this->get('translator')->trans(
@@ -301,6 +320,7 @@ class AdminUserController extends Controller
         return $this->render(
                 'FulgurioSocialNetworkBundle:Admin:confirm.html.twig',
                 array(
+                    'action' => $this->generateUrl('fulgurio_social_network_admin_users_remove_avatar', array('userId' => $userId)),
                     'confirmationMessage' => $this->get('translator')->trans(
                             'fulgurio.socialnetwork.remove_avatar.confirm',
                             array('%username%' => $user->getUsername()),

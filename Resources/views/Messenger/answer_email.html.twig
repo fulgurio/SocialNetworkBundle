@@ -1,0 +1,3 @@
+{% trans with { '%username%' : app.user.username, '%message_subject%' : message.subject, '%answer%' : answer.content } from 'messenger' %}fulgurio.socialnetwork.email.answer.html{% endtrans %}
+<br />
+<p>{{ answer.content|nl2br }}</p>

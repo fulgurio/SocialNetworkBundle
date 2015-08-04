@@ -14,6 +14,18 @@ Fulgurio\SocialNetworkBundle\Entity\Message:
       notBlank: true
     content:
       type: text
+    allowAnswer:
+      type: boolean
+      column: allow_answer
+    filename:
+      type: string
+      length: 255
+      nullable: true
+    typeOfMessage:
+      type: string
+      length: 90
+      nullable: true
+      column: type_of_message
     created_at:
       type: datetime
       gedmo:
@@ -24,6 +36,12 @@ Fulgurio\SocialNetworkBundle\Entity\Message:
       gedmo:
         timestampable:
           on: update
+  lifecycleCallbacks:
+    prePersist: [ preUpload ]
+    preUpdate: [ preUpload ]
+    postPersist: [ upload ]
+    postUpdate: [ upload ]
+    preRemove: [ removeUpload ]
   manyToOne:
     parent:
       targetEntity: Message

@@ -10,6 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Mailer;
 
+use Fulgurio\SocialNetworkBundle\Service\Messenger;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -39,6 +40,11 @@ abstract class AbstractMailer
      * @var array
      */
     protected $parameters;
+
+    /**
+     * @var Fulgurio\SocialNetworkBundle\Service\Messenger
+     */
+    protected $messenger;
 
 
     /**
@@ -81,5 +87,14 @@ abstract class AbstractMailer
             ->setBody($bodyHTML, 'text/html')
             ->addPart($bodyText, 'text/plain');
         $this->mailer->send($message);
+    }
+
+    /**
+     * $messenger setter
+     * @param Messenger $messenger
+     */
+    public function setMessenger(Messenger $messenger)
+    {
+        $this->messenger = $messenger;
     }
 }

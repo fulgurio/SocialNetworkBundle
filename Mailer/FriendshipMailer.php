@@ -10,7 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Mailer;
 
-use FOS\UserBundle\Model\UserInterface;
+use Fulgurio\SocialNetworkBundle\Entity\User;
 
 /**
  * Friendship mailer
@@ -22,117 +22,137 @@ class FriendshipMailer extends AbstractMailer
     /**
      * Invit invitation message
      *
-     * @param UserInterface $user
+     * @param User $user
      */
-    public function sendInvitMessage(UserInterface $user)
+    public function sendInvitMessage(User $user)
     {
         $subject = $this->templating->render(
                 $this->parameters['invit.subject'],
                 array('user' => $user)
         );
+        $data = array('user' => $user, 'subject' => $subject);
         $bodyText = $this->templating->render(
-                $this->parameters['invit.template.txt'],
-                array('user' => $user)
+                $this->parameters['invit.template.text'], $data
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['invit.template.html'],
-                array('user' => $user)
+                $this->parameters['invit.template.html'], $data
         );
-        $this->sendEmailMessage(
-                $this->parameters['from'],
-                $user->getEmail(),
-                $subject,
-                $bodyText,
-                $bodyHTML,
-                $this->parameters['from_name']
+        $bodyMsn = $this->templating->render(
+                $this->parameters['invit.template.html'], $data
         );
+        if ($user->getSendMsgToEmail())
+        {
+            $this->sendEmailMessage(
+                    $this->parameters['from'],
+                    $user->getEmail(),
+                    $subject,
+                    $bodyText,
+                    $bodyHTML
+            );
+        }
+        $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-invit');
     }
 
     /**
      * Accept invitation message
      *
-     * @param UserInterface $user
+     * @param User $user
      */
-    public function sendAcceptMessage(UserInterface $user)
+    public function sendAcceptMessage(User $user)
     {
         $subject = $this->templating->render(
                 $this->parameters['accept.subject'],
                 array('user' => $user)
         );
+        $data = array('user' => $user, 'subject' => $subject);
         $bodyText = $this->templating->render(
-                $this->parameters['accept.template.txt'],
-                array('user' => $user)
+                $this->parameters['accept.template.text'], $data
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['accept.template.html'],
-                array('user' => $user)
+                $this->parameters['accept.template.html'], $data
         );
-        $this->sendEmailMessage(
-                $this->parameters['from'],
-                $user->getEmail(),
-                $subject,
-                $bodyText,
-                $bodyHTML,
-                $this->parameters['from_name']
+        $bodyMsn = $this->templating->render(
+                $this->parameters['accept.template.msn'], $data
         );
+        if ($user->getSendMsgToEmail())
+        {
+            $this->sendEmailMessage(
+                    $this->parameters['from'],
+                    $user->getEmail(),
+                    $subject,
+                    $bodyText,
+                    $bodyHTML
+            );
+        }
+        $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-accept');
     }
 
 
     /**
      * Remove invitation message
      *
-     * @param UserInterface $user
+     * @param User $user
      */
-    public function sendRemoveInvitMessage(UserInterface $user)
+    public function sendRemoveInvitMessage(User $user)
     {
         $subject = $this->templating->render(
                 $this->parameters['remove.subject'],
                 array('user' => $user)
         );
+        $data = array('user' => $user, 'subject' => $subject);
         $bodyText = $this->templating->render(
-                $this->parameters['remove.template.txt'],
-                array('user' => $user)
+                $this->parameters['remove.template.text'], $data
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['remove.template.html'],
-                array('user' => $user)
+                $this->parameters['remove.template.html'], $data
         );
-        $this->sendEmailMessage(
-                $this->parameters['from'],
-                $user->getEmail(),
-                $subject,
-                $bodyText,
-                $bodyHTML,
-                $this->parameters['from_name']
-            );
+        $bodyMsn = $this->templating->render(
+                $this->parameters['remove.template.msn'], $data
+        );
+        if ($user->getSendMsgToEmail())
+        {
+            $this->sendEmailMessage(
+                    $this->parameters['from'],
+                    $user->getEmail(),
+                    $subject,
+                    $bodyText,
+                    $bodyHTML
+                );
+        }
+        $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-remove');
     }
 
     /**
      * Refusal invitation message
      *
-     * @param UserInterface $user
+     * @param User $user
      */
-    public function sendRefusalMessage(UserInterface $user)
+    public function sendRefusalMessage(User $user)
     {
         $subject = $this->templating->render(
                 $this->parameters['refuse.subject'],
                 array('user' => $user)
         );
+        $data = array('user' => $user, 'subject' => $subject);
         $bodyText = $this->templating->render(
-                $this->parameters['refuse.template.txt'],
-                array('user' => $user)
+                $this->parameters['refuse.template.text'], $data
         );
         $bodyHTML = $this->templating->render(
-                $this->parameters['refuse.template.html'],
-                array('user' => $user)
+                $this->parameters['refuse.template.html'], $data
         );
-        $this->sendEmailMessage(
-                $this->parameters['from'],
-                $user->getEmail(),
-                $subject,
-                $bodyText,
-                $bodyHTML,
-                $this->parameters['from_name']
+        $bodyMsn = $this->templating->render(
+                $this->parameters['refuse.template.msn'], $data
         );
+        if ($user->getSendMsgToEmail())
+        {
+            $this->sendEmailMessage(
+                    $this->parameters['from'],
+                    $user->getEmail(),
+                    $subject,
+                    $bodyText,
+                    $bodyHTML
+            );
+        }
+        $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-refusal');
     }
 }

@@ -48,17 +48,24 @@ class MessengerController extends Controller
         $message = new Message();
 
         $selectedUsers = array();
-        if (!is_null($userId)) {
+        if (!is_null($userId))
+        {
             $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $userId));
         }
-        else if ($selectedUsers = $request->get('users')) {
+        elseif ($selectedUsers = $request->get('users'))
+        {
             $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $selectedUsers));
         }
         $form = $this->createForm(new NewMessageFormType($currentUser, $this->getDoctrine()), $message);
-        $formHandler = new NewMessageFormHandler($form, $this->getRequest(), $this->getDoctrine());
+        $formHandler = new NewMessageFormHandler(
+                $form,
+                $this->getRequest(),
+                $this->getDoctrine(),
+                $this->container->get('fulgurio_social_network.messenger_mailer')
+        );
         if ($formHandler->process($currentUser))
         {
-            $this->get('session')->getFlashBag(
+            $this->get('session')->getFlashBag()->add(
                     'success',
                     $this->get('translator')->trans(
                             'fulgurio.socialnetwork.new_message.success_msg',
@@ -83,47 +90,49 @@ class MessengerController extends Controller
     {
         $currentUser = $this->getUser();
         $message = $this->getMessage($msgId, TRUE);
+        $data = array('message' => $message);
         $messageRepository = $this->getDoctrine()
                 ->getRepository('FulgurioSocialNetworkBundle:Message');
-        $participants = $messageRepository->findParticipants($message);
-        $answer = new Message();
-        $answer->setSubject('###RESPONSE###');
-        $form = $this->createForm(new AnswerMessageFormType(), $answer);
-        $formHandler = new AnswerMessageFormHandler(
-                $form,
-                $this->getRequest(),
-                $this->getDoctrine()
-        );
-        if ($formHandler->process($message, $currentUser, $participants))
+        $data['participants'] = $messageRepository->findParticipants($message);
+        if ($message->getAllowAnswer())
         {
-            $this->get('session')->getFlashBag(
-                    'success',
-                    $this->get('translator')->trans(
-                            'fulgurio.socialnetwork.answer_message.success_msg',
-                            array(),
-                            'messenger'));
-            return $this->redirect(
-                    $this->generateUrl(
-                            'fulgurio_social_network_messenger_show_message',
-                            array('msgId' => $msgId))
+            $answer = new Message();
+            $answer->setSubject('###RESPONSE###');
+            $form = $this->createForm(new AnswerMessageFormType(), $answer);
+            $formHandler = new AnswerMessageFormHandler(
+                    $form,
+                    $this->getRequest(),
+                    $this->getDoctrine(),
+                    $this->container->get('fulgurio_social_network.messenger_mailer')
             );
+            if ($formHandler->process($message, $currentUser, $data['participants']))
+            {
+                $this->get('session')->getFlashBag()->add(
+                        'success',
+                        $this->get('translator')->trans(
+                                'fulgurio.socialnetwork.answer_message.success_msg',
+                                array(),
+                                'messenger'));
+                return $this->redirect(
+                        $this->generateUrl(
+                                'fulgurio_social_network_messenger_show_message',
+                                array('msgId' => $msgId))
+                );
+            }
+            $data['form'] = $form->createView();
         }
         $tmpFriends = $this->getDoctrine()
                 ->getRepository('FulgurioSocialNetworkBundle:UserFriendship')
                 ->findAcceptedFriends($currentUser);
-        $friends = array();
+        $data['friends'] = array();
         foreach ($tmpFriends as &$tmpFriend)
         {
-            $friends[$tmpFriend['id']] = $tmpFriend;
+            $data['friends'][$tmpFriend['id']] = $tmpFriend;
         }
         return $this->render(
                 'FulgurioSocialNetworkBundle:Messenger:show.html.twig',
-                array(
-                    'message' =>      $message,
-                    'participants' => $participants,
-                    'friends' =>      $friends,
-                    'form' =>         $form->createView()
-        ));
+                $data
+        );
     }
 
     /**
@@ -154,7 +163,7 @@ class MessengerController extends Controller
                 // If there s some users who don't remove message, we just remove current user link with message
                 $messageRepository->removeUserMessageRelation($msgId, $currentUser);
             }
-            $this->get('session')->getFlashBag(
+            $this->get('session')->getFlashBag()->add(
                     'success',
                     $this->get('translator')->trans(
                             'fulgurio.socialnetwork.remove_message.success_msg',

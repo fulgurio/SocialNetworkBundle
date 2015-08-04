@@ -26,6 +26,10 @@ class ProfileController extends Controller
      */
     public function showAction($userId = null)
     {
+        if (!$this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
+        }
         $currentUser = $this->getUser();
         if (is_null($userId))
         {
@@ -65,19 +69,26 @@ class ProfileController extends Controller
             throw new AccessDeniedException();
         }
         $request = $this->container->get('request');
-        if ($request->get('confirm') === 'yes')
+        if ($request->get('confirm'))
         {
-            $userManager = $this->container->get('fos_user.user_manager');
-            $userManager->deleteUser($currentUser);
-            return new RedirectResponse($this->container->get('router')->generate('fos_user_security_logout'));
-        }
-        else if ($request->get('confirm') === 'no')
-        {
+            if ($request->get('confirm') === 'yes')
+            {
+                $userManager = $this->container->get('fos_user.user_manager');
+                $userManager->deleteUser($currentUser);
+                return new RedirectResponse($this->container->get('router')->generate('fos_user_security_logout'));
+            }
+            if ($request->get('referer'))
+            {
+                return new RedirectResponse($request->get('referer'));
+            }
             return new RedirectResponse($this->container->get('router')->generate('fos_user_profile_show'));
         }
+        $templateName = 'FulgurioSocialNetworkBundle::confirm' . ($request->isXmlHttpRequest() ? 'Ajax' : '') . '.html.twig';
         return $this->container->get('templating')->renderResponse(
-                'FulgurioSocialNetworkBundle::confirm.html.twig',
+                $templateName,
                 array(
+                    'url_referer' => $request->server->get('HTTP_REFERER'),
+                    'action' => $this->container->get('router')->generate('fulgurio_social_network_unsubscribe'),
                     'confirmationMessage' => $this->container->get('translator')->trans(
                             'fulgurio.socialnetwork.profile.unsubscribe.confirm'
                     )

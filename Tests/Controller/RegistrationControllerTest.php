@@ -36,7 +36,7 @@ class RegistrationControllerTest extends WebTestCase
 
         $form = $crawler->filter('form[action$="register/"] button[name="_submit"]')->form();
         $crawler = $client->submit($form, $data);
-        $this->assertTrue($client->getResponse()->isRedirect('/'));
+        $this->assertTrue($client->getResponse()->isRedirect('/register/confirmed'));
 
         // Authentified
         $security = $client->getContainer()->get('security.context');

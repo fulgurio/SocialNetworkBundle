@@ -12,31 +12,49 @@
 				<div>
 					<span>{{ message.sender.username|trans }}</span>:<br />
 					{{ message.content|nl2br }}
+{% if message.filename %}
+					<br />
+					<a href="{{ message.displayFile }}">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.download{% endtrans %}</a>
+{% endif %}
 				</div>
 			</li>
-{%   for response in message.children %}
+{% for response in message.children %}
 			<li>
 				<img src="{{ avatar(response.sender) }}" alt="" />
 				<div>
 					<span>{{ response.sender.username|trans }}</span>:<br />
 					{{ response.content|nl2br }}
+{%   if message.filename %}
+					<br />
+					<a href="{{ response.displayFile }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.file.download{% endtrans %}</a>
+{%   endif %}
 				</div>
 			</li>
-{%   endfor %}
+{% endfor %}
 		</ol>
-		<form action="{{ path('fulgurio_social_network_messenger_reply_message', {msgId: message.id }) }}" method="post" class="form-horizontal">
+{% if form is defined %}
+		<form action="{{ path('fulgurio_social_network_messenger_reply_message', {msgId: message.id }) }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
 			<fieldset>
 {%   if form.vars.errors
-       or form.content.vars.errors %}
+       or form.content.vars.errors
+       or form.file.vars.errors %}
 				<div class="alert alert-error">
 {%     for error in form.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
 {%     for error in form.content.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
+{%     for error in form.file.vars.errors %}{{ error.messageTemplate|trans }}<br />{%   endfor %}
 				</div>
 {%   endif %}
 				<div class="control-group">
-					<label class="control-label" for="{{ form.content.vars.id }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.answer_label{% endtrans %}</label>
+					<label class="control-label" for="{{ form.content.vars.id }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.answer.label{% endtrans %}</label>
 					<div class="controls">
 						<textarea class="input-xlarge" id="{{ form.content.vars.id }}" name="{{ form.content.vars.full_name }}">{{ form.content.vars.value }}</textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="{{ form.file.vars.id }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.file.label{% endtrans %}</label>
+					<div class="controls fileupload fileupload-new" data-provides="fileupload">
+						<span class="btn btn-file"><span class="fileupload-new">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.select{% endtrans %}</span><span class="fileupload-exists">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.change{% endtrans %}</span><input type="file" id="{{ form.file.vars.id }}" name="{{ form.file.vars.full_name }}" /></span>
+						<a class="btn fileupload-exists" data-dismiss="fileupload">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.remove{% endtrans %}</a>
 					</div>
 				</div>
 				<div class="form-actions">
@@ -46,17 +64,18 @@
 				</div>
 			</fieldset>
 		</form>
+{% endif %}
 	</div>
 	<div class="span3">
 		<h2>Participants</h2>
 		<ol class="participants">
-{%   for participant in participants %}
-{%     if app.user == participant %}
+{% for participant in participants %}
+{%   if app.user == participant %}
 			<li><img sr="{{ avatar(participant) }}" alt="" /></li>
-{%     else %}
-			<li><a href="{{ path('fulgurio_social_network_friendship_profil', { userId: participant.id }) }}" title="{{ participant.username }}"{% if not friends[participant.id] %} class="notAFriend"{% endif %}><img src="{{ avatar(participant) }}" alt="" /></a></li>
-{%     endif %}
-{%   endfor %}
+{%   else %}
+			<li><a href="{{ path('fulgurio_social_network_friendship_profil', { userId: participant.id }) }}" title="{{ participant.username }}"{% if friends[participant.id] is not defined %} class="notAFriend"{% endif %}><img src="{{ avatar(participant) }}" alt="" /></a></li>
+{%   endif %}
+{% endfor %}
 		</ol>
 	</div>
 </div>
@@ -64,4 +83,6 @@
 
 {% block javascriptTop %}
 	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/styles_messenger.css') }}" />
+	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/jasny-bootstrap.min.css') }}" />
+	<script src="{{ asset('bundles/fulguriosocialnetwork/js/jasny-bootstrap.min.js') }}"></script>
 {% endblock %}

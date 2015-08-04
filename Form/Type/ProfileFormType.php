@@ -31,7 +31,8 @@ class ProfileFormType extends BaseType
             'type' => 'password',
             'invalid_message' => 'fulgurio.socialnetwork.profile.edit_profil.password_no_match'
         ))
-        ->add('avatarFile', 'file', array('required' => FALSE));
+        ->add('avatarFile', 'file', array('required' => FALSE))
+        ->add('send_msg_to_email', 'checkbox', array('required' => FALSE));
     }
 
     /**
@@ -40,6 +41,6 @@ class ProfileFormType extends BaseType
      */
     public function getName()
     {
-        return 'fulgurio_social_network_profile';
+        return 'fulgurio_social_network_profile_type';
     }
 }

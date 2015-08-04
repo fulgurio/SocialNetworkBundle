@@ -38,6 +38,6 @@ class ResettingFormType extends BaseType
      */
     public function getName()
     {
-        return 'fulgurio_social_network_resetting';
+        return 'fulgurio_social_network_resetting_type';
     }
 }

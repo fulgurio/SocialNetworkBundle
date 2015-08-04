@@ -14,7 +14,7 @@ Fulgurio\SocialNetworkBundle\Entity\UserFriendship:
     nb_refusals:
       type: smallint
     created_at:
-      type: date
+      type: datetime
       gedmo:
         timestampable:
           on: create
@@ -26,6 +26,13 @@ Fulgurio\SocialNetworkBundle\Entity\UserFriendship:
   manyToOne:
     user_src:
       targetEntity: User
+      joinColumn:
+        name: user_src_id
+        referencedColumnName: id
+        onDelete: cascade
     user_tgt:
       targetEntity: User
-      inversedBy: friends
+      joinColumn:
+        name: user_tgt_id
+        referencedColumnName: id
+        onDelete: cascade

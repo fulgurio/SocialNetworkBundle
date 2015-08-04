@@ -8,9 +8,9 @@
 			<legend>{% trans %}fulgurio.socialnetwork.register.legend{% endtrans %}</legend>
 {%   if (form.vars.errors and form.vars.errors|length > 0) or form.username.vars.errors or form.email.vars.errors or form.plainPassword.vars.errors %}
 			<div class="alert alert-error">
-{%     for error in form.username.vars.errors %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{% endfor %}
-{%     for error in form.email.vars.errors %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{% endfor %}
-{%     for error in form.plainPassword.vars.errors %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{% endfor %}
+{%     for error in form.username.vars.errors %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
+{%     for error in form.email.vars.errors %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
+{%     for error in form.plainPassword.vars.errors %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{%   endfor %}
 {%     for error in form.vars.errors %}{{ error.messageTemplate|trans({}, 'validators') }}<br />{% endfor %}
 			</div>
 {%   endif %}

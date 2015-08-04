@@ -21,6 +21,8 @@ class AdminController extends Controller
 {
     /**
      * Index page action
+     *
+     * @return Response
      */
     public function indexAction()
     {

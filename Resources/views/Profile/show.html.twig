@@ -10,6 +10,7 @@
 	<p>{% trans %}fulgurio.socialnetwork.profile.email{% endtrans %}: {{ user.email }}</p>
 	<p>{% trans with { '%date%': user.createdAt|date('fulgurio.socialnetwork.format_date'|trans) } %}fulgurio.socialnetwork.profile.registered_date{% endtrans %}</p>
 	<a href="{{ path('fos_user_profile_edit') }}">{% trans %}fulgurio.socialnetwork.profile.edit_profil.link{% endtrans %}</a>
+	<a href="{{ path('fulgurio_social_network_unsubscribe') }}">{% trans %}fulgurio.socialnetwork.profile.unsubscribe.link{% endtrans %}</a>
 {% else %}
 	<p>{% trans from 'friendship' %}fulgurio.socialnetwork.profile.username{% endtrans %}: {{ user.username }}</p>
 {%   if areFriend %}

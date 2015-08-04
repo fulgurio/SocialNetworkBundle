@@ -30,6 +30,11 @@ class User extends BaseUser
      */
     private $avatarFile;
 
+    /**
+     * @var boolean $send_msg_to_email
+     */
+    private $send_msg_to_email = TRUE;
+
 
     /**
      * Constructor
@@ -263,6 +268,29 @@ class User extends BaseUser
     public function getAvatar()
     {
         return $this->avatar;
+    }
+
+    /**
+     * Set send_msg_to_email
+     *
+     * @param boolean $sendMsgToEmail
+     * @return User
+     */
+    public function setSendMsgToEmail($sendMsgToEmail)
+    {
+        $this->send_msg_to_email = $sendMsgToEmail;
+
+        return $this;
+    }
+
+    /**
+     * Get send_msg_to_email
+     *
+     * @return boolean
+     */
+    public function getSendMsgToEmail()
+    {
+        return $this->send_msg_to_email;
     }
 
     /**

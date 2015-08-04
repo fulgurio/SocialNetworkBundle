@@ -19,14 +19,37 @@ fulgurio:
       content:
         label:                Corps du message
         not_blank:            Le corps du message est obligatoire
+      file:
+        label:                Pièce jointe
+        select:               Sélectionner un fichier
+        remove:               Supprimer
+        change:               Changer
+        download:             Télécharger le fichier
       send:                   Envoyer
       no_friend_found:        Aucun ami de ce nom trouvé
       success_msg:            Votre message a bien été envoyé
     answer_message:
       title:                  Message
-      answer_label:           Votre réponse
+      answer:
+        label:                Votre réponse
+      file:
+        label:                Pièce jointe
+        select:               Sélectionner un fichier
+        remove:               Supprimer
+        change:               Changer
+        download:             Télécharger le fichier
       send_button:            Envoyer
       success_msg:            Votre réponse a bien été envoyée
     remove_message:
       confirm_msg:            Etes-vous sûr de vouloir supprimer ce message ?
       success_msg:            Votre message a bien été effacé
+    email:
+      message:
+        subject:              Nouveau message de %username%
+        text:                 %username% a écrit
+        html:                 %username% a écrit
+      answer:
+        subject:              Nouvelle réponse au message "%message_subject%"
+        text:                 |
+                              %username% a répondu au message "%message_subject%"
+        html:                 %username% a répondu au message "%message_subject%"
