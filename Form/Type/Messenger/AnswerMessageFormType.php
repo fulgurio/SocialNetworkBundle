@@ -23,7 +23,7 @@ class AnswerMessageFormType extends AbstractType
     {
         $builder
             ->add('content', 'text')
-//            ->add('file', 'file', array('required' => FALSE))
+            ->add('file', 'file', array('required' => FALSE))
         ;
     }
 

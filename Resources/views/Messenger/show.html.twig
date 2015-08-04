@@ -12,6 +12,10 @@
 				<div>
 					<span>{{ message.sender.username|trans }}</span>:<br />
 					{{ message.content|nl2br }}
+{% if message.filename %}
+					<br />
+					<a href="{{ message.displayFile }}">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.download{% endtrans %}</a>
+{% endif %}
 				</div>
 			</li>
 {% for response in message.children %}
@@ -20,24 +24,37 @@
 				<div>
 					<span>{{ response.sender.username|trans }}</span>:<br />
 					{{ response.content|nl2br }}
+{%   if message.filename %}
+					<br />
+					<a href="{{ response.displayFile }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.file.download{% endtrans %}</a>
+{%   endif %}
 				</div>
 			</li>
 {% endfor %}
 		</ol>
 {% if form is defined %}
-		<form action="{{ path('fulgurio_social_network_messenger_reply_message', {msgId: message.id }) }}" method="post" class="form-horizontal">
+		<form action="{{ path('fulgurio_social_network_messenger_reply_message', {msgId: message.id }) }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
 			<fieldset>
 {%   if form.get('errors')
-       or form.getChild('content').get('errors') %}
+       or form.getChild('content').get('errors')
+       or form.getChild('file').get('errors') %}
 				<div class="alert alert-error">
 {%     for error in form.get('errors') %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
 {%     for error in form.getChild('content').get('errors') %}{{ error.messageTemplate|trans({}, 'messenger') }}<br />{% endfor %}
+{%     for error in form.getChild('file').get('errors') %}{{ error.messageTemplate|trans }}<br />{%   endfor %}
 				</div>
 {%   endif %}
 				<div class="control-group">
-					<label class="control-label" for="{{ form.getChild('content').get('id') }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.answer_label{% endtrans %}</label>
+					<label class="control-label" for="{{ form.getChild('content').get('id') }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.answer.label{% endtrans %}</label>
 					<div class="controls">
 						<textarea class="input-xlarge" id="{{ form.getChild('content').get('id') }}" name="{{ form.getChild('content').get('full_name') }}">{{ form.getChild('content').get('value') }}</textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="{{ form.getChild('file').get('id') }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.file.label{% endtrans %}</label>
+					<div class="controls fileupload fileupload-new" data-provides="fileupload">
+						<span class="btn btn-file"><span class="fileupload-new">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.select{% endtrans %}</span><span class="fileupload-exists">{% trans %}fulgurio.socialnetwork.profile.edit_profil.avatar.change{% endtrans %}</span><input type="file" id="{{ form.getChild('file').get('id') }}" name="{{ form.getChild('file').get('full_name') }}" /></span>
+						<a class="btn fileupload-exists" data-dismiss="fileupload">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.remove{% endtrans %}</a>
 					</div>
 				</div>
 				<div class="form-actions">
@@ -66,4 +83,6 @@
 
 {% block javascriptTop %}
 	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/styles_messenger.css') }}" />
+	<link rel="stylesheet" href="{{ asset('bundles/fulguriosocialnetwork/css/jasny-bootstrap.min.css') }}" />
+	<script src="{{ asset('bundles/fulguriosocialnetwork/js/jasny-bootstrap.min.js') }}"></script>
 {% endblock %}

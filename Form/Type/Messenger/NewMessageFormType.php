@@ -61,6 +61,7 @@ class NewMessageFormType extends AbstractType
             ))
             ->add('subject', 'text')
             ->add('content', 'text')
+            ->add('file', 'file', array('required' => FALSE))
             ->addValidator(new CallbackValidator(array($this, 'checkTarget')))
             ;
     }

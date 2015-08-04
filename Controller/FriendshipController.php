@@ -196,7 +196,7 @@ class FriendshipController extends Controller
         foreach ($usersFriendship as $userFriendship)
         {
             $userFriendship->setNbRefusals(0);
-            $userFriendship->setStatus('accepted');
+            $userFriendship->setStatus(UserFriendship::ACCEPTED_STATUS);
             $em->persist($userFriendship);
         }
         $em->flush();
