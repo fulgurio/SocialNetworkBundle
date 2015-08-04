@@ -10,6 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Repository;
 
+use Fulgurio\SocialNetworkBundle\Entity\UserFriendship;
 use Doctrine\ORM\EntityRepository;
 use Fulgurio\SocialNetworkBundle\Entity\User;
 
@@ -34,7 +35,7 @@ class UserFriendshipRepository extends EntityRepository
      */
     public function findAskingFriends($user, $page = 1, $paginator = NULL)
     {
-        return $this->filterFriendsByStatus($user, 'asking', $page, $paginator);
+        return $this->filterFriendsByStatus($user, UserFriendship::ASKING_STATUS, $page, $paginator);
     }
 
     /**
@@ -47,7 +48,7 @@ class UserFriendshipRepository extends EntityRepository
      */
     public function findPendingFriends($user, $page = 1, $paginator = NULL)
     {
-        return $this->filterFriendsByStatus($user, 'pending', $page, $paginator);
+        return $this->filterFriendsByStatus($user, UserFriendship::PENDING_STATUS, $page, $paginator);
     }
 
     /**
@@ -60,7 +61,7 @@ class UserFriendshipRepository extends EntityRepository
      */
     public function findAcceptedFriends($user, $page = 1, $paginator = NULL)
     {
-        return $this->filterFriendsByStatus($user, 'accepted', $page, $paginator);
+        return $this->filterFriendsByStatus($user, UserFriendship::ACCEPTED_STATUS, $page, $paginator);
     }
 
     /**
@@ -73,7 +74,7 @@ class UserFriendshipRepository extends EntityRepository
      */
     public function findAcceptedAndPendingFriends($user, $page = 1, $paginator = NULL)
     {
-        return $this->filterFriendsByStatus($user, array('accepted', 'pending'), $page, $paginator);
+        return $this->filterFriendsByStatus($user, array(UserFriendship::ACCEPTED_STATUS, UserFriendship::PENDING_STATUS), $page, $paginator);
     }
 
 
@@ -87,7 +88,7 @@ class UserFriendshipRepository extends EntityRepository
      */
     public function findAcceptedAndRefusedFriends($user, $page = 1, $paginator = NULL)
     {
-        return $this->filterFriendsByStatus($user, array('accepted', 'refused'), $page, $paginator);
+        return $this->filterFriendsByStatus($user, array(UserFriendship::ACCEPTED_STATUS, UserFriendship::REFUSED_STATUS), $page, $paginator);
     }
 
     /**
@@ -164,7 +165,7 @@ class UserFriendshipRepository extends EntityRepository
         )->setMaxResults(1);
         $query->setParameter('user', $user);
         $query->setParameter('friendUser', $friendUser);
-        $query->setParameter('status', 'accepted');
+        $query->setParameter('status', UserFriendship::ACCEPTED_STATUS);
         return $query->getResult();
     }
 
@@ -186,7 +187,7 @@ class UserFriendshipRepository extends EntityRepository
         )->setMaxResults(1);
         $query->setParameter('user', $user);
         $query->setParameter('friendUser', $friendUser);
-        $query->setParameter('status', 'pending');
+        $query->setParameter('status', UserFriendship::PENDING_STATUS);
         return $query->getResult();
     }
 
@@ -209,7 +210,7 @@ class UserFriendshipRepository extends EntityRepository
                 ORDER BY u.username');
         $query->setParameter('user', $user);
         $query->setParameter('username', $username . '%');
-        $query->setParameter('status', 'accepted');
+        $query->setParameter('status', UserFriendship::ACCEPTED_STATUS);
         return $query->getResult();
     }
 }

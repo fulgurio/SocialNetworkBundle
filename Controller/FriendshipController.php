@@ -118,8 +118,8 @@ class FriendshipController extends Controller
                     $friendship2->setUserSrc($mayBeFriend);
                     $friendship2->setUserTgt($currentUser);
                 }
-                $friendship->setStatus('pending');
-                $friendship2->setStatus('asking');
+                $friendship->setStatus(UserFriendship::PENDING_STATUS);
+                $friendship2->setStatus(UserFriendship::ASKING_STATUS);
                 $em->persist($friendship);
                 $em->persist($friendship2);
                 $this->get('fulgurio_social_network.friendship_mailer')->sendInvitMessage($mayBeFriend);
@@ -154,12 +154,12 @@ class FriendshipController extends Controller
             $friendship = new UserFriendship();
             $friendship->setUserSrc($currentUser);
             $friendship->setUserTgt($user);
-            $friendship->setStatus('pending');
+            $friendship->setStatus(UserFriendship::PENDING_STATUS);
             $em->persist($friendship);
             $friendship2 = new UserFriendship();
             $friendship2->setUserSrc($user);
             $friendship2->setUserTgt($currentUser);
-            $friendship2->setStatus('asking');
+            $friendship2->setStatus(UserFriendship::ASKING_STATUS);
             $em->persist($friendship2);
             $em->flush();
         }
@@ -236,17 +236,17 @@ class FriendshipController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         foreach ($usersFriendship as $userFriendship)
         {
-            if ($userFriendship->getStatus() == 'accepted')
+            if ($userFriendship->getStatus() == UserFriendship::ACCEPTED_STATUS)
             {
                 $hasAcceptedBefore = TRUE;
             }
-            $userFriendship->setStatus('refused');
+            $userFriendship->setStatus(UserFriendship::REFUSED_STATUS);
             if ($userFriendship->getUserTgt() == $currentUser)
             {
                 $nbRefusals = $userFriendship->getNbRefusals();
                 if ($nbRefusals >= $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals'))
                 {
-                    $userFriendship->setStatus('removed');
+                    $userFriendship->setStatus(UserFriendship::REMOVED_STATUS);
                 }
                 else
                 {
