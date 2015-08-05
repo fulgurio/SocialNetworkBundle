@@ -1,0 +1,4 @@
+Fulgurio\SocialNetworkBundle\Entity\User:
+    avatarFile:
+        mapping:           avatar_mapping
+        filename_property: avatar

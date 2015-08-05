@@ -11,6 +11,7 @@
 namespace Fulgurio\SocialNetworkBundle\Twig\Extension;
 
 use Fulgurio\SocialNetworkBundle\Entity\User;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 /**
  * User avatar function for Twig.
@@ -24,6 +25,21 @@ class AvatarExtension extends \Twig_Extension
      */
     protected $environment;
 
+    /**
+     * @var UploaderHelper
+     */
+    private $vichUploadHelper;
+
+
+    /**
+     * Constructor
+     *
+     * @param UploaderHelper $vichUploadHelper
+     */
+    function __construct(UploaderHelper $vichUploadHelper)
+    {
+        $this->vichUploadHelper = $vichUploadHelper;
+    }
 
     /**
      * (non-PHPdoc)
@@ -53,13 +69,19 @@ class AvatarExtension extends \Twig_Extension
     {
         if (is_array($user))
         {
-            return User::getAvatarUrl($user);
+            return $this->vichUploadHelper->asset(
+                    $user,
+                    'avatarFile',
+                    'Fulgurio\SocialNetworkBundle\Entity\User'
+            );
         }
-        if ($user->getAvatar() != '')
+        elseif ($user->getAvatar() != '')
         {
-            return $user->displayAvatar();
+            return $this->vichUploadHelper->asset($user, 'avatarFile');
         }
-        return $this->environment->getExtension('assets')->getAssetUrl('bundles/fulguriosocialnetwork/images/avatar.png');
+        return $this->environment
+                ->getExtension('assets')
+                ->getAssetUrl('bundles/fulguriosocialnetwork/images/avatar.png');
     }
 
     /**

@@ -18,124 +18,60 @@ framework:
     translator: ~
 ```
 
-For more information about translations, check [Symfony documentation](http://symfony.com/doc/2.0/book/translation.html).
+For more information about translations, check [Symfony documentation](http://symfony.com/doc/2.3/book/translation.html).
 
 ## Installation
 
 The bundle uses [FOSUser](https://github.com/FriendsOfSymfony/FOSUserBundle).
 Configuration of this bundle is also included on this document.
 
-Installation is a quick 3 step process:
+Installation is a quick 7 steps process:
 
-1. Download FulgurioSocialNetworkBundle
-2. Configure the Autoloader
-3. Enable the Bundle
-4. Configure your application's security.yml
-5. Configure the FOSUserBundle
-6. Configure the bundle
-7. Import FulgurioSocialNetworkBundle routing
-8. Update your database schema
+1. Download FulgurioSocialNetworkBundle using composer
+2. Enable the Bundle
+3. Configure your application's security.yml
+4. Configure the FOSUserBundle
+5. Configure the bundle
+6. Import FulgurioSocialNetworkBundle routing
+7. Update your database schema
 
-### Step 1: Download FulgurioSocialNetworkBundle
+### Step 1: Download FulgurioSocialNetworkBundle using composer
 
-Ultimately, the FulgurioSocialNetworkBundle files should be downloaded to the
-`vendor/bundles/Fulgurio/SocialNetworkBundle` directory.
+First, edit composer.json, and add the bundle
 
-This can be done in several ways, depending on your preference. The first
-method is the standard Symfony2 method.
-
-**Using the vendors script**
-
-Add the following lines in your `deps` file:
-
-``` ini
-[FOSUserBundle]
-    git=git://github.com/FriendsOfSymfony/FOSUserBundle.git
-    target=bundles/FOS/UserBundle
-    version=1.2.0
-
-[Stof-DoctrineExtensionsBundle]
-    git=http://github.com/stof/StofDoctrineExtensionsBundle.git
-    version=origin/1.0.x
-    target=/bundles/Stof/DoctrineExtensionsBundle
-
-[gedmo-doctrine-extensions]
-    git=http://github.com/Atlantic18/DoctrineExtensions.git
-    version=origin/2.2.x
-
-[knp-components]
-    git=http://github.com/KnpLabs/knp-components.git
-    version=v1.1
-
-[KnpPaginatorBundle]
-    git=http://github.com/KnpLabs/KnpPaginatorBundle.git
-    target=bundles/Knp/Bundle/PaginatorBundle
-    version=v2.2
-
-[FulgurioSocialNetworkBundle]
-    git=git://github.com/Fulgurio/SocialNetworkBundle.git
-    target=bundles/Fulgurio/SocialNetworkBundle
+``` json
+{
+    "require": {
+        "fulgurio/social-network-bundle" : "dev-2.3"
+    }
+}
 ```
 
-Now, run the vendors script to download the bundle:
+and launch composer, it will load all dependencies.
 
 ``` bash
-$ php bin/vendors install
+$ composer update
 ```
 
-**Using submodules**
-
-If you prefer instead to use git submodules, then run the following:
-
-``` bash
-$ git submodule add git://github.com/FriendsOfSymfony/FOSUserBundle.git vendor/bundles/FOS/UserBundle
-$ git submodule add git://github.com/stof/StofDoctrineExtensionsBundle.git vendor/bundles/Stof/DoctrineExtensionsBundle
-$ git submodule add git://github.com/Atlantic18/DoctrineExtensions.git vendor
-$ git submodule add git://github.com/KnpLabs/knp-components.git vendor
-$ git submodule add git://github.com/KnpLabs/KnpPaginatorBundle.git vendor/bundles/Knp/Bundle/PaginatorBundle
-$ git submodule add git://github.com/Fulgurio/SocialNetworkBundle.git vendor/bundles/Fulgurio/SocialNetworkBundle
-$ git submodule update --init
-```
-
-### Step 2: Configure the Autoloader
-
-Add the namespace to your autoloader:
-
-``` php
-<?php
-// app/autoload.php
-
-$loader->registerNamespaces(array(
-    // ...
-    'FOS' => __DIR__.'/../vendor/bundles',
-    'Stof'             => __DIR__.'/../vendor/bundles',
-    'Gedmo'            => __DIR__.'/../vendor/gedmo-doctrine-extensions/lib',
-    'Knp\\Component'   => __DIR__.'/../vendor/knp-components/src',
-    'Knp\\Bundle'      => __DIR__.'/../vendor/bundles',
-    'Fulgurio' => __DIR__.'/../vendor/bundles',
-));
-```
-
-### Step 3: Enable the bundles
-
-Finally, enable the bundles in the kernel:
+### Step 2: Enable the bundles
 
 ``` php
 <?php
 // app/AppKernel.php
 
-public function registerBundles()
-{
-    $bundles = array(
-        // ...
-        new FOS\UserBundle\FOSUserBundle(),
-        new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-        new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
-        new Fulgurio\SocialNetworkBundle\FulgurioSocialNetworkBundle(),
-    );
-}
+    public function registerBundles()
+    {
+            $bundles = array(
+            // ...
+            new FOS\UserBundle\FOSUserBundle(),
+            new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new Vich\UploaderBundle\VichUploaderBundle(),
+            new Fulgurio\SocialNetworkBundle\FulgurioSocialNetworkBundle()
+        );
+    }
 ```
-### Step 4: Configure your application's security.yml
+### Step 3: Configure your application's security.yml
 
 In order for Symfony's security component to use the FOSUserBundle, you must
 tell it to do so in the `security.yml` file. The `security.yml` file is where the
@@ -182,19 +118,7 @@ security:
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 ```
 
-Under the `providers` section, you are making the bundle's packaged user provider
-service available via the alias `fos_userbundle`. The id of the bundle's user
-provider service is `fos_user.user_manager`.
-
-Next, take a look at examine the `firewalls` section. Here we have declared a
-firewall named `main`. By specifying `form_login`, you have told the Symfony2
-framework that any time a request is made to this firewall that leads to the
-user needing to authenticate himself, the user will be redirected to a form
-where he will be able to enter his credentials. It should come as no surprise
-then that you have specified the user provider we declared earlier as the
-provider for the firewall to use as part of the authentication process.
-
-### Step 5: Configure the FOSUserBundle
+### Step 4: Configure the FOSUserBundle
 
 Now that you have properly configured your application's `security.yml` to work
 with the FOSUserBundle, the next step is to configure the bundle to work with
@@ -206,27 +130,36 @@ of datastore you are using.
 ``` yaml
 # app/config/config.yml
 fos_user:
-    db_driver:     orm
-    firewall_name: main
-    user_class:    Fulgurio\SocialNetworkBundle\Entity\User
+    db_driver:       orm
+    firewall_name:   main
+    user_class:      Fulgurio\SocialNetworkBundle\Entity\User
     registration:
         form:
-            type:  fulgurio_social_network_registration_type
+            type:    fulgurio_social_network_registration_type
     resetting:
         form:
-            type:  fulgurio_social_network_resetting_type
+            type:    fulgurio_social_network_resetting_type
     profile:
         form:
-            type:  fulgurio_social_network_profile_type
+            type:    fulgurio_social_network_profile_type
+            handler: fulgurio_social_network.profile.form.handler
 
 stof_doctrine_extensions:
     orm:
         default:
             timestampable: true
             sluggable: true
+
+# Vich Uploader bundle
+vich_uploader:
+    db_driver: orm
+    mappings:
+        avatar_mapping:
+            uri_prefix:         /uploads/avatars
+            upload_destination: %kernel.root_dir%/../web/uploads/avatars
 ```
 
-### Step 6: Configure the bundle
+### Step 5: Configure the bundle
 Now configure the bundle, just set contact email (it's the "From:" email of
 bundle sent email)
 
@@ -243,9 +176,23 @@ fulgurio_social_network:
             remove:
                 email:
                     address: contact@example.com
+                    sender_name: Contact
+    friendship:
+        email:
+            address: contact@example.com
+            sender_name: Contact
+    messenger:
+        message:
+            email:
+                address: contact@example.com
+                sender_name: Contact
+        answer:
+            email:
+                address: contact@example.com
+                sender_name: Contact
 ```
 
-### Step 7: Import FulgurioSocialNetworkBundle routing
+### Step 6: Import FulgurioSocialNetworkBundle routing
 
 Now that you have activated and configured the bundle, all that is left to do is
 import the FulgurioSocialNetworkBundle routing files.
@@ -257,22 +204,15 @@ In YAML:
 
 ``` yaml
 # app/config/routing.yml
-fos_user_security:
+fulgurio_social_network:
     resource: "@FulgurioSocialNetworkBundle/Resources/config/routing.yml"
 ```
 
-Or if you prefer XML:
-
-``` xml
-<!-- app/config/routing.xml -->
-<import resource="@FulgurioSocialNetworkBundle/Resources/config/routing.yml"/>
-```
-
-### Step 8: Update your database schema
+### Step 7: Update your database schema
 
 Now that the bundle is configured, the last thing you need to do is update your
 database schema because you have added a new entity, the `User` class which you
-created in Step 4.
+created in Step 3.
 
 For ORM run the following command.
 

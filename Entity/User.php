@@ -11,6 +11,7 @@
 namespace Fulgurio\SocialNetworkBundle\Entity;
 
 use FOS\UserBundle\Entity\User as BaseUser;
+use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,9 +27,9 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @var string $avatarFile
+     * @var File $avatarFile
      */
-    private $avatarFile;
+    protected $avatarFile;
 
     /**
      * @var boolean $send_msg_to_email
@@ -48,158 +49,30 @@ class User extends BaseUser
     }
 
     /**
-     * Set avatarFile
+     * Set avatar_file
      *
-     * @param string $avatarFile
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $image
      */
-    public function setAvatarFile($avatarFile)
+    public function setAvatarFile(File $image = null)
     {
-        $this->avatarFile = $avatarFile;
+        $this->avatarFile = $image;
 
-        // We simulate a change on submited form, to save data in database
-        $this->avatar .= '#CHANGE#';
+        if ($image)
+        {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updated_at = new \DateTime('now');
+        }
     }
 
     /**
-     * Get avatarFile
+     * Get avatar_file
      *
-     * @return string
+     * @return File
      */
     public function getAvatarFile()
     {
         return $this->avatarFile;
-    }
-
-    /**
-     * Display avatar
-     *
-     * @return string
-     */
-    public function displayAvatar()
-    {
-        return '/' . $this->getUploadDir() . $this->avatar;
-    }
-
-    /**
-     * Upload directory
-     */
-    public function getUploadDir()
-    {
-        return 'uploads/' . $this->getId() . '/';
-    }
-
-    /**
-     * Get absolut upload directory
-     */
-    public function getUploadRootDir()
-    {
-        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
-    }
-
-    /**
-     * Get a randomw filename, and check if file does'nt exist
-     *
-     * @param UploadedFile $file
-     * @param string $path
-     */
-    public function getUniqName($file, $path)
-    {
-        $filename = uniqid() . '.' . $file->guessExtension();
-        if (!file_exists($path . $filename))
-        {
-            return ($filename);
-        }
-        $this->getUniqName($file, $path);
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function preUpload()
-    {
-        if (null !== $this->avatarFile)
-        {
-            $this->removeUpload();
-            $this->avatar = $this->getUniqName($this->avatarFile, $this->getUploadRootDir());
-        }
-    }
-
-    /**
-     * @ORM\PostPersist
-     */
-    public function upload()
-    {
-        if (null !== $this->avatarFile)
-        {
-            $this->avatarFile->move($this->getUploadRootDir(), $this->avatar);
-            $this->image_shrink($this->getUploadRootDir(). $this->avatar, $this->getUploadRootDir(). $this->avatar, 50, 50, 80);
-            unset($this->avatarFile);
-        }
-    }
-
-    /**
-     * @ORM\PostRemove
-     */
-    public function removeUpload()
-    {
-        if ($this->avatar != '#CHANGE#')
-        {
-            @unlink($this->getUploadRootDir() . substr($this->avatar, 0, -strlen('#CHANGE#')));
-        }
-    }
-
-    /**
-     * Shrink picture
-     *
-     * @param type $sourcefile
-     * @param type $destfile
-     * @param type $fw
-     * @param type $fh
-     * @param type $jpegquality
-     * @return string
-     */
-    private function image_shrink($sourcefile, $destfile, $fw, $fh, $jpegquality = 100)
-    {
-        list($ow, $oh, $from_type) = getimagesize($sourcefile);
-        switch($from_type)
-        {
-            case 1: // GIF
-                $srcImage = imageCreateFromGif($sourcefile);
-                break;
-            case 2: // JPG
-                $srcImage = imageCreateFromJpeg($sourcefile);
-                break;
-            case 3: // PNG
-                $srcImage = imageCreateFromPng($sourcefile);
-                break;
-            default:
-                return;
-        }
-        if (($fw / $ow) > ($fh / $oh))
-        {
-            $tempw = $fw;
-            $temph = ($fw / $ow) * $oh;
-        }
-        else
-        {
-            $tempw = ($fh / $oh) * $ow;
-            $temph = $fh;
-        }
-        $tempImage = imageCreateTrueColor($fw, $fh);
-        imagecopyresampled($tempImage, $srcImage, ($fw - $tempw) / 2, ($fh - $temph) / 2, 0, 0, $tempw, $temph, $ow, $oh);
-        imageJpeg($tempImage, $destfile, $jpegquality);
-        return getimagesize($destfile);
-    }
-
-    /**
-     * Get avatar url from an array of data
-     *
-     * @param array $user
-     * @return string
-     */
-    static function getAvatarUrl(array $user)
-    {
-        return '/uploads/' . $user['id'] . '/' . $user['avatar'];
     }
 
     /***************************************************************************
@@ -209,7 +82,7 @@ class User extends BaseUser
     /**
      * @var string
      */
-    private $avatar;
+    protected $avatar;
 
     /**
      * @var \DateTime

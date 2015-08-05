@@ -1,6 +1,6 @@
 Fulgurio\SocialNetworkBundle\Entity\User:
-  type: entity
-#  type: mappedSuperclass
+  type: mappedSuperclass
+#  type: entity
   repositoryClass: Fulgurio\SocialNetworkBundle\Repository\UserRepository
   table: member
   fields:
@@ -25,12 +25,6 @@ Fulgurio\SocialNetworkBundle\Entity\User:
       gedmo:
         timestampable:
           on: update
-  lifecycleCallbacks:
-    prePersist: [ preUpload ]
-    preUpdate: [ preUpload ]
-    postPersist: [ upload ]
-    postUpdate: [ upload ]
-    postRemove: [ removeUpload ]
 
   oneToMany:
     friends:

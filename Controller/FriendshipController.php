@@ -307,9 +307,10 @@ class FriendshipController extends Controller
                             $this->getUser(),
                             $request->get('q')
             );
+            $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
             foreach ($foundedFriends as &$friend)
             {
-                $friend['avatar'] = User::getAvatarUrl($friend);
+                $friend['avatar'] = $helper->asset($friend, 'avatarFile', 'Fulgurio\SocialNetworkBundle\Entity\User');
             }
             $response = new Response(json_encode(
                     array('friends' => $foundedFriends)));
