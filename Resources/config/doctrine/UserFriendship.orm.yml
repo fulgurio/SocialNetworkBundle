@@ -32,6 +32,7 @@ Fulgurio\SocialNetworkBundle\Entity\UserFriendship:
         onDelete: cascade
     user_tgt:
       targetEntity: User
+      inversedBy: friends
       joinColumn:
         name: user_tgt_id
         referencedColumnName: id
