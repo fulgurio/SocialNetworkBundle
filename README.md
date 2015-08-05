@@ -157,6 +157,9 @@ vich_uploader:
         avatar_mapping:
             uri_prefix:         /uploads/avatars
             upload_destination: %kernel.root_dir%/../web/uploads/avatars
+        message_mapping:
+            uri_prefix:         /uploads/messages
+            upload_destination: %kernel.root_dir%/../web/uploads/messages
 ```
 
 ### Step 5: Configure the bundle

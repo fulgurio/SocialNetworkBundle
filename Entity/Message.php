@@ -10,23 +10,21 @@
 
 namespace Fulgurio\SocialNetworkBundle\Entity;
 
+use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Fulgurio\SocialNetworkBundle\Entity\Message
  */
 class Message
 {
-    const DIRNAME = 'messenger';
-
     /**
      * @var boolean $allowAnswer
      */
     private $allowAnswer = TRUE;
 
     /**
-     * @var UploadedFile $file
+     * @var File $file
      */
     public $file;
 
@@ -34,102 +32,28 @@ class Message
     /**
      * Set file
      *
-     * @param UploadedFile $file
+     * @param File $file
      */
-    public function setFile(UploadedFile $file)
+    public function setFile(File $file)
     {
         $this->file = $file;
-        $this->filename .= '#CHANGE#';
+
+        if ($file)
+        {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updated_at = new \DateTime('now');
+        }
     }
 
     /**
      * Get file
      *
-     * @return UploadedFile
+     * @return File
      */
     public function getFile()
     {
         return $this->file;
-    }
-
-    /**
-     * Return url of file
-     *
-     * @return string
-     */
-    public function displayFile()
-    {
-        return '/' . $this->getUploadDir() . $this->filename;
-    }
-
-    /**
-     * Upload directory
-     *
-     * @return string
-     */
-    public function getUploadDir()
-    {
-        $id = $this->getParent() ? $this->getParent()->getId() : $this->getId();
-        return 'uploads/' . self::DIRNAME . '/' . $id . '/';
-    }
-
-    /**
-     * Get absolut upload directory
-     *
-     * @return string
-     */
-    public function getUploadRootDir()
-    {
-        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
-    }
-
-    /**
-     * Generate new filename if file is uploaded
-     */
-    public function preUpload()
-    {
-        if (null !== $this->file)
-        {
-            $this->removeFile();
-            $this->filename = $this->file->getClientOriginalName();
-        }
-    }
-
-    /**
-     * Move the uploaded file
-     */
-    public function upload()
-    {
-        if (null !== $this->file)
-        {
-            $this->file->move($this->getUploadRootDir(), $this->filename);
-        }
-    }
-
-    /**
-     * Remove uploaded files
-     */
-    public function removeFile()
-    {
-        if ($this->filename != '#CHANGE#' && $this->filename != '')
-        {
-            if (strstr($this->filename, '#CHANGE#'))
-            {
-                unlink($this->getUploadRootDir() . substr($this->filename, 0, -strlen('#CHANGE#')));
-            }
-            else
-            {
-                unlink($this->getUploadRootDir() . $this->filename);
-            }
-        }
-    }
-
-    /**
-     * Remove uploaded files
-     */
-    public function removeUpload()
-    {
-        $this->removeFile();
     }
 
     /***************************************************************************

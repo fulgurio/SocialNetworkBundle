@@ -14,7 +14,7 @@
 					{{ message.content|nl2br }}
 {% if message.filename %}
 					<br />
-					<a href="{{ message.displayFile }}">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.download{% endtrans %}</a>
+					<a href="{{ vich_uploader_asset(message, 'file') }}">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.download{% endtrans %}</a>
 {% endif %}
 				</div>
 			</li>
@@ -26,7 +26,7 @@
 					{{ response.content|nl2br }}
 {%   if message.filename %}
 					<br />
-					<a href="{{ response.displayFile }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.file.download{% endtrans %}</a>
+					<a href="{{ vich_uploader_asset(response, 'file') }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.file.download{% endtrans %}</a>
 {%   endif %}
 				</div>
 			</li>

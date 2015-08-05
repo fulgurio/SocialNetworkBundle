@@ -36,12 +36,6 @@ Fulgurio\SocialNetworkBundle\Entity\Message:
       gedmo:
         timestampable:
           on: update
-  lifecycleCallbacks:
-    prePersist: [ preUpload ]
-    preUpdate: [ preUpload ]
-    postPersist: [ upload ]
-    postUpdate: [ upload ]
-    preRemove: [ removeUpload ]
   manyToOne:
     parent:
       targetEntity: Message
