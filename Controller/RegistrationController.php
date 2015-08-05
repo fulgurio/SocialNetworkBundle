@@ -30,11 +30,14 @@ class RegistrationController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
         if (!is_object($user) || !$user instanceof UserInterface)
         {
-            throw new AccessDeniedException('This user does not have access to this section.');
+            throw new AccessDeniedHttpException('This user does not have access to this section.');
         }
         // We set an notice flash and an email
         $this->container->get('fulgurio_social_network.fos_mailer')->sendRegistrationEmailMessage($user);
-        $this->container->get('session')->setFlash('notice', 'fulgurio.socialnetwork.register.welcome_msg');
+        $this->container->get('session')->getFlashBag()->add(
+                'notice',
+                'fulgurio.socialnetwork.register.welcome_msg'
+        );
         // We redirect to homepage
         return new RedirectResponse($this->container->get('router')->generate('fulgurio_social_network_homepage'));
     }
