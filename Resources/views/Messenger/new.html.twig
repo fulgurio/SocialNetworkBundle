@@ -70,7 +70,7 @@ $('#{{ form.username_target.vars.id }}').keyup(function() {
 			data: {'q': s},
 			success: function(d) {
 				var nb = d.friends.length;
-				if (searchResult == undefined) {
+				if (searchResult === undefined) {
 					searchResult = $('<ol id="searchResult"></ol>');
 					selectedFriends = $('<ul id="selectedFriends"></ul>');
 
@@ -83,18 +83,18 @@ $('#{{ form.username_target.vars.id }}').keyup(function() {
 				for (var i = 0; i < nb; ++i) {
 					var exists = false;
 					$(selectedFriends).find('li').each(function() {
-						if (d.friends[i].id == $(this).data('infos').id) {
+						if (d.friends[i].id === $(this).data('infos').id) {
 							exists = true;
 							return;
 						}
 					});
-					if (exists == false) {
+					if (exists === false) {
 						var li = $('<li><img src="' + (d.friends[i].avatar ? d.friends[i].avatar : '{{ asset('bundles/fulguriosocialnetwork/images/avatar.png') }}') + '" class="pull-left" alt="" />' + d.friends[i].username + '</li>');
 						li.data('infos', d.friends[i]);
 						li.click(function() {
 							var aClose = $('<a class="close">&times;</a>');
 							aClose.click(function() {
-								if ($(this).parent().parent().children().length == 1) {
+								if ($(this).parent().parent().children().length === 1) {
 									$('#m_tgt').attr('required', 'required');
 								}
 								$(this).parent().remove();

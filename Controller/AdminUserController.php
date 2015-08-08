@@ -345,6 +345,6 @@ class AdminUserController extends Controller
                 $this->get('translator')->trans('fulgurio.socialnetwork.user_not_found', array(), 'admin_user')
             );
         }
-        return ($user);
+        return $user;
     }
 }

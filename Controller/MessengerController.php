@@ -52,9 +52,9 @@ class MessengerController extends Controller
         {
             $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $userId));
         }
-        elseif ($selectedUsers = $request->get('users'))
+        elseif ($selectedUsersId = $request->get('users'))
         {
-            $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $selectedUsers));
+            $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $selectedUsersId));
         }
         $form = $this->createForm(new NewMessageFormType($currentUser, $this->getDoctrine()), $message);
         $formHandler = new NewMessageFormHandler(
