@@ -133,7 +133,7 @@ services:
                 confirmation.template.html : %fulgurio_social_network.confirmation.email.html%
                 resetting.from_mail        : %fos_user.resetting.email.from_email%
                 resetting.subject          : %fulgurio_social_network.resetting.email.subject%
-                resetting.template.text     : %fulgurio_social_network.resetting.email.text%
+                resetting.template.text    : %fulgurio_social_network.resetting.email.text%
                 resetting.template.html    : %fulgurio_social_network.resetting.email.html%
 
     # Messenger mailer

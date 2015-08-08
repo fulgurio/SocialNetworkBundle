@@ -52,11 +52,16 @@ class MessengerController extends Controller
         {
             $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $userId));
         }
-        elseif ($selectedUsersId = $request->get('users'))
+        elseif ($selectedUsers = $request->get('users'))
         {
-            $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $selectedUsersId));
+            $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $selectedUsers));
         }
-        $form = $this->createForm(new NewMessageFormType($currentUser, $this->getDoctrine()), $message);
+        $form = $this->createForm(
+                new NewMessageFormType(
+                        $currentUser,
+                        $this->getDoctrine(),
+                        $this->container->getParameter('fos_user.model.user.class')
+                ), $message);
         $formHandler = new NewMessageFormHandler(
                 $form,
                 $this->getRequest(),

@@ -34,17 +34,23 @@ class NewMessageFormType extends AbstractType
      */
     private $doctrine;
 
+    /**
+     * @var string
+     */
+    private $userClassName;
 
     /**
      * Constructor
      *
      * @param User $currentUser
      * @param Registry $doctrine
+     * @param string $userClassName
      */
-    public function __construct(User $currentUser, Registry $doctrine)
+    public function __construct(User $currentUser, Registry $doctrine, $userClassName)
     {
         $this->currentUser = $currentUser;
         $this->doctrine = $doctrine;
+        $this->userClassName = $userClassName;
     }
 
     /**
@@ -64,7 +70,7 @@ class NewMessageFormType extends AbstractType
             ->add('id_targets', 'entity', array(
                 'multiple' => TRUE,
                 'mapped' => FALSE,
-                'class' => 'Fulgurio\SocialNetworkBundle\Entity\User',
+                'class' => $this->userClassName,
                 'query_builder' => function(UserRepository $er)
                 {
                     return $er->getAcceptedFriendsQuery($this->currentUser);
@@ -94,7 +100,7 @@ class NewMessageFormType extends AbstractType
     {
         $form = $event->getForm();
         $userRepository = $this->doctrine
-                ->getRepository('FulgurioSocialNetworkBundle:User');
+                ->getRepository($this->userClassName);
         $idTargets = $form->get('id_targets');
         $usersId = (count($idTargets->getViewData()) > 0) ? $idTargets->getViewData() : array();
         $usernameTarget = $form->get('username_target');
@@ -149,7 +155,7 @@ class NewMessageFormType extends AbstractType
                     if ($id == $myFriend['id'])
                     {
                         $friend = $this->doctrine
-                                ->getRepository('FulgurioSocialNetworkBundle:User')
+                                ->getRepository($this->userClassName)
                                 ->findOneById($myFriend['id']);
                         $foundedFriends[] = $friend;
                     }

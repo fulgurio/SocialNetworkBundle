@@ -2,6 +2,12 @@ fulgurio_social_network_messenger_new_message:
     pattern:  /new
     defaults: { _controller: FulgurioSocialNetworkBundle:Messenger:new }
 
+fulgurio_social_network_messenger_new_message_to:
+    pattern:  /new/{userId}
+    defaults: { _controller: FulgurioSocialNetworkBundle:Messenger:new }
+    requirements:
+        userId:  \d+
+
 fulgurio_social_network_messenger_remove_message:
     pattern:  /{msgId}/remove
     defaults: { _controller: FulgurioSocialNetworkBundle:Messenger:remove }
