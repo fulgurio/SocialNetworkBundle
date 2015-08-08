@@ -26,13 +26,13 @@ Fulgurio\SocialNetworkBundle\Entity\User:
         timestampable:
           on: update
 
-  oneToMany:
-    friends:
-      targetEntity: Fulgurio\SocialNetworkBundle\Entity\UserFriendship
-      mappedBy: user_tgt
-    msgSender:
-      targetEntity: Message
-      mappedBy: sender
-    msgTarget:
-      targetEntity: MessageTarget
-      mappedBy: target
+#  oneToMany:
+#    friends:
+#      targetEntity: Fulgurio\SocialNetworkBundle\Entity\UserFriendship
+#      mappedBy: user_tgt
+#    msgSender:
+#      targetEntity: Message
+#      mappedBy: sender
+#    msgTarget:
+#      targetEntity: MessageTarget
+#      mappedBy: target
