@@ -9,7 +9,7 @@
 	<span class="span2">{% trans from 'admin_user' %}fulgurio.socialnetwork.view.username{% endtrans %}</span>{{ user.username }}<br />
 	<span class="span2">{% trans from 'admin_user' %}fulgurio.socialnetwork.view.email{% endtrans %}</span>{{ user.email }}<br />
 	<span class="span2">{% trans from 'admin_user' %}fulgurio.socialnetwork.view.register_date{% endtrans %}</span>{{ user.createdAt|date('fulgurio.socialnetwork.format_date_time'|trans({}, 'admin')) }}<br />
-	<span class="span2">{% trans from 'admin_user' %}fulgurio.socialnetwork.view.last_login{% endtrans %}</span>{{ user.lastLogin|date('fulgurio.socialnetwork.format_date_time'|trans({}, 'admin')) }}<br />
+	<span class="span2">{% trans from 'admin_user' %}fulgurio.socialnetwork.view.last_login{% endtrans %}</span>{% if user.lastLogin %}{{ user.lastLogin|date('fulgurio.socialnetwork.format_date_time'|trans({}, 'admin')) }}{% else %}{% trans from 'admin_user' %}fulgurio.socialnetwork.never_logged{% endtrans %}{% endif %}<br />
 </p>
 <div class="form-actions">
 	<a href="{{ path('fulgurio_social_network_admin_users_init_password', {userId: user.id}) }}" class="btn btn-primary">{% trans from 'admin_user' %}fulgurio.socialnetwork.actions.init_password{% endtrans %}</a>

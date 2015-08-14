@@ -3,6 +3,7 @@ fulgurio:
     header_link:            Utilisateurs
     user_not_found:         Utilisateur non trouvé.
     no_result:              Aucun utilisateur trouvé.
+    never_logged:           Jamais connecté
     list:
       title:                Utilisateurs
       last_login:           Dernière connexion

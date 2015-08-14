@@ -3,6 +3,7 @@ fulgurio:
     header_link:            Users
     user_not_found:         User not found.
     no_result:              No user found.
+    never_logged:           Never logged
     list:
       title:                Users
       last_login:           Last login
