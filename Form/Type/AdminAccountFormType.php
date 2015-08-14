@@ -20,7 +20,7 @@ class AdminAccountFormType extends AbstractType
     /**
      * @var Symfony\Component\HttpFoundation\Request
      */
-    private $request;
+    protected $request;
 
 
     /**
