@@ -11,11 +11,12 @@
 	<form action="{{ formAction }}" {{ form_enctype(form) }} method="post" class="form-horizontal">
 		<fieldset>
 			<legend>{{ formTitle|trans({}, 'admin_user') }}</legend>
-{{ form_errors(form) }}
-{% if form.username.vars.errors
+{% if form.vars.errors
+     or form.username.vars.errors
      or form.email.vars.errors
      or form.newPassword.first.vars.errors %}
 			<div class="alert alert-error">
+{%   for error in form.vars.errors %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
 {%   for error in form.username.vars.errors %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
 {%   for error in form.email.vars.errors %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
 {%   for error in form.newPassword.first.vars.errors %}{{ error.messageTemplate|trans({}, 'admin_user') }}<br />{% endfor %}
@@ -46,7 +47,7 @@
 				</div>
 			</div>
 			<div class="control-group avatar">
-				<label class="control-label" for="{{ form.email.vars.id }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.avatar.label{% endtrans %}</label>
+				<label class="control-label" for="{{ form.avatarFile.vars.id }}">{% trans from 'admin_user' %}fulgurio.socialnetwork.add.avatar.label{% endtrans %}</label>
 				<div class="controls fileupload {% if user.avatar %}fileupload-exists{% else %}fileupload-new{% endif %}" data-provides="fileupload">
 					<div class="fileupload-new thumbnail"><img src="{{ asset('bundles/fulguriosocialnetwork/images/avatar.png') }}" /></div>
 					<div class="fileupload-preview fileupload-exists thumbnail"><img src="{{ avatar(user) }}" /></div>
