@@ -21,45 +21,33 @@ class AdminAccountFormHandler
      */
     private $userManager;
 
-    /**
-     * @var Symfony\Component\Form\Form
-     */
-    private $form;
-
-    /**
-     * @var Symfony\Component\HttpFoundation\Request
-     */
-    private $request;
-
 
     /**
      * Constructor
      *
      * @param FOS\UserBundle\Model\UserManagerInterface $userManager
-     * @param Symfony\Component\Form\Form $form
-     * @param Symfony\Component\HttpFoundation\Request $request
      */
-    public function __construct(UserManagerInterface $userManager, Form $form, Request $request)
+    public function __construct(UserManagerInterface $userManager)
     {
         $this->userManager = $userManager;
-        $this->form = $form;
-        $this->request = $request;
     }
 
     /**
      * Processing form values
      *
-     * @param $user
+     * @param Symfony\Component\Form\Form $form
+     * @param Symfony\Component\HttpFoundation\Request $request
      * @return boolean
      */
-    public function process($user)
+    public function process(Form $form, Request $request)
     {
-        if ($this->request->getMethod() == 'POST')
+        if ($request->getMethod() == 'POST')
         {
-            $this->form->handleRequest($this->request);
-            if ($this->form->isValid())
+            $form->handleRequest($request);
+            if ($form->isValid())
             {
-                $newPassword = $this->form->get('newPassword')->getData();
+                $user = $form->getData();
+                $newPassword = $form->get('newPassword')->getData();
                 if (trim($newPassword))
                 {
                     $user->setPlainPassword($newPassword);

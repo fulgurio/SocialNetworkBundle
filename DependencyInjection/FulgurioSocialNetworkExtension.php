@@ -43,6 +43,7 @@ class FulgurioSocialNetworkExtension extends Extension
         $this->addMessengerConfig($container, $config['messenger']);
         $this->addContactConfig($container, $config['contact']);
         $this->addFriendshipConfig($container, $config['friendship']);
+        $this->addUserConfig($container, $config['user']);
     }
 
     /**
@@ -129,6 +130,24 @@ class FulgurioSocialNetworkExtension extends Extension
         $this->addEmailsConfig($container, 'friendship.email.accept', $config['email']['accept']);
         $this->addEmailsConfig($container, 'friendship.email.refuse', $config['email']['refuse']);
         $this->addEmailsConfig($container, 'friendship.email.remove', $config['email']['remove']);
+    }
+
+    /**
+     * Adding user data config
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function addUserConfig(ContainerBuilder $container, array $config)
+    {
+        if (isset($config['admin']['form']['type']) && $config['admin']['form']['type'])
+        {
+            $container->setAlias('fulgurio_social_network.user.admin.form.type', $config['admin']['form']['type']);
+        }
+        if (isset($config['admin']['form']['handler']) && $config['admin']['form']['handler'])
+        {
+            $container->setAlias('fulgurio_social_network.user.admin.form.handler', $config['admin']['form']['handler']);
+        }
     }
 
     /**

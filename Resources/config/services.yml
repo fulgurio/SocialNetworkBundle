@@ -28,6 +28,18 @@ services:
         tags:
             -  { name: twig.extension }
 
+# Forms
+    fulgurio_social_network.user.admin.form.type:
+        class: Fulgurio\SocialNetworkBundle\Form\Type\AdminAccountFormType
+        scope: request
+        arguments:
+            - @request
+
+    fulgurio_social_network.user.admin.form.handler:
+        class: Fulgurio\SocialNetworkBundle\Form\Handler\AdminAccountFormHandler
+        arguments:
+            user_manager: @fos_user.user_manager
+
     fulgurio_social_network.registration.form.type:
         class: Fulgurio\SocialNetworkBundle\Form\Type\RegistrationFormType
         arguments: [ %fos_user.model.user.class% ]

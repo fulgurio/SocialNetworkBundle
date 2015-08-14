@@ -12,20 +12,25 @@ namespace Fulgurio\SocialNetworkBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AdminAccountFormType extends AbstractType
 {
-    private $container;
+    /**
+     * @var Symfony\Component\HttpFoundation\Request
+     */
+    private $request;
+
 
     /**
      * Constructor
      *
-     * @param object $container
+     * @param Symfony\Component\HttpFoundation\Request $request
      */
-    public function __construct($container)
+    public function __construct(Request $request)
     {
-        $this->container = $container;
+        $this->request = $request;
     }
 
     /**
@@ -49,8 +54,7 @@ class AdminAccountFormType extends AbstractType
             ))
             ->add('avatarFile', 'file', array('required' => FALSE));
 
-        $request = $this->container->get('request');
-        if ($request->get('userId'))
+        if ($this->request->get('userId'))
         {
             $builder->add('newPassword', 'repeated', array(
                 'type' => 'password',

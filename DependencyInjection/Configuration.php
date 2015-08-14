@@ -37,6 +37,7 @@ class Configuration implements ConfigurationInterface
         $this->addAvatarSection($rootNode);
         $this->addContactSection($rootNode);
         $this->addFriendsSection($rootNode);
+        $this->addUserSection($rootNode);
         return $treeBuilder;
     }
 
@@ -409,4 +410,32 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ;
     }
+
+    /**
+     * User configuration
+     *
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addUserSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('user')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('admin')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->arrayNode('form')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                    ->scalarNode('type')->defaultNull()->end()
+                                    ->scalarNode('handler')->defaultNull()->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end();
+    }
+
 }

@@ -10,10 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
-use Fulgurio\SocialNetworkBundle\Entity\User;
-use Fulgurio\SocialNetworkBundle\Form\Handler\AdminAccountFormHandler;
 use Fulgurio\SocialNetworkBundle\Form\Handler\AdminContactFormHandler;
-use Fulgurio\SocialNetworkBundle\Form\Type\AdminAccountFormType;
 use Fulgurio\SocialNetworkBundle\Form\Type\AdminContactFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,10 +32,11 @@ class AdminUserController extends Controller
     public function listAction()
     {
         $request = $this->get('request');
+        $userClassName = $this->container->getParameter('fos_user.model.user.class');
         $search = trim($request->get('s', ''));
         $page = $request->get('page', 1);
         $repository = $this->getDoctrine()
-                ->getRepository('FulgurioSocialNetworkBundle:User');
+                ->getRepository($userClassName);
         if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))
         {
             $users = $repository->findWithPagination(
@@ -100,14 +98,13 @@ class AdminUserController extends Controller
         {
             throw new AccessDeniedHttpException();
         }
-        $user = is_null($userId) ? new User() : $this->getSpecifiedUser($userId);
-        $form = $this->createForm(new AdminAccountFormType($this->container),
+        $userClassName = $this->container->getParameter('fos_user.model.user.class');
+        $user = is_null($userId) ? new $userClassName() : $this->getSpecifiedUser($userId);
+        $form = $this->createForm(
+                $this->container->get('fulgurio_social_network.user.admin.form.type'),
                 $user);
-        $formHandler = new AdminAccountFormHandler(
-                $this->container->get('fos_user.user_manager'),
-                $form,
-        $this->getRequest());
-        if ($formHandler->process($user))
+        $formHandler = $this->container->get('fulgurio_social_network.user.admin.form.handler');
+        if ($formHandler->process($form, $this->getRequest()))
         {
             $this->get('session')->getFlashBag()->add('notice',
                     $this->get('translator')->trans(
@@ -339,7 +336,8 @@ class AdminUserController extends Controller
      */
     private function getSpecifiedUser($userId)
     {
-        if (!$user = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->find($userId))
+        $userClassName = $this->container->getParameter('fos_user.model.user.class');
+        if (!$user = $this->getDoctrine()->getRepository($userClassName)->find($userId))
         {
             throw new NotFoundHttpException(
                 $this->get('translator')->trans('fulgurio.socialnetwork.user_not_found', array(), 'admin_user')
