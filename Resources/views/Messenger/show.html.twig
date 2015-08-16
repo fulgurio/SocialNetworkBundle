@@ -67,10 +67,10 @@
 {% endif %}
 	</div>
 	<div class="span3">
-		<h2>Participants</h2>
+		<h2>{% trans from 'messenger' %}fulgurio.socialnetwork.participants{% endtrans %}</h2>
 		<ol class="participants">
 {% for participant in participants %}
-{%   if app.user == participant %}
+{%   if app.user.id == participant.id %}
 			<li><img sr="{{ avatar(participant) }}" alt="" /></li>
 {%   else %}
 			<li><a href="{{ path('fulgurio_social_network_friendship_profil', { userId: participant.id }) }}" title="{{ participant.username }}"{% if friends[participant.id] is not defined %} class="notAFriend"{% endif %}><img src="{{ avatar(participant) }}" alt="" /></a></li>

@@ -7,6 +7,7 @@ fulgurio:
     remove_button:            Supprimer
     no_message:               Vous n'avez aucun message
     back_to_messages_list:    Retour
+    participants:             Participants
     new_message:
       title:                  Nouveau message
       legend:                 Nouveau message
