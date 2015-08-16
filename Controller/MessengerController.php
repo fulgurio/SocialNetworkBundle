@@ -17,6 +17,7 @@ use Fulgurio\SocialNetworkBundle\Form\Handler\Messenger\NewMessageFormHandler;
 use Fulgurio\SocialNetworkBundle\Entity\Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class MessengerController extends Controller
 {
@@ -69,11 +70,13 @@ class MessengerController extends Controller
         $formHandler = new NewMessageFormHandler(
                 $form,
                 $this->getRequest(),
+                $this->get('translator')
+        );
+        if ($formHandler->process(
                 $this->getDoctrine(),
                 $this->container->get('fulgurio_social_network.messenger_mailer'),
-                $this->container->getParameter('fulgurio_social_network.messenger.message_target.class')
-        );
-        if ($formHandler->process($currentUser))
+                $currentUser,
+                $this->container->getParameter('fulgurio_social_network.messenger.message_target.class')))
         {
             $this->get('session')->getFlashBag()->add(
                     'success',
@@ -82,8 +85,20 @@ class MessengerController extends Controller
                             array(),
                             'messenger')
             );
-            return $this->redirect($this->generateUrl('fulgurio_social_network_messenger_list'));
+            $redirectUrl = $this->generateUrl('fulgurio_social_network_messenger_list');
+            if ($request->isXmlHttpRequest())
+            {
+                return new JsonResponse(array(
+                    'success' => 1,
+                    'redirect' => $redirectUrl
+                ));
+            }
+            return $this->redirect($redirectUrl);
         }
+        elseif ($request->isXmlHttpRequest() && $formHandler->hasError())
+        {
+            return new JsonResponse(array('errors' => $formHandler->getErrors()));
+         }
         return $this->render('FulgurioSocialNetworkBundle:Messenger:new.html.twig', array(
             'form' => $form->createView(),
             'selectedUsers' => $selectedUsers,
