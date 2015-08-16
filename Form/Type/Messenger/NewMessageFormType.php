@@ -10,7 +10,6 @@
 
 namespace Fulgurio\SocialNetworkBundle\Form\Type\Messenger;
 
-use Fulgurio\SocialNetworkBundle\Entity\MessageTarget;
 use Fulgurio\SocialNetworkBundle\Entity\User;
 use Fulgurio\SocialNetworkBundle\Repository\UserRepository;
 use Symfony\Component\Form\AbstractType;
@@ -40,17 +39,33 @@ class NewMessageFormType extends AbstractType
     private $userClassName;
 
     /**
+     * @var string
+     */
+    private $userFriendshipClassName;
+
+    /**
+     * @var string
+     */
+    private $messageTargetClassName;
+
+
+    /**
      * Constructor
      *
      * @param User $currentUser
      * @param Registry $doctrine
      * @param string $userClassName
+     * @param string $userFriendshipClassName
+     * @param string $messageTargetClassName
      */
-    public function __construct(User $currentUser, Registry $doctrine, $userClassName)
+    public function __construct(User $currentUser, Registry $doctrine, $userClassName, $userFriendshipClassName, $messageTargetClassName)
     {
+        $this->userFriendshipClassName = $userFriendshipClassName;
         $this->currentUser = $currentUser;
         $this->doctrine = $doctrine;
         $this->userClassName = $userClassName;
+        $this->userFriendshipClassName = $userFriendshipClassName;
+        $this->messageTargetClassName = $messageTargetClassName;
     }
 
     /**
@@ -123,7 +138,7 @@ class NewMessageFormType extends AbstractType
             $message = $form->getData();
             foreach ($friends as $friend)
             {
-                $target = new MessageTarget();
+                $target = new $this->messageTargetClassName();
                 $target->setMessage($message);
                 $target->setTarget($friend);
                 $this->doctrine->getManager()->persist($target);
@@ -143,7 +158,7 @@ class NewMessageFormType extends AbstractType
     private function getOnlyFriends($usersId)
     {
         $myFriends = $this->doctrine
-                ->getRepository('FulgurioSocialNetworkBundle:UserFriendship')
+                ->getRepository($this->userFriendshipClassName)
                 ->findAcceptedFriends($this->currentUser);
         $foundedFriends = array();
         if (!empty($myFriends))

@@ -30,17 +30,30 @@ class Messenger
      */
     private $securityContext;
 
+    /**
+     * @var string
+     */
+    private $messageClassName;
+
+    /**
+     * @var string
+     */
+    private $messageTargetClassName;
 
     /**
      * Constructor
      *
      * @param RegistryInterface $doctrine
      * @param SecurityContext $securityContext
+     * @param string $messageClassName
+     * @param string $messageTargetClassName
      */
-    public function __construct(RegistryInterface $doctrine, SecurityContext $securityContext)
+    public function __construct(RegistryInterface $doctrine, SecurityContext $securityContext, $messageClassName, $messageTargetClassName)
     {
         $this->doctrine = $doctrine;
         $this->securityContext = $securityContext;
+        $this->messageClassName = $messageClassName;
+        $this->messageTargetClassName = $messageTargetClassName;
     }
 
     /**
@@ -54,7 +67,7 @@ class Messenger
      */
     public function sendMessage($userTgt, $subject, $content, $canNotAnswer = FALSE, $typeOfMessage = NULL)
     {
-        $message = new Message();
+        $message = new $this->messageClassName();
         $message->setSender($this->securityContext->getToken()->getUser());
         $message->setSubject($subject);
         $message->setContent($content);
@@ -63,7 +76,7 @@ class Messenger
         {
             $message->setTypeOfMessage($typeOfMessage);
         }
-        $messageTarget = new MessageTarget();
+        $messageTarget = new $this->messageTargetClassName();
         $messageTarget->setTarget($userTgt);
         $messageTarget->setMessage($message);
         $messageTarget->setHasRead(FALSE);

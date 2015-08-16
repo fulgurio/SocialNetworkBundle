@@ -10,6 +10,7 @@ services:
         class: Fulgurio\SocialNetworkBundle\Twig\Extension\FriendshipExtension
         arguments:
             doctrine: "@doctrine"
+            userFriendshipClassName: %fulgurio_social_network.friendship.class%
         tags:
             -  { name: twig.extension }
 
@@ -25,6 +26,7 @@ services:
         class: Fulgurio\SocialNetworkBundle\Twig\Extension\MessengerExtension
         arguments:
             doctrine: "@doctrine"
+            messageClassName: %fulgurio_social_network.messenger.message.class%
         tags:
             -  { name: twig.extension }
 
@@ -175,3 +177,5 @@ services:
         arguments:
             doctrine: "@doctrine"
             securityContext: "@security.context"
+            messageClassName: %fulgurio_social_network.messenger.message.class%
+            messageTargetClassName: %fulgurio_social_network.messenger.message_target.class%

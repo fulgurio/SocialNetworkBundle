@@ -1,6 +1,5 @@
 Fulgurio\SocialNetworkBundle\Entity\User:
   type: mappedSuperclass
-#  type: entity
   repositoryClass: Fulgurio\SocialNetworkBundle\Repository\UserRepository
   table: member
   fields:
@@ -25,14 +24,3 @@ Fulgurio\SocialNetworkBundle\Entity\User:
       gedmo:
         timestampable:
           on: update
-
-#  oneToMany:
-#    friends:
-#      targetEntity: Fulgurio\SocialNetworkBundle\Entity\UserFriendship
-#      mappedBy: user_tgt
-#    msgSender:
-#      targetEntity: Message
-#      mappedBy: sender
-#    msgTarget:
-#      targetEntity: MessageTarget
-#      mappedBy: target

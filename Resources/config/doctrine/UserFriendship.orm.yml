@@ -1,5 +1,5 @@
 Fulgurio\SocialNetworkBundle\Entity\UserFriendship:
-  type: entity
+  type: mappedSuperclass
   repositoryClass: Fulgurio\SocialNetworkBundle\Repository\UserFriendshipRepository
   table: member_friendship
   fields:
@@ -23,17 +23,3 @@ Fulgurio\SocialNetworkBundle\Entity\UserFriendship:
       gedmo:
         timestampable:
           on: update
-  manyToOne:
-    user_src:
-      targetEntity: User
-      joinColumn:
-        name: user_src_id
-        referencedColumnName: id
-        onDelete: cascade
-    user_tgt:
-      targetEntity: User
-      inversedBy: friends
-      joinColumn:
-        name: user_tgt_id
-        referencedColumnName: id
-        onDelete: cascade

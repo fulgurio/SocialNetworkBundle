@@ -45,28 +45,33 @@ class MessengerController extends Controller
     {
         $request = $this->get('request');
         $currentUser = $this->getUser();
-        $message = new Message();
+        $messageClassName = $this->container->getParameter('fulgurio_social_network.messenger.message.class');
+        $message = new $messageClassName();
 
         $selectedUsers = array();
+        $userClassName = $this->container->getParameter('fos_user.model.user.class');
         if (!is_null($userId))
         {
-            $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $userId));
+            $selectedUsers = $this->getDoctrine()->getRepository($userClassName)->findBy(array('id' => $userId));
         }
         elseif ($selectedUsers = $request->get('users'))
         {
-            $selectedUsers = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->findBy(array('id' => $selectedUsers));
+            $selectedUsers = $this->getDoctrine()->getRepository($userClassName)->findBy(array('id' => $selectedUsers));
         }
         $form = $this->createForm(
                 new NewMessageFormType(
                         $currentUser,
                         $this->getDoctrine(),
-                        $this->container->getParameter('fos_user.model.user.class')
+                        $userClassName,
+                        $this->container->getParameter('fulgurio_social_network.friendship.class'),
+                        $this->container->getParameter('fulgurio_social_network.messenger.message_target.class')
                 ), $message);
         $formHandler = new NewMessageFormHandler(
                 $form,
                 $this->getRequest(),
                 $this->getDoctrine(),
-                $this->container->get('fulgurio_social_network.messenger_mailer')
+                $this->container->get('fulgurio_social_network.messenger_mailer'),
+                $this->container->getParameter('fulgurio_social_network.messenger.message_target.class')
         );
         if ($formHandler->process($currentUser))
         {
@@ -96,19 +101,22 @@ class MessengerController extends Controller
         $currentUser = $this->getUser();
         $message = $this->getMessage($msgId, TRUE);
         $data = array('message' => $message);
-        $messageRepository = $this->getDoctrine()
-                ->getRepository('FulgurioSocialNetworkBundle:Message');
-        $data['participants'] = $messageRepository->findParticipants($message);
+        $userClassName = $this->container->getParameter('fos_user.model.user.class');
+        $userRepository = $this->getDoctrine()->getRepository($userClassName);
+        $data['participants'] = $userRepository->findChatParticipants($message);
         if ($message->getAllowAnswer())
         {
-            $answer = new Message();
+            $messageClassName = $this->container->getParameter('fulgurio_social_network.messenger.message.class');
+            $answer = new $messageClassName();
             $answer->setSubject('###RESPONSE###');
             $form = $this->createForm(new AnswerMessageFormType(), $answer);
             $formHandler = new AnswerMessageFormHandler(
                     $form,
                     $this->getRequest(),
                     $this->getDoctrine(),
-                    $this->container->get('fulgurio_social_network.messenger_mailer')
+                    $this->container->get('fulgurio_social_network.messenger_mailer'),
+                    $this->container->getParameter('fulgurio_social_network.messenger.message.class'),
+                    $this->container->getParameter('fulgurio_social_network.messenger.message_target.class')
             );
             if ($formHandler->process($message, $currentUser, $data['participants']))
             {
@@ -126,8 +134,9 @@ class MessengerController extends Controller
             }
             $data['form'] = $form->createView();
         }
+        $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
         $tmpFriends = $this->getDoctrine()
-                ->getRepository('FulgurioSocialNetworkBundle:UserFriendship')
+                ->getRepository($userFriendshipClassName)
                 ->findAcceptedFriends($currentUser);
         $data['friends'] = array();
         foreach ($tmpFriends as &$tmpFriend)
@@ -153,8 +162,6 @@ class MessengerController extends Controller
         $message = $this->getMessage($msgId);
         if ($request->request->get('confirm') === 'yes')
         {
-            $messageRepository = $this->getDoctrine()
-                    ->getRepository('FulgurioSocialNetworkBundle:Message');
             if (count($message->getTarget()) == 1)
             {
                 // If we are the last (or only) user on message conversation,
@@ -166,7 +173,7 @@ class MessengerController extends Controller
             else
             {
                 // If there s some users who don't remove message, we just remove current user link with message
-                $messageRepository->removeUserMessageRelation($msgId, $currentUser);
+                $this->getMessageRepository()->removeUserMessageRelation($msgId, $currentUser);
             }
             $this->get('session')->getFlashBag()->add(
                     'success',
@@ -199,9 +206,7 @@ class MessengerController extends Controller
      */
     private function getMessagesList()
     {
-        return $this->getDoctrine()
-                ->getRepository('FulgurioSocialNetworkBundle:Message')
-                ->findRootMessages($this->getUser());
+        return $this->getMessageRepository()->findRootMessages($this->getUser());
     }
 
     /**
@@ -215,8 +220,7 @@ class MessengerController extends Controller
     private function getMessage($msgId, $updateHasRead = FALSE)
     {
         $currentUser = $this->getUser();
-        $relation = $this->getDoctrine()
-                ->getRepository('FulgurioSocialNetworkBundle:MessageTarget')
+        $relation = $this->getMessageTargetRepository()
                 ->findOneBy(array(
                     'message' => $msgId,
                     'target' => $currentUser->getId())
@@ -232,8 +236,20 @@ class MessengerController extends Controller
             $em->persist($relation);
             $em->flush();
         }
+        return $this->getMessageRepository()->find($msgId);
+    }
+
+    protected function getMessageRepository()
+    {
+        $className = $this->container->getParameter('fulgurio_social_network.messenger.message.class');
         return $this->getDoctrine()
-                ->getRepository('FulgurioSocialNetworkBundle:Message')
-                ->find($msgId);
+                ->getRepository($className);
+    }
+
+    protected function getMessageTargetRepository()
+    {
+        $className = $this->container->getParameter('fulgurio_social_network.messenger.message_target.class');
+        return $this->getDoctrine()
+                ->getRepository($className);
     }
 }

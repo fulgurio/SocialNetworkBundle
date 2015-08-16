@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Vincent Guerard <v.guerard@fulgurio.net>
  */
-class User extends BaseUser
+abstract class User extends BaseUser
 {
     /**
      * @var integer $id
@@ -36,17 +36,6 @@ class User extends BaseUser
      */
     private $send_msg_to_email = TRUE;
 
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->friends = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->msgSender = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->msgTarget = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Set avatar_file
@@ -82,7 +71,7 @@ class User extends BaseUser
     /**
      * @var string
      */
-    protected $avatar;
+    private $avatar;
 
     /**
      * @var \DateTime
@@ -93,21 +82,6 @@ class User extends BaseUser
      * @var \DateTime
      */
     private $updated_at;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    protected $friends;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    protected $msgSender;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    protected $msgTarget;
 
 
     /**
@@ -210,104 +184,5 @@ class User extends BaseUser
     public function getUpdatedAt()
     {
         return $this->updated_at;
-    }
-
-    /**
-     * Add friends
-     *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\UserFriendship $friends
-     * @return User
-     */
-    public function addFriend(\Fulgurio\SocialNetworkBundle\Entity\UserFriendship $friends)
-    {
-        $this->friends[] = $friends;
-
-        return $this;
-    }
-
-    /**
-     * Remove friends
-     *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\UserFriendship $friends
-     */
-    public function removeFriend(\Fulgurio\SocialNetworkBundle\Entity\UserFriendship $friends)
-    {
-        $this->friends->removeElement($friends);
-    }
-
-    /**
-     * Get friends
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFriends()
-    {
-        return $this->friends;
-    }
-
-    /**
-     * Add msgSender
-     *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\Message $msgSender
-     * @return User
-     */
-    public function addMsgSender(\Fulgurio\SocialNetworkBundle\Entity\Message $msgSender)
-    {
-        $this->msgSender[] = $msgSender;
-
-        return $this;
-    }
-
-    /**
-     * Remove msgSender
-     *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\Message $msgSender
-     */
-    public function removeMsgSender(\Fulgurio\SocialNetworkBundle\Entity\Message $msgSender)
-    {
-        $this->msgSender->removeElement($msgSender);
-    }
-
-    /**
-     * Get msgSender
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMsgSender()
-    {
-        return $this->msgSender;
-    }
-
-    /**
-     * Add msgTarget
-     *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\MessageTarget $msgTarget
-     * @return User
-     */
-    public function addMsgTarget(\Fulgurio\SocialNetworkBundle\Entity\MessageTarget $msgTarget)
-    {
-        $this->msgTarget[] = $msgTarget;
-
-        return $this;
-    }
-
-    /**
-     * Remove msgTarget
-     *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\MessageTarget $msgTarget
-     */
-    public function removeMsgTarget(\Fulgurio\SocialNetworkBundle\Entity\MessageTarget $msgTarget)
-    {
-        $this->msgTarget->removeElement($msgTarget);
-    }
-
-    /**
-     * Get msgTarget
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMsgTarget()
-    {
-        return $this->msgTarget;
     }
 }

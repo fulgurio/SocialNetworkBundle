@@ -1,0 +1,4 @@
+Fulgurio\SocialNetworkBundle\Entity\Message:
+    file:
+        mapping:           message_mapping
+        filename_property: filename

@@ -18,7 +18,12 @@ class MessengerExtension extends \Twig_Extension
     /**
      * @var Symfony\Bridge\Doctrine\RegistryInterface
      */
-    protected $doctrine;
+    private $doctrine;
+
+    /**
+     * @var string
+     */
+    private $messageClassName;
 
 
     /**
@@ -26,9 +31,10 @@ class MessengerExtension extends \Twig_Extension
      *
      * @param RegistryInterface $doctrine
      */
-    public function __construct(RegistryInterface $doctrine)
+    public function __construct(RegistryInterface $doctrine, $messageClassName)
     {
         $this->doctrine = $doctrine;
+        $this->messageClassName = $messageClassName;
     }
 
     /**
@@ -51,7 +57,7 @@ class MessengerExtension extends \Twig_Extension
     public function nbOfUnreadMessage(User $user)
     {
         return $this->doctrine
-                ->getRepository('FulgurioSocialNetworkBundle:Message')
+                ->getRepository($this->messageClassName)
                 ->countUnreadMessage($user);
     }
 

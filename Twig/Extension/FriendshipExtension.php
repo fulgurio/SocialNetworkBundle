@@ -18,17 +18,24 @@ class FriendshipExtension extends \Twig_Extension
     /**
      * @var Symfony\Bridge\Doctrine\RegistryInterface
      */
-    protected $doctrine;
+    private $doctrine;
+
+    /**
+     * @var string
+     */
+    private $userFriendshipClassName;
 
 
     /**
      * Constructor
      *
      * @param RegistryInterface $doctrine
+     * @param string $userFriendshipClassName
      */
-    public function __construct(RegistryInterface $doctrine)
+    public function __construct(RegistryInterface $doctrine, $userFriendshipClassName)
     {
         $this->doctrine = $doctrine;
+        $this->userFriendshipClassName = $userFriendshipClassName;
     }
 
     /**
@@ -51,7 +58,7 @@ class FriendshipExtension extends \Twig_Extension
     public function nbOfPendingUser(User $user)
     {
         return $this->doctrine
-                ->getRepository('FulgurioSocialNetworkBundle:UserFriendship')
+                ->getRepository($this->userFriendshipClassName)
                 ->countPendingUserOfFrienship($user);
     }
 

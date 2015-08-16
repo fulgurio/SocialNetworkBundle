@@ -1,5 +1,5 @@
 Fulgurio\SocialNetworkBundle\Entity\Message:
-  type: entity
+  type: mappedSuperclass
   repositoryClass: Fulgurio\SocialNetworkBundle\Repository\MessageRepository
   table: message
   fields:
@@ -36,25 +36,3 @@ Fulgurio\SocialNetworkBundle\Entity\Message:
       gedmo:
         timestampable:
           on: update
-  manyToOne:
-    parent:
-      targetEntity: Message
-      inversedBy: children
-      joinColumn:
-        name: parent_id
-        referencedColumnName: id
-        onDelete: cascade
-    sender:
-      targetEntity: User
-      inversedBy: msgSender
-      joinColumn:
-        name: sender_id
-        referencedColumnName: id
-        onDelete: set null
-  oneToMany:
-    target:
-      targetEntity: MessageTarget
-      mappedBy: message
-    children:
-      targetEntity: Message
-      mappedBy: parent

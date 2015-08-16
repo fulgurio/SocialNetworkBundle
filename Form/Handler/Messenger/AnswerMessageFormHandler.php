@@ -12,7 +12,6 @@ namespace Fulgurio\SocialNetworkBundle\Form\Handler\Messenger;
 
 use Fulgurio\SocialNetworkBundle\Entity\User;
 use Fulgurio\SocialNetworkBundle\Entity\Message;
-use Fulgurio\SocialNetworkBundle\Entity\MessageTarget;
 use Fulgurio\SocialNetworkBundle\Mailer\MessengerMailer;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +39,16 @@ class AnswerMessageFormHandler
      */
     private $mailer;
 
+    /**
+     * @var string
+     */
+    private $messageClassName;
+
+    /**
+     * @var string
+     */
+    private $messageTargetClassName;
+
 
     /**
      * Constructor
@@ -47,13 +56,18 @@ class AnswerMessageFormHandler
      * @param Symfony\Component\Form\Form $form
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param Symfony\Bundle\DoctrineBundle\Registry $doctrine
+     * @param $mailer
+     * @param string $messageClassName
+     * @param string $messageTargetClassName
      */
-    public function __construct(Form $form, Request $request, Registry $doctrine, MessengerMailer $mailer)
+    public function __construct(Form $form, Request $request, Registry $doctrine, MessengerMailer $mailer, $messageClassName, $messageTargetClassName)
     {
         $this->form = $form;
         $this->request = $request;
         $this->doctrine = $doctrine;
         $this->mailer = $mailer;
+        $this->messageClassName = $messageClassName;
+        $this->messageTargetClassName = $messageTargetClassName;
     }
 
     /**
@@ -79,7 +93,7 @@ class AnswerMessageFormHandler
                 $unreadMessageUsers = array();
                 foreach ($participants as $participant)
                 {
-                    $answerTarget = new MessageTarget();
+                    $answerTarget = new $this->messageTargetClassName();
                     $answerTarget->setHasRead(TRUE);
                     $answerTarget->setTarget($participant);
                     $answerTarget->setMessage($answer);
@@ -95,7 +109,7 @@ class AnswerMessageFormHandler
                 $em->persist($message);
                 $em->flush();
                 $this->doctrine
-                        ->getRepository('FulgurioSocialNetworkBundle:Message')
+                        ->getRepository($this->messageClassName)
                         ->markRootAsUnread($message, $unreadMessageUsers);
                 return TRUE;
             }

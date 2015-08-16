@@ -165,6 +165,8 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('messenger')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->scalarNode('message_class')->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode('message_target_class')->isRequired()->cannotBeEmpty()->end()
                         ->arrayNode('message')
                             ->addDefaultsIfNotSet()
                             ->children()
@@ -322,10 +324,11 @@ class Configuration implements ConfigurationInterface
     private function addFriendsSection(ArrayNodeDefinition $node)
     {
         $node
-                ->children()
-                    ->arrayNode('friendship')
+            ->children()
+                ->arrayNode('friendship')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->scalarNode('class')->isRequired()->cannotBeEmpty()->end()
                         ->scalarNode('nb_refusals')->defaultValue(3)->end()
                     ->end()
                     ->children()

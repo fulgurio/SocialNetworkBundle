@@ -46,8 +46,10 @@ class ProfileController extends Controller
             {
                 throw new NotFoundHttpException();
             }
-            $areFriend = $doctrine->getRepository('FulgurioSocialNetworkBundle:UserFriendship')->areFriends($currentUser, $userToDisplay);
-            $havePendingInvit = ($areFriend == FALSE) ? $doctrine->getRepository('FulgurioSocialNetworkBundle:UserFriendship')->havePendingInvitation($currentUser, $userToDisplay) : FALSE;
+            $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
+            $userFrienshipRepository = $doctrine->getRepository($userFriendshipClassName);
+            $areFriend = $userFrienshipRepository->areFriends($currentUser, $userToDisplay);
+            $havePendingInvit = ($areFriend == FALSE) ? $userFrienshipRepository->havePendingInvitation($currentUser, $userToDisplay) : FALSE;
         }
         return $this->container->get('templating')->renderResponse(
                 'FulgurioSocialNetworkBundle:Profile:show.html.twig',

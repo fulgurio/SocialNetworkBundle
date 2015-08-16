@@ -9,7 +9,6 @@
  */
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
-use Fulgurio\SocialNetworkBundle\Entity\User;
 use Fulgurio\SocialNetworkBundle\Entity\UserFriendship;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +31,8 @@ class FriendshipController extends Controller
         $request = $this->get('request');
         $currentUser = $this->getUser();
         $page = $request->query->get('page', 1);
-        $friendshipRepository = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:UserFriendship');
+        $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
+        $friendshipRepository = $this->getDoctrine()->getRepository($userFriendshipClassName);
         return $this->render('FulgurioSocialNetworkBundle:Friendship:list.html.twig', array(
             'friendsAsking' => $friendshipRepository->findAskingFriends($currentUser),
             'friends' => $friendshipRepository->findAcceptedAndPendingFriends($currentUser, $page, $this->get('knp_paginator')),
@@ -51,8 +51,10 @@ class FriendshipController extends Controller
         if (trim($searchValue) != '')
         {
             $currentUser = $this->getUser();
-            $userRepository = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User');
-            $friendshipRepository = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:UserFriendship');
+            $userClassName = $this->container->getParameter('fos_user.model.user.class');
+            $userRepository = $this->getDoctrine()->getRepository($userClassName);
+            $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
+            $friendshipRepository = $this->getDoctrine()->getRepository($userFriendshipClassName);
             $excludeIDs = array($currentUser->getId());
             $friendships = $friendshipRepository->findAcceptedAndRefusedFriends($currentUser);
             foreach ($friendships as $friendship)
@@ -82,8 +84,10 @@ class FriendshipController extends Controller
         if ($selectedFriends = $request->get('friends_id'))
         {
             $currentUser = $this->getUser();
-            $userRepository = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User');
-            $friendshipRepository = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:UserFriendship');
+            $userClassName = $this->container->getParameter('fos_user.model.user.class');
+            $userRepository = $this->getDoctrine()->getRepository($userClassName);
+            $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
+            $friendshipRepository = $this->getDoctrine()->getRepository($userFriendshipClassName);
             $em = $this->getDoctrine()->getManager();
             foreach($selectedFriends as $selectedFriendId)
             {
@@ -111,10 +115,10 @@ class FriendshipController extends Controller
                 }
                 else
                 {
-                    $friendship = new UserFriendship();
+                    $friendship = new $userFriendshipClassName();
                     $friendship->setUserSrc($currentUser);
                     $friendship->setUserTgt($mayBeFriend);
-                    $friendship2 = new UserFriendship();
+                    $friendship2 = new $userFriendshipClassName();
                     $friendship2->setUserSrc($mayBeFriend);
                     $friendship2->setUserTgt($currentUser);
                 }
@@ -144,19 +148,21 @@ class FriendshipController extends Controller
         $request = $this->get('request');
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->getUser();
-        $user = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User')->find($userId);
+        $userClassName = $this->container->getParameter('fos_user.model.user.class');
+        $user = $this->getDoctrine()->getRepository($userClassName)->find($userId);
+        $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
         if (!$user->hasRole('ROLE_ADMIN')
           && !$user->hasRole('ROLE_SUPER_ADMIN')
           && !$user->hasRole('ROLE_GHOST')
-          && !$this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:UserFriendship')->areFriends($currentUser, $user)
+          && !$this->getDoctrine()->getRepository($userFriendshipClassName)->areFriends($currentUser, $user)
         )
         {
-            $friendship = new UserFriendship();
+            $friendship = new $userFriendshipClassName();
             $friendship->setUserSrc($currentUser);
             $friendship->setUserTgt($user);
             $friendship->setStatus(UserFriendship::PENDING_STATUS);
             $em->persist($friendship);
-            $friendship2 = new UserFriendship();
+            $friendship2 = new $userFriendshipClassName();
             $friendship2->setUserSrc($user);
             $friendship2->setUserTgt($currentUser);
             $friendship2->setStatus(UserFriendship::ASKING_STATUS);
@@ -182,12 +188,14 @@ class FriendshipController extends Controller
     public function acceptAction($userId)
     {
         $currentUser = $this->getUser();
-        $userRepository = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User');
+        $userClassName = $this->container->getParameter('fos_user.model.user.class');
+        $userRepository = $this->getDoctrine()->getRepository($userClassName);
         if (!$user = $userRepository->find($userId))
         {
             throw new NotFoundHttpException();
         }
-        $friendshipRepository = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:UserFriendship');
+        $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
+        $friendshipRepository = $this->getDoctrine()->getRepository($userFriendshipClassName);
         if (!$usersFriendship = $friendshipRepository->findByUserAndFriendUser($currentUser, $user))
         {
             throw new NotFoundHttpException();
@@ -222,12 +230,14 @@ class FriendshipController extends Controller
     {
         $request = $this->get('request');
         $currentUser = $this->getUser();
-        $userRepository = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:User');
+        $userClassName = $this->container->getParameter('fos_user.model.user.class');
+        $userRepository = $this->getDoctrine()->getRepository($userClassName);
         if (!$user = $userRepository->find($userId))
         {
             throw new NotFoundHttpException();
         }
-        $friendshipRepository = $this->getDoctrine()->getRepository('FulgurioSocialNetworkBundle:UserFriendship');
+        $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
+        $friendshipRepository = $this->getDoctrine()->getRepository($userFriendshipClassName);
         if (!$usersFriendship = $friendshipRepository->findByUserAndFriendUser($currentUser, $user))
         {
             throw new NotFoundHttpException();
@@ -241,7 +251,7 @@ class FriendshipController extends Controller
                 $hasAcceptedBefore = TRUE;
             }
             $userFriendship->setStatus(UserFriendship::REFUSED_STATUS);
-            if ($userFriendship->getUserTgt() == $currentUser)
+            if ($userFriendship->getUserTgt()->getId() == $currentUser->getId())
             {
                 $nbRefusals = $userFriendship->getNbRefusals();
                 if ($nbRefusals >= $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals'))
@@ -301,8 +311,10 @@ class FriendshipController extends Controller
     {
         if ($request->isXmlHttpRequest())
         {
+            $userClassName = $this->container->getParameter('fos_user.model.user.class');
+            $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
             $foundedFriends = $this->getDoctrine()
-                    ->getRepository('FulgurioSocialNetworkBundle:UserFriendship')
+                    ->getRepository($userFriendshipClassName)
                     ->searchFriend(
                             $this->getUser(),
                             $request->get('q')
@@ -310,7 +322,7 @@ class FriendshipController extends Controller
             $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
             foreach ($foundedFriends as &$friend)
             {
-                $friend['avatar'] = $helper->asset($friend, 'avatarFile', 'Fulgurio\SocialNetworkBundle\Entity\User');
+                $friend['avatar'] = $helper->asset($friend, 'avatarFile', $userClassName);
             }
             $response = new Response(json_encode(
                     array('friends' => $foundedFriends)));

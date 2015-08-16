@@ -101,6 +101,8 @@ class FulgurioSocialNetworkExtension extends Extension
      */
     private function addMessengerConfig(ContainerBuilder $container, array $config)
     {
+        $container->setParameter('fulgurio_social_network.messenger.message.class', $config['message_class']);
+        $container->setParameter('fulgurio_social_network.messenger.message_target.class', $config['message_target_class']);
         $this->addEmailsConfig($container, 'messenger.message.email', $config['message']['email']);
         $this->addEmailsConfig($container, 'messenger.answer.email', $config['answer']['email']);
     }
@@ -124,6 +126,7 @@ class FulgurioSocialNetworkExtension extends Extension
      */
     private function addFriendshipConfig(ContainerBuilder $container, array $config)
     {
+        $container->setParameter('fulgurio_social_network.friendship.class', $config['class']);
         $container->setParameter('fulgurio_social_network.friendship.nb_refusals', $config['nb_refusals']);
         $this->addEmailsConfig($container, 'friendship.email', $config['email']);
         $this->addEmailsConfig($container, 'friendship.email.invit', $config['email']['invit']);

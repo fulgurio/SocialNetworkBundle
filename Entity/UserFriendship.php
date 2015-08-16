@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Fulgurio\SocialNetworkBundle\Entity\UserFriendship
  */
-class UserFriendship
+abstract class UserFriendship
 {
     const ASKING_STATUS = 'asking';
     const ACCEPTED_STATUS = 'accepted';
@@ -76,16 +76,6 @@ class UserFriendship
      * @var \DateTime
      */
     private $updated_at;
-
-    /**
-     * @var \Fulgurio\SocialNetworkBundle\Entity\User
-     */
-    private $user_src;
-
-    /**
-     * @var \Fulgurio\SocialNetworkBundle\Entity\User
-     */
-    private $user_tgt;
 
 
     /**
@@ -175,51 +165,5 @@ class UserFriendship
     public function getUpdatedAt()
     {
         return $this->updated_at;
-    }
-
-    /**
-     * Set user_src
-     *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\User $userSrc
-     * @return UserFriendship
-     */
-    public function setUserSrc(\Fulgurio\SocialNetworkBundle\Entity\User $userSrc = null)
-    {
-        $this->user_src = $userSrc;
-
-        return $this;
-    }
-
-    /**
-     * Get user_src
-     *
-     * @return \Fulgurio\SocialNetworkBundle\Entity\User
-     */
-    public function getUserSrc()
-    {
-        return $this->user_src;
-    }
-
-    /**
-     * Set user_tgt
-     *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\User $userTgt
-     * @return UserFriendship
-     */
-    public function setUserTgt(\Fulgurio\SocialNetworkBundle\Entity\User $userTgt = null)
-    {
-        $this->user_tgt = $userTgt;
-
-        return $this;
-    }
-
-    /**
-     * Get user_tgt
-     *
-     * @return \Fulgurio\SocialNetworkBundle\Entity\User
-     */
-    public function getUserTgt()
-    {
-        return $this->user_tgt;
     }
 }

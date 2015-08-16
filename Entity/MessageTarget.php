@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Fulgurio\SocialNetworkBundle\Entity\MessageTarget
  */
-class MessageTarget
+abstract class MessageTarget
 {
     /**
      * @var boolean $has_read
@@ -40,16 +40,6 @@ class MessageTarget
      * @var \DateTime
      */
     private $updated_at;
-
-    /**
-     * @var \Fulgurio\SocialNetworkBundle\Entity\Message
-     */
-    private $message;
-
-    /**
-     * @var \Fulgurio\SocialNetworkBundle\Entity\User
-     */
-    private $target;
 
 
     /**
@@ -129,51 +119,5 @@ class MessageTarget
     public function getUpdatedAt()
     {
         return $this->updated_at;
-    }
-
-    /**
-     * Set message
-     *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\Message $message
-     * @return MessageTarget
-     */
-    public function setMessage(\Fulgurio\SocialNetworkBundle\Entity\Message $message = null)
-    {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    /**
-     * Get message
-     *
-     * @return \Fulgurio\SocialNetworkBundle\Entity\Message
-     */
-    public function getMessage()
-    {
-        return $this->message;
-    }
-
-    /**
-     * Set target
-     *
-     * @param \Fulgurio\SocialNetworkBundle\Entity\User $target
-     * @return MessageTarget
-     */
-    public function setTarget(\Fulgurio\SocialNetworkBundle\Entity\User $target = null)
-    {
-        $this->target = $target;
-
-        return $this;
-    }
-
-    /**
-     * Get target
-     *
-     * @return \Fulgurio\SocialNetworkBundle\Entity\User
-     */
-    public function getTarget()
-    {
-        return $this->target;
     }
 }
