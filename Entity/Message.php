@@ -26,7 +26,7 @@ abstract class Message
     /**
      * @var File $file
      */
-    public $file;
+    private $file;
 
 
     /**
