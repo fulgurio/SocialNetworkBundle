@@ -4,7 +4,7 @@ services:
         class: Fulgurio\SocialNetworkBundle\Twig\Extension\AvatarExtension
         tags:
             -  { name: twig.extension }
-        arguments: [ @vich_uploader.templating.helper.uploader_helper ]
+        arguments: [ @vich_uploader.templating.helper.uploader_helper, %fulgurio_social_network.avatar.default% ]
 
     fulgurio_social_network.twig.friendship_extension:
         class: Fulgurio\SocialNetworkBundle\Twig\Extension\FriendshipExtension
