@@ -1,0 +1,19 @@
+fulgurio_social_network_messenger_list_add:
+    pattern:  /add
+    defaults: { _controller: FulgurioSocialNetworkBundle:MessengerList:add }
+
+fulgurio_social_network_messenger_list_edit:
+    pattern:  /{groupId}/edit
+    defaults: { _controller: FulgurioSocialNetworkBundle:MessengerList:add }
+    requirements:
+        groupId:  \d+
+
+fulgurio_social_network_messenger_list_remove:
+    pattern:  /{groupId}/remove
+    defaults: { _controller: FulgurioSocialNetworkBundle:MessengerList:remove }
+    requirements:
+        groupId:  \d+
+
+fulgurio_social_network_messenger_list_index:
+    pattern:  /
+    defaults: { _controller: FulgurioSocialNetworkBundle:MessengerList:list }

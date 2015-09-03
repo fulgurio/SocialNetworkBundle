@@ -1,0 +1,35 @@
+Fulgurio\SocialNetworkBundle\Entity\UserGroup:
+  type: mappedSuperclass
+  repositoryClass: Fulgurio\SocialNetworkBundle\Repository\UserGroupRepository
+  table: member_group
+  indexes:
+    type_of_group_idx:
+      columns: [type_of_group]
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    name:
+      type: string
+      length: 64
+    type_of_group:
+      type: string
+      length: 16
+    type_of_owner:
+      type: string
+      length: 16
+      nullable: true
+    nb_of_relationship:
+      type: integer
+    created_at:
+      type: datetime
+      gedmo:
+        timestampable:
+          on: create
+    updated_at:
+      type: datetime
+      gedmo:
+        timestampable:
+          on: update

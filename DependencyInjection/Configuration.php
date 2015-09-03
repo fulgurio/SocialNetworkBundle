@@ -426,6 +426,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('user')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->scalarNode('group_class')->isRequired()->cannotBeEmpty()->end()
                         ->arrayNode('admin')
                             ->addDefaultsIfNotSet()
                             ->children()

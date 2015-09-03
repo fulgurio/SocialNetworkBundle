@@ -1,0 +1,25 @@
+fulgurio:
+  socialnetwork:
+    title:                    Liste de diffusion
+    legend:                   Liste de diffusion
+    new_message_list_button:  Créer une liste de diffusion
+    edit_button:              Editer
+    remove_button:            Supprimer
+    no_message_list:          Aucune liste de diffusion
+    add:
+      title:                  Créer une nouvelle liste de diffusion
+      name:
+        label:                Nom
+        is_required:          Champ obligatoire
+      search:
+        label:                Rechercher un utilisateur
+      success_msg:            La liste de diffusion a bien été créée
+    edit:
+      title:                  Editer la liste de diffusion
+      success_msg:            La liste de diffusion a bien été modifiée
+    remove:
+      title:                  Suppression de la liste de diffusion
+      confirm_msg:            Etes-vous sûr de vouloir supprimer cette liste de diffusion ?
+      success_msg:            La liste de diffusion a bien été effacée
+    save_button:              Enregistrer
+    back_to_list:             Retour à la liste

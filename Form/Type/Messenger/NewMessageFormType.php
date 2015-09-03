@@ -142,8 +142,8 @@ class NewMessageFormType extends AbstractType
                 $target->setMessage($message);
                 $target->setTarget($friend);
                 $this->doctrine->getManager()->persist($target);
+                $message->addTarget($target);
             }
-            $message->addTarget($target);
             return;
         }
         $usernameTarget->addError(new FormError('fulgurio.socialnetwork.new_message.no_friend_found'));

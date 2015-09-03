@@ -143,6 +143,7 @@ class FulgurioSocialNetworkExtension extends Extension
      */
     private function addUserConfig(ContainerBuilder $container, array $config)
     {
+        $container->setParameter('fulgurio_social_network.user.group.class', $config['group_class']);
         if (isset($config['admin']['form']['type']) && $config['admin']['form']['type'])
         {
             $container->setAlias('fulgurio_social_network.user.admin.form.type', $config['admin']['form']['type']);

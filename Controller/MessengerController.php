@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class MessengerController extends Controller
 {
+    const NB_PER_PAGE = 10;
+
     /**
      * Messenger list page
      *
@@ -28,10 +30,18 @@ class MessengerController extends Controller
      */
     public function listAction()
     {
+        $page = $this->getRequest()->query->get('page', 1);
+        $query = $this->getMessageRepository()
+                ->getRootMessagesQuery($this->getUser());
+        $messages = $this->get('knp_paginator')->paginate(
+                $query,
+                $page,
+                self::NB_PER_PAGE
+        );
         return $this->render(
                 'FulgurioSocialNetworkBundle:Messenger:list.html.twig',
                 array(
-                    'messages' => $this->getMessagesList()
+                    'messages' => $messages
                 )
         );
     }
@@ -98,7 +108,7 @@ class MessengerController extends Controller
         elseif ($request->isXmlHttpRequest() && $formHandler->hasError())
         {
             return new JsonResponse(array('errors' => $formHandler->getErrors()));
-         }
+        }
         return $this->render('FulgurioSocialNetworkBundle:Messenger:new.html.twig', array(
             'form' => $form->createView(),
             'selectedUsers' => $selectedUsers,
@@ -214,14 +224,6 @@ class MessengerController extends Controller
                     array(),
                     'messenger')
         ));
-    }
-
-    /**
-     * Get messages root of current user
-     */
-    private function getMessagesList()
-    {
-        return $this->getMessageRepository()->findRootMessages($this->getUser());
     }
 
     /**

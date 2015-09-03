@@ -1,0 +1,128 @@
+{% extends 'FulgurioSocialNetworkBundle::base.html.twig' %}
+
+{% if group.id %}
+{%   set action = path('fulgurio_social_network_messenger_list_edit', { 'groupId': group.id } ) %}
+{%   set title = 'fulgurio.socialnetwork.edit.title'|trans({}, 'messenger-list') %}
+{% else %}
+{%   set action = path('fulgurio_social_network_messenger_list_add') %}
+{%   set title = 'fulgurio.socialnetwork.add.title'|trans({}, 'messenger-list') %}
+{% endif %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+		<h1>{{ title }}</h1>
+		<form action="{{ action }}" method="post" class="form-horizontal" id="messengerListForm" {{ form_enctype(form) }}>
+			<fieldset>
+{%   if form.vars.errors
+       or form.name.vars.errors
+       or form.search.vars.errors
+       or form.idUsers.vars.errors %}
+				<div class="alert alert-error">
+{%     for error in form.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger-list') }}<br />{% endfor %}
+{%     for error in form.name.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger-list') }}<br />{% endfor %}
+{%     for error in form.search.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger-list') }}<br />{% endfor %}
+{%     for error in form.idUsers.vars.errors %}{{ error.messageTemplate|trans({}, 'messenger-list') }}<br />{% endfor %}
+				</div>
+{%   endif %}
+				<div class="control-group">
+					<label class="control-label" for="{{ form.name.vars.id }}">{% trans from 'messenger-list' %}fulgurio.socialnetwork.add.name.label{% endtrans %}</label>
+					<div class="controls posrel">
+						<input type="text" id="{{ form.name.vars.id }}" class="input-xlarge" name="{{ form.name.vars.full_name }}" value="{{ form.name.vars.value }}" />
+					</div>
+				</div>
+				<ul id="selectedFriends">
+{%   if users is defined %}
+{%     for user in users %}
+					<li id="user_{{ user.id }}"><span class="title">{{ user.fullname }}</span> <a class="close">{% trans from 'messenger-list' %}fulgurio.socialnetwork.remove{% endtrans %}</a></li>
+{%     endfor %}
+{%   endif %}
+				</ul>
+				<div class="control-group">
+					<label class="control-label" for="{{ form.search.vars.id }}">{% trans from 'messenger-list' %}fulgurio.socialnetwork.add.search.label{% endtrans %}</label>
+					<div class="controls posrel">
+						<input type="text" id="{{ form.search.vars.id }}" class="input-xlarge" name="{{ form.search.vars.full_name }}" value="{{ form.search.vars.value }}" />
+					</div>
+				</div>
+				<div class="form-actions">
+					<input type="hidden" name="{{ form._token.vars.full_name }}" value="{{ form._token.vars.value }}" />
+					<button type="submit" class="btn btn-primary">{% trans from 'messenger-list' %}fulgurio.socialnetwork.save_button{% endtrans %}</button>
+					<a href="{{ path('fulgurio_social_network_messenger_list_index') }}" class="btn">{% trans from 'messenger-list' %}fulgurio.socialnetwork.back_to_list{% endtrans %}</a>
+				</div>
+			</fieldset>
+		</form>
+{% endblock %}
+
+{% block javascriptBottom %}
+<script>
+{%   if users is defined %}
+{%     for user in users %}
+$('#user_{{ user.id }} a').click(function() {
+	$(this).parent().remove();
+});
+$('#user_{{ user.id }}').data('infos', {"id":"{{ user.id }}"});
+{%     endfor %}
+{%   endif %}
+var $searchResult, $selectedFriends;
+$('#{{ form.search.vars.id }}').keyup(function() {
+	var tgt = this;
+	var s = $(tgt).attr('value');
+	if (s.length > 0) {
+		$.ajax('{{ path('fulgurio_social_network_friendship_search') }}', {
+			data: {'q': s},
+			success: function(d) {
+				var nb = d.friends.length;
+				if (typeof searchResult === 'undefined') {
+					$searchResult = $('<ul id="searchResult" class="li_left"></ul>');
+					$searchResult.appendTo('#targetUser');
+					$selectedFriends = $('#selectedFriends');
+				}
+				else {
+					$searchResult.empty();
+				}
+				for (var i = 0; i < nb; ++i) {
+					var exists = false;
+					$selectedFriends.find('li').each(function() {
+						if (d.friends[i].id === $(this).data('infos').id) {
+							exists = true;
+							return;
+						}
+					});
+					if (exists === false) {
+						var li = $('<li><div class="thumb"><img src="' + (d.friends[i].avatar ? d.friends[i].avatar : '{{ asset('bundles/fulguriosocialnetwork/images/avatar.png') }}') + '" alt="" /></div><p>' + d.friends[i].fullname + '</p></li>');
+						li.data('infos', d.friends[i]);
+						li.click(function() {
+							var aClose = $('<a class="close">supprimer</a>');
+							aClose.click(function() {
+								if ($(this).parent().parent().children().length === 1) {
+									$('#m_tgt').attr('required', 'required');
+								}
+								$(this).parent().remove();
+							});
+							var d = $(this).data('infos');
+							var li2 = $('<li><span class="title">' + d.fullname + '</span> </li>');
+							li2.data('infos', d);
+							aClose.appendTo(li2);
+							li2.appendTo($selectedFriends);
+							$(tgt).attr('value', '');
+							$searchResult.empty();
+							$('#m_tgt').removeAttr('required');
+						});
+						li.appendTo($searchResult);
+					}
+				}
+			},
+			error: function() {
+				console.log('error');
+			}
+		});
+	}
+});
+$('#messengerListForm').submit(function() {
+	var form = this;
+	$('#selectedFriends').find('li').each(function() {
+		$('<input type="hidden" name="{{ form.idUsers.vars.full_name }}" value="' + $(this).data('infos').id + '" />').appendTo($(form));
+	});
+});
+</script>
+{% endblock %}

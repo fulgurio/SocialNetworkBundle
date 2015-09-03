@@ -25,8 +25,9 @@ abstract class MessageRepository extends EntityRepository
      * Find user root messages
      *
      * @param User $user
+     * @return Query
      */
-    public function findRootMessages($user)
+    public function getRootMessagesQuery($user)
     {
         $query = $this->getEntityManager()->createQuery(
                 'SELECT m, mt.has_read
@@ -36,7 +37,7 @@ abstract class MessageRepository extends EntityRepository
                     AND m.parent IS NULL
                 ORDER BY m.updated_at DESC');
         $query->setParameter('user', $user);
-        return $query->getResult();
+        return $query;
     }
 
     /**
