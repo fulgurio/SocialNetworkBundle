@@ -73,6 +73,7 @@ class NewMessageFormType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $currentUser = $this->currentUser;
         $builder
             ->add('username_target', 'text', array(
                 'required' => FALSE,
@@ -86,9 +87,9 @@ class NewMessageFormType extends AbstractType
                 'multiple' => TRUE,
                 'mapped' => FALSE,
                 'class' => $this->userClassName,
-                'query_builder' => function(UserRepository $er)
+                'query_builder' => function(UserRepository $er) use ($currentUser)
                 {
-                    return $er->getAcceptedFriendsQuery($this->currentUser);
+                    return $er->getAcceptedFriendsQuery($currentUser);
                 }
             ))
             ->add('subject', 'text', array(
