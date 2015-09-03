@@ -30,15 +30,21 @@ class AvatarExtension extends \Twig_Extension
      */
     private $vichUploadHelper;
 
+    /**
+     * @var string
+     */
+    private $defaultAvatar;
+
 
     /**
      * Constructor
      *
      * @param UploaderHelper $vichUploadHelper
      */
-    function __construct(UploaderHelper $vichUploadHelper)
+    function __construct(UploaderHelper $vichUploadHelper, $defaultAvatar)
     {
         $this->vichUploadHelper = $vichUploadHelper;
+        $this->defaultAvatar = $defaultAvatar;
     }
 
     /**
@@ -81,7 +87,7 @@ class AvatarExtension extends \Twig_Extension
         }
         return $this->environment
                 ->getExtension('assets')
-                ->getAssetUrl('bundles/fulguriosocialnetwork/images/avatar.png');
+                ->getAssetUrl($this->defaultAvatar);
     }
 
     /**

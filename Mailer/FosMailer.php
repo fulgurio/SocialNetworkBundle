@@ -61,7 +61,7 @@ class FosMailer extends AbstractMailer implements MailerInterface
                 $this->parameters['confirmation.subject']
         );
         $bodyText = $this->templating->render(
-                $this->parameters['confirmation.template.txt'], $data
+                $this->parameters['confirmation.template.text'], $data
         );
         $bodyHTML = $this->templating->render(
                 $this->parameters['confirmation.template.html'], $data
