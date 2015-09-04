@@ -38,6 +38,16 @@ abstract class User extends BaseUser
 
 
     /**
+     * {inherit}
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->username;
+    }
+
+    /**
      * Set avatar_file
      *
      * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $image
