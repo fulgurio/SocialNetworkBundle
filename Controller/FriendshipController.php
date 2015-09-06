@@ -9,6 +9,7 @@
  */
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
+use Fulgurio\SocialNetworkBundle\Entity\User;
 use Fulgurio\SocialNetworkBundle\Entity\UserFriendship;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,9 +34,11 @@ class FriendshipController extends Controller
         $page = $request->query->get('page', 1);
         $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
         $friendshipRepository = $this->getDoctrine()->getRepository($userFriendshipClassName);
+        $askingFriends = $friendshipRepository->findAskingFriends($currentUser);
+        $friends = $friendshipRepository->findAcceptedAndPendingFriends($currentUser, $page, $this->get('knp_paginator'));
         return $this->render('FulgurioSocialNetworkBundle:Friendship:list.html.twig', array(
-            'friendsAsking' => $friendshipRepository->findAskingFriends($currentUser),
-            'friends' => $friendshipRepository->findAcceptedAndPendingFriends($currentUser, $page, $this->get('knp_paginator')),
+            'friendsAsking' => $askingFriends,
+            'friends' => $friends
         ));
     }
 
@@ -69,75 +72,92 @@ class FriendshipController extends Controller
                 $pendingFriendshipsIDs[$id] = $id;
             }
         }
-        return $this->render('FulgurioSocialNetworkBundle:Friendship:add.html.twig', array(
-                'searchValue' => $searchValue,
-                'users' => $users,
-                'pendingFriendshipsIDs' => $pendingFriendshipsIDs,
-        ));
+        return $this->render(
+                'FulgurioSocialNetworkBundle:Friendship:add.html.twig',
+                array(
+                    'searchValue' => $searchValue,
+                    'users' => $users,
+                    'pendingFriendshipsIDs' => $pendingFriendshipsIDs,
+                )
+        );
     }
 
     /**
      * Friend user add page
+     *
+     * @param Request $request
      */
     public function addAction(Request $request)
     {
-        if ($selectedFriends = $request->get('friends_id'))
+        $selectedFriends = $request->get('userId')
+                ? array($request->get('userId'))
+                : $request->get('friends_id');
+
+        if ($selectedFriends)
         {
-            $currentUser = $this->getUser();
-            $userClassName = $this->container->getParameter('fos_user.model.user.class');
-            $userRepository = $this->getDoctrine()->getRepository($userClassName);
-            $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
-            $friendshipRepository = $this->getDoctrine()->getRepository($userFriendshipClassName);
             $em = $this->getDoctrine()->getManager();
             foreach($selectedFriends as $selectedFriendId)
             {
-                $mayBeFriend = $userRepository->findOneById($selectedFriendId);
-                if ($usersFriendship = $friendshipRepository->findByUserAndFriendUser($currentUser, $mayBeFriend))
+                $mayBeFriend = $this->getSpecifiedUser($selectedFriendId);
+                if ($this->addSingleFriend($mayBeFriend))
                 {
-                    if ($usersFriendship[0]->getUserSrc() == $currentUser)
-                    {
-                        if ($usersFriendship[0]->getNbRefusals() >= $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals'))
-                        {
-                            continue;
-                        }
-                        $friendship = $usersFriendship[0];
-                        $friendship2 = $usersFriendship[1];
-                    }
-                    else
-                    {
-                        if ($usersFriendship[1]->getNbRefusals() >= $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals'))
-                        {
-                            continue;
-                        }
-                        $friendship = $usersFriendship[1];
-                        $friendship2 = $usersFriendship[0];
-                    }
+                    $this->get('fulgurio_social_network.friendship_mailer')->sendInvitMessage($mayBeFriend);
                 }
-                else
-                {
-                    $friendship = new $userFriendshipClassName();
-                    $friendship->setUserSrc($currentUser);
-                    $friendship->setUserTgt($mayBeFriend);
-                    $friendship2 = new $userFriendshipClassName();
-                    $friendship2->setUserSrc($mayBeFriend);
-                    $friendship2->setUserTgt($currentUser);
-                }
-                $friendship->setStatus(UserFriendship::PENDING_STATUS);
-                $friendship2->setStatus(UserFriendship::ASKING_STATUS);
-                $em->persist($friendship);
-                $em->persist($friendship2);
-                $this->get('fulgurio_social_network.friendship_mailer')->sendInvitMessage($mayBeFriend);
             }
-            $em->persist($currentUser);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('notice',
-                    $this->get('translator')->trans(
-                            'fulgurio.socialnetwork.invitation.success_msg',
-                            array(),
-                            'friendship'
-            ));
+            $this->addFlash('notice', 'fulgurio.socialnetwork.invitation.success_msg');
         }
         return $this->redirect($this->generateUrl('fulgurio_social_network_friendship_list'));
+    }
+
+    /**
+     * Ask a user to be friend
+     *
+     * @param User $mayBeFriend
+     * @return boolean
+     */
+    protected function addSingleFriend(User $mayBeFriend)
+    {
+        $currentUser = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $nbRefusals = $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals');
+        $usersFriendship = $this->getFriendship($currentUser, $mayBeFriend);
+        if ($usersFriendship)
+        {
+            if ($usersFriendship[0]->getUserSrc() == $currentUser)
+            {
+                if ($usersFriendship[0]->getNbRefusals() >= $nbRefusals)
+                {
+                    return FALSE;
+                }
+                $friendship = $usersFriendship[0];
+                $friendship2 = $usersFriendship[1];
+            }
+            else
+            {
+                if ($usersFriendship[1]->getNbRefusals() >= $nbRefusals)
+                {
+                    return FALSE;
+                }
+                $friendship = $usersFriendship[1];
+                $friendship2 = $usersFriendship[0];
+            }
+        }
+        else
+        {
+            $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
+            $friendship = new $userFriendshipClassName();
+            $friendship->setUserSrc($currentUser);
+            $friendship->setUserTgt($mayBeFriend);
+            $friendship2 = new $userFriendshipClassName();
+            $friendship2->setUserSrc($mayBeFriend);
+            $friendship2->setUserTgt($currentUser);
+        }
+        $friendship->setStatus(UserFriendship::PENDING_STATUS);
+        $friendship2->setStatus(UserFriendship::ASKING_STATUS);
+        $em->persist($friendship);
+        $em->persist($friendship2);
+        return TRUE;
     }
 
     /**
@@ -148,8 +168,7 @@ class FriendshipController extends Controller
         $request = $this->get('request');
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->getUser();
-        $userClassName = $this->container->getParameter('fos_user.model.user.class');
-        $user = $this->getDoctrine()->getRepository($userClassName)->find($userId);
+        $user = $this->getSpecifiedUser($userId);
         $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
         if (!$user->hasRole('ROLE_ADMIN')
           && !$user->hasRole('ROLE_SUPER_ADMIN')
@@ -188,35 +207,27 @@ class FriendshipController extends Controller
     public function acceptAction($userId)
     {
         $currentUser = $this->getUser();
-        $userClassName = $this->container->getParameter('fos_user.model.user.class');
-        $userRepository = $this->getDoctrine()->getRepository($userClassName);
-        if (!$user = $userRepository->find($userId))
-        {
-            throw new NotFoundHttpException();
-        }
-        $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
-        $friendshipRepository = $this->getDoctrine()->getRepository($userFriendshipClassName);
-        if (!$usersFriendship = $friendshipRepository->findByUserAndFriendUser($currentUser, $user))
-        {
-            throw new NotFoundHttpException();
-        }
+        $user = $this->getSpecifiedUser($userId);
+        $friendships = $this->getFriendship($currentUser, $user);
         $em = $this->getDoctrine()->getManager();
-        foreach ($usersFriendship as $userFriendship)
+        foreach ($friendships as $friendship)
         {
-            $userFriendship->setNbRefusals(0);
-            $userFriendship->setStatus('accepted');
-            $em->persist($userFriendship);
+            $friendship->setNbRefusals(0);
+            $friendship->setStatus('accepted');
         }
-        $em->flush();
-
         $this->get('fulgurio_social_network.friendship_mailer')->sendAcceptMessage($user);
-            $this->get('session')->getFlashBag()->add('notice',
-                    $this->get('translator')->trans(
-                            'fulgurio.socialnetwork.add.accepted_msg',
-                            array('%username%' => $user->getUsername()),
-                            'friendship'
-            ));
-        return $this->redirect($this->generateUrl('fulgurio_social_network_friendship_list'));
+        $this->addTransFlash(
+                'notice',
+                'fulgurio.socialnetwork.accept.confirm.notice',
+                array('%USERNAME%' => $user)
+        );
+        $redirectUrl = $this->generateUrl('fulgurio_social_network_friendship_list');
+        if ($this->getRequest()->isXmlHttpRequest())
+        {
+            return new JsonResponse(
+                    array('success' => 1, 'redirect' => $redirectUrl));
+        }
+        return $this->redirect($redirectUrl);
     }
 
     /**
@@ -229,76 +240,81 @@ class FriendshipController extends Controller
     public function refuseAction($userId)
     {
         $request = $this->get('request');
+        $user = $this->getSpecifiedUser($userId);
         $currentUser = $this->getUser();
-        $userClassName = $this->container->getParameter('fos_user.model.user.class');
-        $userRepository = $this->getDoctrine()->getRepository($userClassName);
-        if (!$user = $userRepository->find($userId))
+        $usersFriendship = $this->getFriendship($currentUser, $user);
+        if ($request->get('confirm'))
         {
-            throw new NotFoundHttpException();
+            if ($request->get('confirm') === 'yes')
+            {
+                $em = $this->getDoctrine()->getManager();
+                $hasAcceptedBefore = $this->updateStatusToRefusal($usersFriendship);
+                if ($hasAcceptedBefore)
+                {
+                    $message = 'fulgurio.socialnetwork.remove.confirm.notice';
+                    $this->get('fulgurio_social_network.friendship_mailer')->sendRemoveInvitMessage($user);
+                }
+                else
+                {
+                    $message = 'fulgurio.socialnetwork.refuse.confirm.notice';
+                    $this->get('fulgurio_social_network.friendship_mailer')->sendRefusalMessage($user);
+                }
+                $em->flush();
+                $this->addTransFlash('notice', $message, array('%USERNAME%' => $user));
+            }
+            $redirectUrl = $this->generateUrl('fulgurio_social_network_friendship_list');
+            if ($request->isXmlHttpRequest())
+            {
+                return new JsonResponse(array(
+                    'success' => 1,
+                    'redirect' => $redirectUrl
+                ));
+            }
+            return $this->redirect($redirectUrl);
         }
-        $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
-        $friendshipRepository = $this->getDoctrine()->getRepository($userFriendshipClassName);
-        if (!$usersFriendship = $friendshipRepository->findByUserAndFriendUser($currentUser, $user))
-        {
-            throw new NotFoundHttpException();
-        }
+        $templateName = 'FulgurioSocialNetworkBundle::confirm' . ($request->isXmlHttpRequest() ? 'Ajax' : '') . '.html.twig';
+        return $this->render($templateName, array(
+            'action' => $this->generateUrl('fulgurio_social_network_friendship_refuse', array('userId' => $userId)),
+            'title' => $this->translate('fulgurio.socialnetwork.refuse.confirm.title'),
+            'confirmationMessage' => $this->translate('fulgurio.socialnetwork.refuse.confirm.message', array('%USERNAME%' => $user))
+        ));
+    }
+
+    /**
+     * Update friendship to refusal or removed status
+     *
+     * @param Collection $usersFriendship
+     * @return $boolean
+     */
+    private function updateStatusToRefusal($usersFriendship)
+    {
         $hasAcceptedBefore = FALSE;
+        $currentUser = $this->getUser();
         $em = $this->getDoctrine()->getManager();
+        $nbRefusalsLimit = $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals');
         foreach ($usersFriendship as $userFriendship)
         {
             if ($userFriendship->getStatus() == UserFriendship::ACCEPTED_STATUS)
             {
                 $hasAcceptedBefore = TRUE;
+                break;
             }
             $userFriendship->setStatus(UserFriendship::REFUSED_STATUS);
             if ($userFriendship->getUserTgt()->getId() == $currentUser->getId())
             {
                 $nbRefusals = $userFriendship->getNbRefusals();
-                if ($nbRefusals >= $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals'))
+                if ($nbRefusals >= $nbRefusalsLimit)
                 {
                     $userFriendship->setStatus(UserFriendship::REMOVED_STATUS);
                 }
                 else
                 {
-                    $userFriendship->setNbRefusals($userFriendship->getNbRefusals() + 1);
+                    $userFriendship->setNbRefusals($nbRefusals + 1);
                 }
             }
             $em->persist($userFriendship);
         }
-        if ($request->get('confirm') === 'yes')
-        {
-            if ($hasAcceptedBefore)
-            {
-                $message = 'fulgurio.socialnetwork.add.remove_msg';
-                $this->get('fulgurio_social_network.friendship_mailer')->sendRemoveInvitMessage($user);
-            }
-            else
-            {
-                $message = 'fulgurio.socialnetwork.add.refused_msg';
-                $this->get('fulgurio_social_network.friendship_mailer')->sendRefusalMessage($user);
-            }
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('notice',
-                    $this->get('translator')->trans(
-                            $message,
-                            array('%username%' => $user->getUsername()),
-                            'friendship'
-            ));
-            return $this->redirect($this->generateUrl('fulgurio_social_network_friendship_list'));
-        }
-        else if ($request->get('confirm') === 'no')
-        {
-            return $this->redirect($this->generateUrl('fulgurio_social_network_friendship_list'));
-        }
-        $templateName = 'FulgurioSocialNetworkBundle::confirm' . ($request->isXmlHttpRequest() ? 'Ajax' : '') . '.html.twig';
-        return $this->render($templateName, array(
-            'action' => $this->generateUrl('fulgurio_social_network_friendship_refuse', array('userId' => $userId)),
-            'confirmationMessage' => $this->get('translator')->trans(
-                    $hasAcceptedBefore ? 'fulgurio.socialnetwork.add.confirm_remove_msg' : 'fulgurio.socialnetwork.add.confirm_refuse_msg',
-                    array(),
-                    'friendship'
-            )
-        ));
+        return $hasAcceptedBefore;
     }
 
     /**
@@ -330,5 +346,69 @@ class FriendshipController extends Controller
             return $response;
         }
         throw new AccessDeniedException();
+    }
+
+    /**
+     * Get user from given ID, and ckeck if he exists
+     *
+     * @throws NotFoundHttpException
+     * @param number $userId
+     * @return User
+     */
+    private function getSpecifiedUser($userId)
+    {
+        $userClassName = $this->container->getParameter('fos_user.model.user.class');
+        if (!$user = $this->getDoctrine()->getRepository($userClassName)->find($userId))
+        {
+            throw new NotFoundHttpException();
+        }
+        return $user;
+    }
+
+    /**
+     * Get friendship between two users
+     *
+     * @param string $user1
+     * @param string $user2
+     * @return UserFriendship
+     * @throws NotFoundHttpException
+     */
+    private function getFriendship($user1, $user2)
+    {
+        $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
+        $friendshipRepository = $this->getDoctrine()->getRepository($userFriendshipClassName);
+        $friendship = $friendshipRepository->findByUserAndFriendUser($user1, $user2);
+        if ($friendship == FALSE)
+        {
+            throw new NotFoundHttpException();
+        }
+        return $friendship;
+    }
+
+    /**
+     * Helper to add a translated flash
+     *
+     * @param string $type
+     * @param string $message
+     * @param array $data
+     */
+    private function addTransFlash($type, $message, $data = array())
+    {
+        $this->get('session')->getFlashBag()->add(
+                $type,
+                $this->translate($message, $data)
+        );
+    }
+
+    /**
+     * Translator helper
+     *
+     * @param string $message
+     * @param array $data
+     * @return string
+     */
+    private function translate($message, $data = array())
+    {
+        return $this->get('translator')->trans($message, $data, 'friendship');
     }
 }

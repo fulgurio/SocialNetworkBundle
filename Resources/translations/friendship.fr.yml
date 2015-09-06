@@ -25,6 +25,8 @@ fulgurio:
           msg2:              %current_username% souhaite vous inviter à rejoindre sa liste d'amis sur Réseau Social.
           msg3:              Cliquez %tag%ici%endtag% pour accepter ou non son invitation.
     accept:
+      confirm:
+        notice:              Vous êtes maintenant ami avec "%USERNAME%" !
       email:
         subject:             %current_username% a accepté de rejoindre votre liste d'amis sur Réseau Social
         text:                |
@@ -35,6 +37,10 @@ fulgurio:
           msg1:              Bonjour %username%,
           msg2:              %current_username% vous a accepté comme ami sur Réseau Social
     refuse:
+      confirm:
+        title:               Refus
+        message:             Etes-vous sûr de refuser cette demande d'ami ?
+        notice:              Vous avez refusé la demande d'ami de "%USERNAME%"
       email:
         subject:             %current_username% a refusé de rejoindre votre liste d'amis sur Réseau Social
         text:                |
@@ -45,6 +51,10 @@ fulgurio:
           msg1:              Bonjour %username%,
           msg2:              %current_username% a refusé votre invitation à rejoindre votre liste d'amis sur Réseau Social.
     remove:
+      confirm:
+        title:               Suppression
+        message:             Etes-vous sûr de supprimer cette relation ?
+        notice:              Vous n'êtes plus ami avec "%USERNAME%"
       email:
         subject:             %current_username% vous a retiré de sa liste d'amis sur Réseau Social
         text:                |
@@ -60,11 +70,6 @@ fulgurio:
       find_button:           Trouver un ami
       no_user_found:         Aucun utilisateur de ce nom trouvé
       as_friend:             Ajouter comme ami
-      accepted_msg:          Vous êtes maintenant ami avec "%username%" !
-      refused_msg:           Vous avez refusé la demande d'ami de "%username%"
-      remove_msg:            Vous n'êtes plus ami avec "%username%"
-      confirm_refuse_msg:    Etes- vous sûr de refuser cette demande d'ami ?
-      confirm_remove_msg:    Etes- vous sûr de supprimer cette relation ?
     block:
       find_from:             Trouvez des amis grâce à
       invit_by_email:        Ou %tag%envoyez à vos amis un email d'invitation à vous rejoindre%endtag%
