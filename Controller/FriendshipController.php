@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Friendship controller
@@ -105,7 +106,7 @@ class FriendshipController extends Controller
                 }
             }
             $em->flush();
-            $this->addFlash('notice', 'fulgurio.socialnetwork.invitation.success_msg');
+            $this->addTransFlash('notice', 'fulgurio.socialnetwork.invitation.confirm.notice');
         }
         return $this->redirect($this->generateUrl('fulgurio_social_network_friendship_list'));
     }
@@ -121,26 +122,26 @@ class FriendshipController extends Controller
         $currentUser = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $nbRefusals = $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals');
-        $usersFriendship = $this->getFriendship($currentUser, $mayBeFriend);
-        if ($usersFriendship)
+        $usersFriendships = $this->getFriendships($currentUser, $mayBeFriend);
+        if ($usersFriendships)
         {
-            if ($usersFriendship[0]->getUserSrc() == $currentUser)
+            if ($usersFriendships[0]->getUserSrc() == $currentUser)
             {
-                if ($usersFriendship[0]->getNbRefusals() >= $nbRefusals)
+                if ($usersFriendships[0]->getNbRefusals() >= $nbRefusals)
                 {
                     return FALSE;
                 }
-                $friendship = $usersFriendship[0];
-                $friendship2 = $usersFriendship[1];
+                $friendship = $usersFriendships[0];
+                $friendship2 = $usersFriendships[1];
             }
             else
             {
-                if ($usersFriendship[1]->getNbRefusals() >= $nbRefusals)
+                if ($usersFriendships[1]->getNbRefusals() >= $nbRefusals)
                 {
                     return FALSE;
                 }
-                $friendship = $usersFriendship[1];
-                $friendship2 = $usersFriendship[0];
+                $friendship = $usersFriendships[1];
+                $friendship2 = $usersFriendships[0];
             }
         }
         else
@@ -208,7 +209,11 @@ class FriendshipController extends Controller
     {
         $currentUser = $this->getUser();
         $user = $this->getSpecifiedUser($userId);
-        $friendships = $this->getFriendship($currentUser, $user);
+        $friendships = $this->getFriendships($currentUser, $user);
+        if ($friendships == FALSE)
+        {
+            throw new NotFoundHttpException();
+        }
         $em = $this->getDoctrine()->getManager();
         foreach ($friendships as $friendship)
         {
@@ -242,13 +247,17 @@ class FriendshipController extends Controller
         $request = $this->get('request');
         $user = $this->getSpecifiedUser($userId);
         $currentUser = $this->getUser();
-        $usersFriendship = $this->getFriendship($currentUser, $user);
+        $usersFriendships = $this->getFriendships($currentUser, $user);
+        if ($usersFriendships == FALSE)
+        {
+            throw new NotFoundHttpException();
+        }
         if ($request->get('confirm'))
         {
             if ($request->get('confirm') === 'yes')
             {
                 $em = $this->getDoctrine()->getManager();
-                $hasAcceptedBefore = $this->updateStatusToRefusal($usersFriendship);
+                $hasAcceptedBefore = $this->updateStatusToRefusal($usersFriendships);
                 if ($hasAcceptedBefore)
                 {
                     $message = 'fulgurio.socialnetwork.remove.confirm.notice';
@@ -283,16 +292,16 @@ class FriendshipController extends Controller
     /**
      * Update friendship to refusal or removed status
      *
-     * @param Collection $usersFriendship
+     * @param Collection $usersFriendships
      * @return $boolean
      */
-    private function updateStatusToRefusal($usersFriendship)
+    private function updateStatusToRefusal($usersFriendships)
     {
         $hasAcceptedBefore = FALSE;
         $currentUser = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $nbRefusalsLimit = $this->container->getParameter('fulgurio_social_network.friendship.nb_refusals');
-        foreach ($usersFriendship as $userFriendship)
+        foreach ($usersFriendships as $userFriendship)
         {
             if ($userFriendship->getStatus() == UserFriendship::ACCEPTED_STATUS)
             {
@@ -373,15 +382,11 @@ class FriendshipController extends Controller
      * @return UserFriendship
      * @throws NotFoundHttpException
      */
-    private function getFriendship($user1, $user2)
+    private function getFriendships($user1, $user2)
     {
         $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
         $friendshipRepository = $this->getDoctrine()->getRepository($userFriendshipClassName);
         $friendship = $friendshipRepository->findByUserAndFriendUser($user1, $user2);
-        if ($friendship == FALSE)
-        {
-            throw new NotFoundHttpException();
-        }
         return $friendship;
     }
 
