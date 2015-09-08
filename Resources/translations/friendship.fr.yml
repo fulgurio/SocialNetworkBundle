@@ -11,8 +11,9 @@ fulgurio:
     invitation:
       asking:                Demande d'invitations
       accept:                Accepter ?
-      success_msg:           La demande d'ami a bien été envoyée !
       pending:               Invitation en attente
+      confirm:
+        notice:              La demande d'ami a bien été envoyée !
       email:
         subject:             %current_username% souhaite vous inviter à rejoindre sa liste d'amis sur Réseau Social
         text:                |
