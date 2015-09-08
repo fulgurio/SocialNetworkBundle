@@ -58,7 +58,7 @@ class FosMailer extends AbstractMailer implements MailerInterface
             'user' => $user,
             'confirmationUrl' => $url);
         $subject = $this->templating->render(
-                $this->parameters['confirmation.subject']
+                $this->parameters['confirmation.subject'], $data
         );
         $bodyText = $this->templating->render(
                 $this->parameters['confirmation.template.text'], $data
@@ -88,7 +88,7 @@ class FosMailer extends AbstractMailer implements MailerInterface
             'user' => $user,
             'confirmationUrl' => $url);
         $subject = $this->templating->render(
-                $this->parameters['resetting.subject']
+                $this->parameters['resetting.subject'], $data
         );
         $bodyText = $this->templating->render(
                 $this->parameters['resetting.template.text'], $data
