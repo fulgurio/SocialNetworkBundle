@@ -38,7 +38,7 @@ class FriendshipMailer extends AbstractMailer
                 $this->parameters['invit.template.html'], $data
         );
         $bodyMsn = $this->templating->render(
-                $this->parameters['invit.template.html'], $data
+                $this->parameters['invit.template.msn'], $data
         );
         if ($user->getSendMsgToEmail())
         {
