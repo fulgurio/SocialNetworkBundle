@@ -40,8 +40,8 @@ class FosMailer extends AbstractMailer implements MailerInterface
                 $this->parameters['registration.from_mail'],
                 $user->getEmail(),
                 $subject,
-                $bodyText,
-                $bodyHTML
+                $bodyHTML,
+                $bodyText
                 );
     }
 

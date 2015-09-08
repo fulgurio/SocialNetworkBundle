@@ -46,8 +46,8 @@ class FriendshipMailer extends AbstractMailer
                     $this->parameters['from'],
                     $user->getEmail(),
                     $subject,
-                    $bodyText,
-                    $bodyHTML
+                    $bodyHTML,
+                    $bodyText
             );
         }
         $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-invit');
@@ -80,8 +80,8 @@ class FriendshipMailer extends AbstractMailer
                     $this->parameters['from'],
                     $user->getEmail(),
                     $subject,
-                    $bodyText,
-                    $bodyHTML
+                    $bodyHTML,
+                    $bodyText
             );
         }
         $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-accept');
@@ -115,8 +115,8 @@ class FriendshipMailer extends AbstractMailer
                     $this->parameters['from'],
                     $user->getEmail(),
                     $subject,
-                    $bodyText,
-                    $bodyHTML
+                    $bodyHTML,
+                    $bodyText
                 );
         }
         $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-remove');
@@ -149,8 +149,8 @@ class FriendshipMailer extends AbstractMailer
                     $this->parameters['from'],
                     $user->getEmail(),
                     $subject,
-                    $bodyText,
-                    $bodyHTML
+                    $bodyHTML,
+                    $bodyText
             );
         }
         $this->messenger->sendMessage($user, $subject, $bodyMsn, TRUE, 'friendship-refusal');

@@ -87,8 +87,8 @@ class MessengerMailer extends AbstractMailer
                 $this->parameters['answer.from'],
                 $user->getEmail(),
                 $subject,
-                $bodyText,
                 $bodyHTML,
+                $bodyText,
                 $this->parameters['answer.from_name']
         );
     }
