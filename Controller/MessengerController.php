@@ -30,6 +30,10 @@ class MessengerController extends Controller
      */
     public function listAction()
     {
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            throw new AccessDeniedException();
+        }
         $page = $this->getRequest()->query->get('page', 1);
         $query = $this->getMessageRepository()
                 ->getRootMessagesQuery($this->getUser());
@@ -54,6 +58,10 @@ class MessengerController extends Controller
      */
     public function newAction($userId = null)
     {
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            throw new AccessDeniedException();
+        }
         $request = $this->get('request');
         $currentUser = $this->getUser();
         $messageClassName = $this->container->getParameter('fulgurio_social_network.messenger.message.class');
@@ -123,6 +131,10 @@ class MessengerController extends Controller
      */
     public function showAction($msgId)
     {
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            throw new AccessDeniedException();
+        }
         $currentUser = $this->getUser();
         $message = $this->getMessage($msgId, TRUE);
         $data = array('message' => $message);
@@ -182,6 +194,10 @@ class MessengerController extends Controller
      */
     public function removeAction($msgId)
     {
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            throw new AccessDeniedException();
+        }
         $request = $this->container->get('request');
         $currentUser = $this->getUser();
         $message = $this->getMessage($msgId);
@@ -236,6 +252,10 @@ class MessengerController extends Controller
      */
     private function getMessage($msgId, $updateHasRead = FALSE)
     {
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            throw new AccessDeniedException();
+        }
         $currentUser = $this->getUser();
         $relation = $this->getMessageTargetRepository()
                 ->findOneBy(array(
@@ -256,6 +276,11 @@ class MessengerController extends Controller
         return $this->getMessageRepository()->find($msgId);
     }
 
+    /**
+     * Get message repository
+     *
+     * @return MessageRepository
+     */
     protected function getMessageRepository()
     {
         $className = $this->container->getParameter('fulgurio_social_network.messenger.message.class');
@@ -263,6 +288,11 @@ class MessengerController extends Controller
                 ->getRepository($className);
     }
 
+    /**
+     * Get message target repository
+     * 
+     * @return MessageTargetRepository
+     */
     protected function getMessageTargetRepository()
     {
         $className = $this->container->getParameter('fulgurio_social_network.messenger.message_target.class');
