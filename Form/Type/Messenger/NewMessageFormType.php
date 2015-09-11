@@ -10,6 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Form\Type\Messenger;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Fulgurio\SocialNetworkBundle\Entity\User;
 use Fulgurio\SocialNetworkBundle\Repository\UserRepository;
 use Symfony\Component\Form\AbstractType;
@@ -17,7 +18,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 
@@ -60,7 +61,6 @@ class NewMessageFormType extends AbstractType
      */
     public function __construct(User $currentUser, Registry $doctrine, $userClassName, $userFriendshipClassName, $messageTargetClassName)
     {
-        $this->userFriendshipClassName = $userFriendshipClassName;
         $this->currentUser = $currentUser;
         $this->doctrine = $doctrine;
         $this->userClassName = $userClassName;
@@ -88,6 +88,7 @@ class NewMessageFormType extends AbstractType
                     return $er->getAcceptedFriendsQuery($currentUser);
                 }
             ))
+            ->addEventListener(FormEvents::POST_SUBMIT, array($this, 'checkTarget'))
             ->add('subject', 'text', array(
                 'constraints' => array(
                     new NotBlank(array('message' => 'fulgurio.socialnetwork.new_message.subject.not_blank'))
@@ -99,7 +100,6 @@ class NewMessageFormType extends AbstractType
                 )
             ))
             ->add('file', 'file', array('required' => FALSE))
-            ->addEventListener(FormEvents::POST_SUBMIT, array($this, 'checkTarget'))
             ;
     }
 
@@ -175,6 +175,17 @@ class NewMessageFormType extends AbstractType
             }
         }
         return $foundedFriends;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form.AbstractType::setDefaultOptions()
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+                'data_class' => 'Fulgurio\SocialNetworkBundle\Entity\Message',
+        ));
     }
 
     /**

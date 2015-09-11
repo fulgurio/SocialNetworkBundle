@@ -12,7 +12,9 @@ namespace Fulgurio\SocialNetworkBundle\Form\Type\Messenger;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+
 
 class AnswerMessageFormType extends AbstractType
 {
@@ -30,6 +32,17 @@ class AnswerMessageFormType extends AbstractType
             ))
             ->add('file', 'file', array('required' => FALSE))
         ;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Symfony\Component\Form.AbstractType::setDefaultOptions()
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+                'data_class' => 'Fulgurio\SocialNetworkBundle\Entity\Message',
+        ));
     }
 
     /**
