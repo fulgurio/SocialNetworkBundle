@@ -154,7 +154,7 @@ class MessengerListController extends Controller
                         )
                 );
             }
-            return $this->redirect($this->generateUrl('fulgurio_social_network_messenger_list_remove'));
+            return $this->redirect($this->generateUrl('fulgurio_social_network_messenger_list_index'));
         }
         $templateName = 'FulgurioSocialNetworkBundle::confirm' . ($request->isXmlHttpRequest() ? 'Ajax' : '') . '.html.twig';
         return $this->render($templateName, array(
