@@ -1,3 +1,11 @@
+{% extends 'FulgurioSocialNetworkBundle:Mail:base.html.twig' %}
+
+{% block subject %}
+{% trans with { '%username%' : app.user.username, '%message_subject%' : message.subject, '%answer%' : answer.content } from 'messenger' %}fulgurio.socialnetwork.email.answer.html{% endtrans %}
+{% endblock %}
+
+{% block content %}
 {% trans with { '%username%' : app.user.username, '%message_subject%' : message.subject, '%answer%' : answer.content } from 'messenger' %}fulgurio.socialnetwork.email.answer.html{% endtrans %}
 <br />
-<p>{{ answer.content|nl2br }}</p>
+<p>{{ answer.content|raw }}</p>
+{% endblock %}
