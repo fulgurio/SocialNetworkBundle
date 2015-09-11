@@ -25,6 +25,10 @@ class MessengerListController extends Controller
      */
     public function listAction()
     {
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            throw new AccessDeniedException();
+        }
         $currentUser = $this->getUser();
         $className = $this->container->getParameter('fulgurio_social_network.user.group.class');
         $groups = $this->getDoctrine()
@@ -40,6 +44,29 @@ class MessengerListController extends Controller
     }
 
     /**
+     * Messenger list show page
+     *
+     * @param number $groupId
+     * @return Response
+     */
+    public function showAction($groupId)
+    {
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            throw new AccessDeniedException();
+        }
+        //@todo : template
+        $group = $this->getGroup($groupId);
+        return $this->render(
+                'FulgurioSocialNetworkBundle:MessengerList:show.html.twig',
+                array(
+                    'group' => $group,
+                    'groupUsers' => $group->getUsers()
+                )
+        );
+    }
+
+    /**
      * Add or edit group page
      *
      * @param integer $groupId
@@ -47,15 +74,17 @@ class MessengerListController extends Controller
      */
     public function addAction($groupId = NULL)
     {
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            throw new AccessDeniedException();
+        }
         $request = $this->get('request');
         $currentUser = $this->getUser();
         $userClassName = $this->container->getParameter('fos_user.model.user.class');
-        $userRepo = $this->getDoctrine()->getRepository($userClassName);
         $options = array();
         if (!is_null($groupId))
         {
             $group = $this->getGroup($groupId);
-            $options['selectedUsers'] = $group->getUsers();
         }
         else
         {
@@ -63,28 +92,21 @@ class MessengerListController extends Controller
             $group = new $userGroupClassName();
             $group->setTypeOfGroup('messengerList');
             $group->setOwner($currentUser);
-            $users = $this->getRequest()->get('users');
-            if ($users)
-            {
-                $options['selectedUsers'] = $userRepo->findBy(array('id' => $users));
-            }
-            else
-            {
-                $options['selectedUsers'] = array();
-            }
         }
         $options['group'] = $group;
-        $form = $this->createForm(new NewListFormType(), $group);
-        $options['form'] = $form->createView();
+        $formType = new NewListFormType(
+                $currentUser,
+                $this->getDoctrine(),
+                $userClassName,
+                $this->container->getParameter('fulgurio_social_network.friendship.class')
+        );
+        $form = $this->createForm($formType, $group);
         $formHandler = new NewListFormHandler(
                 $form,
                 $this->getRequest(),
                 $this->get('translator')
         );
-        if ($formHandler->process(
-                $this->getDoctrine(),
-                $options['selectedUsers'],
-                $userClassName))
+        if ($formHandler->process($this->getDoctrine()))
         {
             $this->get('session')->getFlashBag()->add(
                     'success',
@@ -106,25 +128,7 @@ class MessengerListController extends Controller
         {
             return new JsonResponse(array('errors' => $formHandler->getErrors()));
         }
-//            {
-//                foreach ($form->getData()->idUsers as $userId)
-//                {
-//                    $hadUser = TRUE;
-//                    foreach ($options['selectedUsers'] as $user)
-//                    {
-//                        if ($user->getId() == $userId)
-//                        {
-//                            $hadUser = FALSE;
-//                            break;
-//                        }
-//                    }
-//                    if ($hadUser)
-//                    {
-//                        $options['selectedUsers'][] = $userRepo->findOneById($userId);
-//                    }
-//                }
-//            }
-//        }
+        $options['form'] = $form->createView();
         return $this->render('FulgurioSocialNetworkBundle:MessengerList:new.html.twig', $options);
     }
 
@@ -136,6 +140,10 @@ class MessengerListController extends Controller
      */
     public function removeAction($groupId)
     {
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            throw new AccessDeniedException();
+        }
         $request = $this->get('request');
         $group = $this->getGroup($groupId);
         if ($request->get('confirm'))

@@ -13,6 +13,7 @@ fulgurio:
         is_required:          Champ obligatoire
       search:
         label:                Rechercher un utilisateur
+        no_friend_found:      Aucun ami de ce nom trouvé
       success_msg:            La liste de diffusion a bien été créée
     edit:
       title:                  Editer la liste de diffusion
