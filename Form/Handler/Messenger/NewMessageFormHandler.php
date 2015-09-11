@@ -39,6 +39,7 @@ class NewMessageFormHandler extends AbstractAjaxForm
             {
                 $message = $this->form->getData();
                 $message->setSender($user);
+                $message->setContent($this->applyFilter($message->getContent()));
                 $targets = $message->getTarget();
                 foreach ($targets as $target)
                 {
@@ -61,5 +62,16 @@ class NewMessageFormHandler extends AbstractAjaxForm
             }
         }
         return FALSE;
+    }
+
+    /**
+     * Apply content filter (remove tags and add br)
+     *
+     * @param string $content
+     * @return string
+     */
+    protected function applyFilter($content)
+    {
+        return nl2br(strip_tags($content));
     }
 }

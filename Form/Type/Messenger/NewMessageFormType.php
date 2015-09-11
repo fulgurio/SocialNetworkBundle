@@ -79,10 +79,6 @@ class NewMessageFormType extends AbstractType
                 'required' => FALSE,
                 'mapped' => FALSE,
             ))
-//            ->add('id_targets', 'choice', array(
-//                'multiple' => TRUE,
-//                'mapped' => FALSE
-//            ))
             ->add('id_targets', 'entity', array(
                 'multiple' => TRUE,
                 'mapped' => FALSE,

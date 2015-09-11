@@ -11,7 +11,7 @@
 				<img src="{{ avatar(message.sender) }}" alt="" />
 				<div>
 					<span>{{ message.sender.username|trans }}</span>:<br />
-					{{ message.content|nl2br }}
+					{{ message.content|raw }}
 {% if message.filename %}
 					<br />
 					<a href="{{ vich_uploader_asset(message, 'file') }}">{% trans from 'messenger' %}fulgurio.socialnetwork.new_message.file.download{% endtrans %}</a>
@@ -23,7 +23,7 @@
 				<img src="{{ avatar(response.sender) }}" alt="" />
 				<div>
 					<span>{{ response.sender.username|trans }}</span>:<br />
-					{{ response.content|nl2br }}
+					{{ response.content|raw }}
 {%   if message.filename %}
 					<br />
 					<a href="{{ vich_uploader_asset(response, 'file') }}">{% trans from 'messenger' %}fulgurio.socialnetwork.answer_message.file.download{% endtrans %}</a>

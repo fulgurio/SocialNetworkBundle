@@ -88,6 +88,7 @@ class AnswerMessageFormHandler
                 $answer = $this->form->getData();
                 $answer->setParent($message);
                 $answer->setSender($user);
+                $answer->setContent($this->applyFilter($answer->getContent()));
                 $em = $this->doctrine->getManager();
                 $em->persist($answer);
                 $unreadMessageUsers = array();
@@ -116,4 +117,16 @@ class AnswerMessageFormHandler
         }
         return FALSE;
     }
+
+    /**
+     * Apply content filter (remove tags and add br)
+     *
+     * @param string $content
+     * @return string
+     */
+    protected function applyFilter($content)
+    {
+        return nl2br(strip_tags($content));
+    }
+
 }
