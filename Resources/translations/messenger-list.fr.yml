@@ -22,5 +22,10 @@ fulgurio:
       title:                  Suppression de la liste de diffusion
       confirm_msg:            Etes-vous sûr de vouloir supprimer cette liste de diffusion ?
       success_msg:            La liste de diffusion a bien été effacée
+    remove_user:
+      title:                  Suppression d'un utilisateur de la liste de diffusion
+      confirm_msg:            Etes-vous sûr de vouloir retirer %USERNAME% de cette liste de diffusion ?
+      success_msg:            L'utilisateur a bien été retiré
+
     save_button:              Enregistrer
     back_to_list:             Retour à la liste

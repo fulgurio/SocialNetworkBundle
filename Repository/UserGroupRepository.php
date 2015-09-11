@@ -11,6 +11,7 @@
 namespace Fulgurio\SocialNetworkBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Fulgurio\SocialNetworkBundle\Entity\User;
 
 /**
  * UserGroupRepository
@@ -24,9 +25,9 @@ abstract class UserGroupRepository extends EntityRepository
      * Find messenger group user
      *
      * @param User $user
-     * @return multitype:
+     * @return Doctrine\ORM\Query
      */
-    public function getUserMessengerListQuery($user)
+    public function getUserMessengerListQuery(User $user)
     {
         $entityName = $this->getEntityName();
         $query = $this->getEntityManager()->createQuery(
@@ -40,5 +41,4 @@ abstract class UserGroupRepository extends EntityRepository
         $query->setParameter('typeOf', $entityName::MESSENGER_LIST_TYPE);
         return $query;
     }
-
 }

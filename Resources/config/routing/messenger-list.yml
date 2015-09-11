@@ -14,6 +14,19 @@ fulgurio_social_network_messenger_list_remove:
     requirements:
         groupId:  \d+
 
+fulgurio_social_network_messenger_list_show:
+    pattern:  /{groupId}/edit
+    defaults: { _controller: FulgurioSocialNetworkBundle:MessengerList:show }
+    requirements:
+        groupId:  \d+
+
+fulgurio_social_network_messenger_user_list_remove:
+    pattern:  /{groupId}/{userId}/remove
+    defaults: { _controller: FulgurioSocialNetworkBundle:MessengerList:removeOneUser }
+    requirements:
+        groupId:  \d+
+        userId:  \d+
+
 fulgurio_social_network_messenger_list_index:
     pattern:  /
     defaults: { _controller: FulgurioSocialNetworkBundle:MessengerList:list }

@@ -176,6 +176,54 @@ class MessengerListController extends Controller
     }
 
     /**
+     * Remove a user from a group
+     *
+     * @param number $groupId
+     * @param number $userId
+     * @return Response
+     * @throws AccessDeniedException
+     */
+    public function removeOneUserAction($groupId, $userId)
+    {
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            throw new AccessDeniedException();
+        }
+        $request = $this->get('request');
+        $group = $this->getGroup($groupId);
+        $userClassName = $this->container->getParameter('fos_user.model.user.class');
+        $user = $this->getDoctrine()->getRepository($userClassName)->find($userId);
+        if ($request->get('confirm'))
+        {
+            if ($request->get('confirm') === 'yes')
+            {
+                $em = $this->getDoctrine()->getEntityManager();
+                $group->removeUser($user);
+                $em->persist($group);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add(
+                        'success',
+                        $this->get('translator')->trans(
+                                'fulgurio.socialnetwork.remove_user.success_msg',
+                                array(),
+                                'messenger-list'
+                        )
+                );
+            }
+            return $this->redirect($this->generateUrl('fulgurio_social_network_messenger_list_show', array('groupId' => $groupId)));
+        }
+        $templateName = 'FulgurioSocialNetworkBundle::confirm' . ($request->isXmlHttpRequest() ? 'Ajax' : '') . '.html.twig';
+        return $this->render($templateName, array(
+                'action' => $this->generateUrl(
+                        'fulgurio_social_network_messenger_user_list_remove',
+                        array('groupId' => $groupId, 'userId' => $userId)
+                ),
+                'title' => $this->get('translator')->trans('fulgurio.socialnetwork.remove_user.title', array('%USERNAME%' => $user), 'messenger-list'),
+                'confirmationMessage' => $this->get('translator')->trans('fulgurio.socialnetwork.remove_user.confirm_msg', array('%USERNAME%' => $user), 'messenger-list')
+        ));
+    }
+
+    /**
      * Get group and check if current user is the owner
      *
      * @param number $groupId
