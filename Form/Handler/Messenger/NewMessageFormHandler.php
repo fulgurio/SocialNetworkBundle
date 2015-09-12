@@ -51,7 +51,7 @@ class NewMessageFormHandler extends AbstractAjaxForm
                 $message = $this->form->getData();
                 $message->setSender($user);
                 $message->setContent($this->applyFilter($message->getContent()));
-                if ($this->form->has('group'))
+                if ($this->form->has('group') && $this->form->get('group')->getData() != NULL)
                 {
                     $this->addTargetFromGroup($this->form->get('group')->getData(), $message);
                 }
