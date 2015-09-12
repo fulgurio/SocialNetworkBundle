@@ -11,7 +11,9 @@
 namespace Fulgurio\SocialNetworkBundle\Form\Handler\Messenger;
 
 use Fulgurio\SocialNetworkBundle\Form\Handler\AbstractAjaxForm;
+use Fulgurio\SocialNetworkBundle\Entity\Message;
 use Fulgurio\SocialNetworkBundle\Entity\User;
+use Fulgurio\SocialNetworkBundle\Entity\UserGroup;
 use Fulgurio\SocialNetworkBundle\Mailer\MessengerMailer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
@@ -22,11 +24,19 @@ class NewMessageFormHandler extends AbstractAjaxForm
      */
     private $messageTargetClassName;
 
+    /**
+     * @var Registry
+     */
+    private $doctrine;
+
 
     /**
      * Processing form values
      *
-     * @param Fulgurio\SocialNetworkBundle\Entity\User $user
+     * @param Registry $doctrine
+     * @param MessengerMailer $mailer
+     * @param User $user
+     * @param string $messageTargetClassName
      * @return boolean
      */
     public function process(Registry $doctrine, MessengerMailer $mailer, User $user, $messageTargetClassName)
@@ -37,9 +47,14 @@ class NewMessageFormHandler extends AbstractAjaxForm
             $this->form->handleRequest($this->request);
             if ($this->form->isValid())
             {
+                $this->doctrine = $doctrine;
                 $message = $this->form->getData();
                 $message->setSender($user);
                 $message->setContent($this->applyFilter($message->getContent()));
+                if ($this->form->has('group'))
+                {
+                    $this->addTargetFromGroup($this->form->get('group')->getData(), $message);
+                }
                 $targets = $message->getTarget();
                 foreach ($targets as $target)
                 {
@@ -62,6 +77,36 @@ class NewMessageFormHandler extends AbstractAjaxForm
             }
         }
         return FALSE;
+    }
+
+    /**
+     * Add target from selected group list
+     *
+     * @param UserGroup $group
+     * @param Message $message
+     */
+    protected function addTargetFromGroup(UserGroup $group, Message $message)
+    {
+        $usersId = array();
+        $existingTargets = $message->getTarget();
+        foreach ($existingTargets as $existingTarget)
+        {
+            $usersId[$existingTarget->getId()] = $existingTarget->getId();
+        }
+        $users = $group->getUsers();
+        foreach ($users as $user)
+        {
+            if (isset($usersId[$user->getId()]))
+            {
+                continue;
+            }
+            $messageTarget = new $this->messageTargetClassName();
+            $messageTarget->setTarget($user);
+            $messageTarget->setMessage($message);
+            $messageTarget->setHasRead(FALSE);
+            $message->addTarget($messageTarget);
+            $this->doctrine->getManager()->persist($messageTarget);
+        }
     }
 
     /**

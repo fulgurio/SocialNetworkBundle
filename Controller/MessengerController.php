@@ -67,24 +67,25 @@ class MessengerController extends Controller
         $messageClassName = $this->container->getParameter('fulgurio_social_network.messenger.message.class');
         $message = new $messageClassName();
 
-        $selectedUsers = array();
         $userClassName = $this->container->getParameter('fos_user.model.user.class');
-        if (!is_null($userId))
+        $userGroupClassName = $this->container->getParameter('fulgurio_social_network.user.group.class');
+        $formType = new NewMessageFormType(
+            $currentUser,
+            $this->getDoctrine(),
+            $userClassName,
+            $this->container->getParameter('fulgurio_social_network.friendship.class'),
+            $this->container->getParameter('fulgurio_social_network.messenger.message_target.class'),
+            $userGroupClassName
+        );
+        if ($userGroupClassName)
         {
-            $selectedUsers = $this->getDoctrine()->getRepository($userClassName)->findBy(array('id' => $userId));
+            $formType->setGroups($this->getDoctrine()
+                    ->getRepository($userGroupClassName)
+                    ->getUserMessengerListQuery($currentUser)
+                    ->getResult()
+            );
         }
-        elseif ($selectedUsers = $request->get('users'))
-        {
-            $selectedUsers = $this->getDoctrine()->getRepository($userClassName)->findBy(array('id' => $selectedUsers));
-        }
-        $form = $this->createForm(
-                new NewMessageFormType(
-                        $currentUser,
-                        $this->getDoctrine(),
-                        $userClassName,
-                        $this->container->getParameter('fulgurio_social_network.friendship.class'),
-                        $this->container->getParameter('fulgurio_social_network.messenger.message_target.class')
-                ), $message);
+        $form = $this->createForm($formType, $message);
         $formHandler = new NewMessageFormHandler(
                 $form,
                 $this->getRequest(),
@@ -117,10 +118,10 @@ class MessengerController extends Controller
         {
             return new JsonResponse(array('errors' => $formHandler->getErrors()));
         }
-        return $this->render('FulgurioSocialNetworkBundle:Messenger:new.html.twig', array(
-            'form' => $form->createView(),
-            'selectedUsers' => $selectedUsers,
-        ));
+        return $this->render(
+                'FulgurioSocialNetworkBundle:Messenger:new.html.twig',
+                array('form' => $form->createView())
+        );
     }
 
     /**
@@ -290,7 +291,7 @@ class MessengerController extends Controller
 
     /**
      * Get message target repository
-     * 
+     *
      * @return MessageTargetRepository
      */
     protected function getMessageTargetRepository()

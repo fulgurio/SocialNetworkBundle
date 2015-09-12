@@ -49,6 +49,11 @@ class NewMessageFormType extends AbstractType
      */
     private $messageTargetClassName;
 
+    /**
+     * @var array
+     */
+    private $groups;
+
 
     /**
      * Constructor
@@ -58,14 +63,16 @@ class NewMessageFormType extends AbstractType
      * @param string $userClassName
      * @param string $userFriendshipClassName
      * @param string $messageTargetClassName
+     * @param string $userGroupClassName
      */
-    public function __construct(User $currentUser, Registry $doctrine, $userClassName, $userFriendshipClassName, $messageTargetClassName)
+    public function __construct(User $currentUser, Registry $doctrine, $userClassName, $userFriendshipClassName, $messageTargetClassName, $userGroupClassName)
     {
         $this->currentUser = $currentUser;
         $this->doctrine = $doctrine;
         $this->userClassName = $userClassName;
         $this->userFriendshipClassName = $userFriendshipClassName;
         $this->messageTargetClassName = $messageTargetClassName;
+        $this->userGroupClassName = $userGroupClassName;
     }
 
     /**
@@ -89,7 +96,7 @@ class NewMessageFormType extends AbstractType
                 }
             ))
             ->addEventListener(FormEvents::POST_SUBMIT, array($this, 'checkTarget'))
-            ->add('subject', 'text', array(
+           ->add('subject', 'text', array(
                 'constraints' => array(
                     new NotBlank(array('message' => 'fulgurio.socialnetwork.new_message.subject.not_blank'))
                 )
@@ -101,6 +108,16 @@ class NewMessageFormType extends AbstractType
             ))
             ->add('file', 'file', array('required' => FALSE))
             ;
+            if ($this->groups)
+            {
+                $builder->add('group', 'entity', array(
+                    'class' => $this->userGroupClassName,
+                    'choices'  => $this->groups,
+                    'property' => 'name',
+                    'required' => FALSE,
+                    'mapped'   => FALSE
+                ));
+            }
     }
 
     /**
@@ -143,6 +160,10 @@ class NewMessageFormType extends AbstractType
             }
             return;
         }
+        if ($form->has('group') && $form->get('group')->getData() != NULL)
+        {
+            return;
+        }
         $usernameTarget->addError(new FormError('fulgurio.socialnetwork.new_message.no_friend_found'));
     }
 
@@ -175,6 +196,11 @@ class NewMessageFormType extends AbstractType
             }
         }
         return $foundedFriends;
+    }
+
+    public function setGroups(array $groups)
+    {
+        $this->groups = $groups;
     }
 
     /**
