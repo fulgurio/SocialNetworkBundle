@@ -30,10 +30,10 @@ class MessengerListController extends Controller
             throw new AccessDeniedException();
         }
         $currentUser = $this->getUser();
-        $className = $this->container->getParameter('fulgurio_social_network.user.group.class');
+        $userGroupClassName = $this->container->getParameter('fulgurio_social_network.user.group.class');
         $groups = $this->getDoctrine()
-                ->getRepository($className)
-                ->getUserMessengerListQuery($currentUser->getId())
+                ->getRepository($userGroupClassName)
+                ->getUserMessengerListQuery($currentUser)
                 ->getResult();
         return $this->render(
                 'FulgurioSocialNetworkBundle:MessengerList:list.html.twig',
