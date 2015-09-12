@@ -167,7 +167,7 @@ class MessengerController extends Controller
                 return $this->redirect(
                         $this->generateUrl(
                                 'fulgurio_social_network_messenger_show_message',
-                                array('msgId' => $msgId))
+                                array('msgId' => $msgId)) . '#comment-' . $answer->getId()
                 );
             }
             $data['form'] = $form->createView();
