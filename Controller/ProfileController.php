@@ -40,7 +40,7 @@ class ProfileController extends Controller
             $doctrine = $this->container->get('doctrine');
             $userClassName = $this->container->getParameter('fos_user.model.user.class');
             $userToDisplay = $doctrine->getRepository($userClassName)->find($userId);
-            if ($currentUser != $userToDisplay && ($userToDisplay->hasRole('ROLE_ADMIN') || $userToDisplay->hasRole('ROLE_SUPER_ADMIN')))
+            if ($currentUser != $userToDisplay && (!$userToDisplay->hasRole('ROLE_ADMIN') || !$userToDisplay->hasRole('ROLE_SUPER_ADMIN')))
             {
                 throw new NotFoundHttpException();
             }
