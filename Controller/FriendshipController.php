@@ -93,7 +93,6 @@ class FriendshipController extends Controller
         $selectedFriends = $request->get('userId')
                 ? array($request->get('userId'))
                 : $request->get('friends_id');
-
         if ($selectedFriends)
         {
             $em = $this->getDoctrine()->getManager();
@@ -214,11 +213,10 @@ class FriendshipController extends Controller
         {
             throw new NotFoundHttpException();
         }
-        $em = $this->getDoctrine()->getManager();
         foreach ($friendships as $friendship)
         {
             $friendship->setNbRefusals(0);
-            $friendship->setStatus('accepted');
+            $friendship->setStatus(UserFriendship::ACCEPTED_STATUS);
         }
         $this->get('fulgurio_social_network.friendship_mailer')->sendAcceptMessage($user);
         $this->addTransFlash(
@@ -306,7 +304,6 @@ class FriendshipController extends Controller
             if ($userFriendship->getStatus() == UserFriendship::ACCEPTED_STATUS)
             {
                 $hasAcceptedBefore = TRUE;
-                break;
             }
             $userFriendship->setStatus(UserFriendship::REFUSED_STATUS);
             if ($userFriendship->getUserTgt()->getId() == $currentUser->getId())
