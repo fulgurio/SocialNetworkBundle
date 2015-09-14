@@ -117,6 +117,6 @@ class NewMessageFormHandler extends AbstractAjaxForm
      */
     protected function applyFilter($content)
     {
-        return nl2br(strip_tags($content));
+        return nl2br(htmlentities($content));
     }
 }
