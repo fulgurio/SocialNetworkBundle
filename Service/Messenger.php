@@ -12,8 +12,6 @@ namespace Fulgurio\SocialNetworkBundle\Service;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Security\Core\SecurityContext;
-use Fulgurio\SocialNetworkBundle\Entity\Message;
-use Fulgurio\SocialNetworkBundle\Entity\MessageTarget;
 
 class Messenger
 {

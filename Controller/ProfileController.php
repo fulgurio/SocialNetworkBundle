@@ -34,8 +34,6 @@ class ProfileController extends Controller
         if (is_null($userId))
         {
             $userToDisplay = $currentUser;
-            $areFriend = FALSE;
-            $havePendingInvit = FALSE;
         }
         else
         {
@@ -46,18 +44,10 @@ class ProfileController extends Controller
             {
                 throw new NotFoundHttpException();
             }
-            $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
-            $userFrienshipRepository = $doctrine->getRepository($userFriendshipClassName);
-            $areFriend = $userFrienshipRepository->areFriends($currentUser, $userToDisplay);
-            $havePendingInvit = ($areFriend == FALSE) ? $userFrienshipRepository->havePendingInvitation($currentUser, $userToDisplay) : FALSE;
         }
         return $this->container->get('templating')->renderResponse(
                 'FulgurioSocialNetworkBundle:Profile:show.html.twig',
-                array(
-                    'user' => $userToDisplay,
-                    'areFriend' => $areFriend,
-                    'havePendingInvit' => $havePendingInvit,
-                )
+                array('user' => $userToDisplay)
         );
     }
 

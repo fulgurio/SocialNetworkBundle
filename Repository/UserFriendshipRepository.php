@@ -149,21 +149,21 @@ abstract class UserFriendshipRepository extends EntityRepository
     /**
      * Check if 2 users are friends
      *
-     * @param integer | User $user
-     * @param integer | User $friendUser
+     * @param integer | User $user1
+     * @param integer | User $user2
      */
-    public function areFriends($user, $friendUser)
+    public function areFriends($user1, $user2)
     {
         $query = $this->getEntityManager()->createQuery(
                 'SELECT f
                 FROM ' . $this->getEntityName() . ' f
                 WHERE
-                    ((f.user_src=:user AND f.user_tgt=:friendUser)
-                    OR (f.user_src=:friendUser AND f.user_tgt=:user))
+                    ((f.user_src=:user1 AND f.user_tgt=:user2)
+                    OR (f.user_src=:user2 AND f.user_tgt=:user1))
                     AND f.status=:status'
         )->setMaxResults(1);
-        $query->setParameter('user', $user);
-        $query->setParameter('friendUser', $friendUser);
+        $query->setParameter('user1', $user1);
+        $query->setParameter('user2', $user2);
         $query->setParameter('status', UserFriendship::ACCEPTED_STATUS);
         return $query->getResult();
     }

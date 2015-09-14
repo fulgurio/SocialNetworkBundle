@@ -46,6 +46,8 @@ class FriendshipExtension extends \Twig_Extension
     {
         return array(
             'nbOfPendingUser' => new \Twig_Function_Method($this, 'nbOfPendingUser', array('is_safe' => array('html'))),
+            'areFriends' => new \Twig_Function_Method($this, 'areFriends', array('is_safe' => array('html'))),
+            'havePendingInvitation' => new \Twig_Function_Method($this, 'havePendingInvitation', array('is_safe' => array('html')))
         );
     }
 
@@ -60,6 +62,34 @@ class FriendshipExtension extends \Twig_Extension
         return $this->doctrine
                 ->getRepository($this->userFriendshipClassName)
                 ->countPendingUserOfFrienship($user);
+    }
+
+    /**
+     * Check if 2 users are friends
+     *
+     * @param User $user1
+     * @param User $user2
+     * @return boolean
+     */
+    public function areFriends(User $user1, User $user2)
+    {
+        return $this->doctrine
+                ->getRepository($this->userFriendshipClassName)
+                ->areFriends($user1, $user2) ? TRUE : FALSE;
+    }
+
+    /**
+     * Check if 2 users have pending invitations relationship
+     *
+     * @param User $user1
+     * @param User $user2
+     * @return boolean
+     */
+    public function havePendingInvitation(User $user1, User $user2)
+    {
+        return $this->doctrine
+                ->getRepository($this->userFriendshipClassName)
+                ->havePendingInvitation($user1, $user2) ? TRUE : FALSE;
     }
 
     /**

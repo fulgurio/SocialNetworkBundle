@@ -3,6 +3,7 @@
 {% block title %}{{ parent() }} - {% trans %}fulgurio.socialnetwork.profile.title{% endtrans %}{% endblock %}
 
 {% block content %}
+{% set areFriends = areFriends(app.user, user) %}
 <section>
 	<img class="pull-left" src="{{ avatar(user) }}" alt="" />
 {% if user == app.user %}
@@ -13,16 +14,16 @@
 	<a href="{{ path('fulgurio_social_network_unsubscribe') }}">{% trans %}fulgurio.socialnetwork.profile.unsubscribe.link{% endtrans %}</a>
 {% else %}
 	<p>{% trans from 'friendship' %}fulgurio.socialnetwork.profile.username{% endtrans %}: {{ user.username }}</p>
-{%   if areFriend %}
+{%   if areFriends %}
 {#	<p>{% trans %}fulgurio.socialnetwork.profile.lastname_and_firstname{% endtrans %}: {{ user.lastname }} {{ user.firstname }}</p>#}
 	<p>{% trans from 'friendship' %}fulgurio.socialnetwork.profile.email{% endtrans %}: {{ user.email }}</p>
 {%   endif %}
 	<p>{% trans with { '%date%': user.createdAt|date('fulgurio.socialnetwork.format_date'|trans) } %}fulgurio.socialnetwork.profile.registered_date{% endtrans %}</p>
-{%   if areFriend %}
+{%   if areFriends%}
 {#	<a href="{{ path('MessengerNewMessageToFriend', { userId : user.id }) }}" class="btn"><i class="icon-envelope"></i> {% trans %}fulgurio.socialnetwork.messenger.write_to_him{% endtrans %}</a>#}
 	<a href="{{ path('fulgurio_social_network_friendship_refuse', {userId: user.id}) }}" class="btn">{% trans from 'friendship' %}fulgurio.socialnetwork.remove_link{% endtrans %}</a>
 {%   else %}
-{%     if havePendingInvit %}
+{%     if havePendingInvit(app.user, user) %}
 	{% trans from 'friendship' %}fulgurio.socialnetwork.invitation.pending{% endtrans %}
 {%     else %}
 	<a href="{{ path('fulgurio_social_network_friendship_invit', { userId : user.id }) }}" class="btn"><i class="icon-user"></i> {% trans from 'friendship' %}fulgurio.socialnetwork.add.as_friend{% endtrans %}</a>
