@@ -42,6 +42,7 @@ fulgurio:
       send_button:            Envoyer
       success_msg:            Votre réponse a bien été envoyée
     remove_message:
+      title:                  Suppression d'un message
       confirm_msg:            Etes-vous sûr de vouloir supprimer ce message ?
       success_msg:            Votre message a bien été effacé
     email:

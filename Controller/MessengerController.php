@@ -236,6 +236,7 @@ class MessengerController extends Controller
                     'fulgurio_social_network_messenger_remove_message',
                     array('msgId' => $msgId)
             ),
+            'title' => $this->get('translator')->trans('fulgurio.socialnetwork.remove_message.title', array(), 'messenger'),
             'confirmationMessage' => $this->get('translator')->trans(
                     'fulgurio.socialnetwork.remove_message.confirm_msg',
                     array(),
