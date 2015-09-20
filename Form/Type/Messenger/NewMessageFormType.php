@@ -27,32 +27,32 @@ class NewMessageFormType extends AbstractType
     /**
      * @var Fulgurio\SocialNetworkBundle\Entity\User $currentUser
      */
-    private $currentUser;
+    protected $currentUser;
 
     /**
      * @var Symfony\Bundle\DoctrineBundle\Registry
      */
-    private $doctrine;
+    protected $doctrine;
 
     /**
      * @var string
      */
-    private $userClassName;
+    protected $userClassName;
 
     /**
      * @var string
      */
-    private $userFriendshipClassName;
+    protected $userFriendshipClassName;
 
     /**
      * @var string
      */
-    private $messageTargetClassName;
+    protected $messageTargetClassName;
 
     /**
      * @var array
      */
-    private $groups;
+    protected $groups;
 
 
     /**
@@ -173,7 +173,7 @@ class NewMessageFormType extends AbstractType
      * @param array $usersId
      * @return array
      */
-    private function getOnlyFriends($usersId)
+    protected function getOnlyFriends($usersId)
     {
         $myFriends = $this->doctrine
                 ->getRepository($this->userFriendshipClassName)

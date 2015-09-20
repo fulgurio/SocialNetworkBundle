@@ -10,7 +10,7 @@
 			<li>
 				<img src="{{ avatar(message.sender) }}" alt="" />
 				<div>
-					<span>{{ message.sender.username|trans }}</span>:<br />
+					<span>{{ message.sender }}</span>:<br />
 					{{ message.content|raw }}
 {% if message.filename %}
 					<br />
@@ -22,7 +22,7 @@
 			<li>
 				<img src="{{ avatar(response.sender) }}" alt="" />
 				<div>
-					<span>{{ response.sender.username|trans }}</span>:<br />
+					<span>{{ response.sender }}</span>:<br />
 					{{ response.content|raw }}
 {%   if message.filename %}
 					<br />
@@ -73,7 +73,7 @@
 {%   if app.user.id == participant.id %}
 			<li><img sr="{{ avatar(participant) }}" alt="" /></li>
 {%   else %}
-			<li><a href="{{ path('fulgurio_social_network_friendship_profil', { userId: participant.id }) }}" title="{{ participant.username }}"{% if friends[participant.id] is not defined %} class="notAFriend"{% endif %}><img src="{{ avatar(participant) }}" alt="" /></a></li>
+			<li><a href="{{ path('fulgurio_social_network_friendship_profil', { userId: participant.id }) }}" title="{{ participant }}"{% if friends[participant.id] is not defined %} class="notAFriend"{% endif %}><img src="{{ avatar(participant) }}" alt="" /></a></li>
 {%   endif %}
 {% endfor %}
 		</ol>

@@ -68,7 +68,10 @@ class MessengerController extends Controller
         $message = new $messageClassName();
 
         $userClassName = $this->container->getParameter('fos_user.model.user.class');
-        $userGroupClassName = $this->container->getParameter('fulgurio_social_network.user.group.class');
+        $userGroupClassName = $this->container->has('fulgurio_social_network.user.group.class')
+                ? $this->container->getParameter('fulgurio_social_network.user.group.class')
+                : NULL;
+
         $formType = new NewMessageFormType(
             $currentUser,
             $this->getDoctrine(),
@@ -252,7 +255,7 @@ class MessengerController extends Controller
      * @return Message
      * @throws NotFoundHttpException
      */
-    private function getMessage($msgId, $updateHasRead = FALSE)
+    protected function getMessage($msgId, $updateHasRead = FALSE)
     {
         if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
         {

@@ -13,7 +13,7 @@
 			<img src="{{ avatar(message[0].sender) }}" alt="" />
 			<div>
 				<a href="{{ path('fulgurio_social_network_messenger_show_message', { msgId: message[0].id }) }}" class="subject">{{ message[0].subject }}</a><br />
-				{{ message[0].sender.username|trans }}
+				{{ message[0].sender }}
 				<a href="{{ path('fulgurio_social_network_messenger_remove_message', { msgId: message[0].id }) }}" class="pull-right btn" title="{% trans from 'messenger' %}fulgurio.socialnetwork.remove_button{% endtrans %}"><i class="icon-trash"></i></a>
 			</div>
 		</li>
