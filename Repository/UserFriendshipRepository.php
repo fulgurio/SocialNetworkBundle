@@ -64,7 +64,7 @@ abstract class UserFriendshipRepository extends EntityRepository
     }
 
     /**
-     * Return all accepted and pendingfriends for a given user
+     * Return all accepted and pending friends for a given user
      *
      * @param User $user
      * @param integer $page
@@ -76,6 +76,16 @@ abstract class UserFriendshipRepository extends EntityRepository
         return $this->filterFriendsByStatus($user, array(UserFriendship::ACCEPTED_STATUS, UserFriendship::PENDING_STATUS), $page, $paginator);
     }
 
+    /**
+     * Return query builder for all accepted and pending friends for a given user
+     *
+     * @param User $user
+     * @return QueryBuilder
+     */
+    public function getAcceptedAndPendingFriendsQuery($user)
+    {
+        return $this->getFriendsByStatusQuery($user, array(UserFriendship::ACCEPTED_STATUS, UserFriendship::PENDING_STATUS));
+    }
 
     /**
      * Return all accepted and refused friends for a given user
@@ -101,29 +111,41 @@ abstract class UserFriendshipRepository extends EntityRepository
      */
     protected function filterFriendsByStatus($user, $status, $page = 1, $paginator = NULL)
     {
-        $query = $this->getEntityManager()->createQueryBuilder();
+        $qb = $this->getFriendsByStatusQuery($user, $status);
+        if (is_null($paginator))
+        {
+            return $qb->getQuery()->getResult();
+        }
+        return $paginator->paginate($qb->getQuery(), $page, self::NB_PER_PAGE);
+    }
+
+    /**
+     * Return query friends with status filter for a given user
+     *
+     * @param User $user
+     * @param string|array $status
+     * @return QueryBuilder
+     */
+    protected function getFriendsByStatusQuery($user, $status)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
         //$query->select('u.id, u.avatar, u.username, u.lastname, u.firstname, u.email, f.status')
-        $query->select('u.id, u.avatar, u.username, u.email, f.status')
-            ->from($this->getEntityName(), 'f')
-            ->join('f.user_tgt', 'u')
-            ->where('f.user_src = :user AND u.enabled = 1')
+        $qb->select('u.id, u.avatar, u.username, u.email, f.status')
+                ->from($this->getEntityName(), 'f')
+                ->join('f.user_tgt', 'u')
+                ->where('f.user_src = :user AND u.enabled = 1')
+                ->setParameter('user', $user);
 //            ->orderBy('u.fullname');
-        ;
         if (is_array($status))
         {
-            $query->andWhere('f.status IN (:status)');
+            $qb->andWhere('f.status IN (:status)');
         }
         else
         {
-            $query->andWhere('f.status=:status');
+            $qb->andWhere('f.status=:status');
         }
-        $query->setParameter('status', $status);
-        $query->setParameter('user', $user);
-        if (is_null($paginator))
-        {
-            return $query->getQuery()->getResult();
-        }
-        return $paginator->paginate($query->getQuery(), $page, self::NB_PER_PAGE);
+        $qb->setParameter('status', $status);
+        return $qb;
     }
 
     /**
