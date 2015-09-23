@@ -82,6 +82,9 @@ class ProfileController extends Controller
                 array(
                     'url_referer' => $request->server->get('HTTP_REFERER'),
                     'action' => $this->container->get('router')->generate('fulgurio_social_network_unsubscribe'),
+                    'title' => $this->container->get('translator')->trans(
+                            'fulgurio.socialnetwork.profile.unsubscribe.title'
+                    ),
                     'confirmationMessage' => $this->container->get('translator')->trans(
                             'fulgurio.socialnetwork.profile.unsubscribe.confirm'
                     )

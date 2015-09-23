@@ -86,6 +86,7 @@ fulgurio:
         password_no_match:      Les nouveaux mots de passe ne sont pas identiques
       unsubscribe:
         link:                   Se désinscrire
+        title:                  Désinscription
         confirm:                Etes-vous sûr de vouloir vous désinscrire ?
     lost_password:
       title:                    Mot de passe perdu ?
