@@ -11,6 +11,8 @@
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
 use FOS\UserBundle\Controller\ProfileController as Controller;
+use Fulgurio\SocialNetworkBundle\Event\UnsubscribedUserEvent;
+use Fulgurio\SocialNetworkBundle\FulgurioSocialNetworkEvents;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -68,6 +70,10 @@ class ProfileController extends Controller
             {
                 $userManager = $this->container->get('fos_user.user_manager');
                 $userManager->deleteUser($currentUser);
+                $this->container->get('event_dispatcher')->dispatch(
+                        FulgurioSocialNetworkEvents::UNSUBSCRIBED_USER,
+                        new UnsubscribedUserEvent($currentUser)
+                );
                 return new RedirectResponse($this->container->get('router')->generate('fos_user_security_logout'));
             }
             if ($request->get('referer'))
