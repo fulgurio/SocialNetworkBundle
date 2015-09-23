@@ -62,7 +62,7 @@ class AvatarExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'avatar' =>    new \Twig_Function_Method($this, 'getAvatar', array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('avatar', array($this, 'getAvatar'), array('is_safe' => array('html'))),
         );
     }
 

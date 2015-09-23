@@ -44,7 +44,7 @@ class MessengerExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'nbOfUnreadMessage' => new \Twig_Function_Method($this, 'nbOfUnreadMessage', array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('nbOfUnreadMessage', array($this, 'nbOfUnreadMessage'), array('is_safe' => array('html')))
         );
     }
 

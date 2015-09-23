@@ -45,9 +45,9 @@ class FriendshipExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'nbOfPendingUser' => new \Twig_Function_Method($this, 'nbOfPendingUser', array('is_safe' => array('html'))),
-            'areFriends' => new \Twig_Function_Method($this, 'areFriends', array('is_safe' => array('html'))),
-            'havePendingInvitation' => new \Twig_Function_Method($this, 'havePendingInvitation', array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('nbOfPendingUser',         array($this, 'nbOfPendingUser'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('areFriends',              array($this, 'areFriends'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('havePendingInvitation',   array($this, 'havePendingInvitation'), array('is_safe' => array('html')))
         );
     }
 

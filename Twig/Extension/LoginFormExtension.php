@@ -49,8 +49,8 @@ class LoginFormExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'last_username' =>    new \Twig_Function_Method($this, 'getLastUsername'),//, array('is_safe' => array('html'))),
-            'csrf_token' =>    new \Twig_Function_Method($this, 'getCsrfLoginToken')//, array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('last_username',   array($this, 'getLastUsername'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('csrf_token',      array($this, 'getCsrfLoginToken'), array('is_safe' => array('html'))),
         );
     }
 
