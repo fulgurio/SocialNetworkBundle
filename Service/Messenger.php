@@ -66,7 +66,10 @@ class Messenger
     public function sendMessage($userTgt, $subject, $content, $canNotAnswer = FALSE, $typeOfMessage = NULL)
     {
         $message = new $this->messageClassName();
-        $message->setSender($this->securityContext->getToken()->getUser());
+        if ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $message->setSender($this->securityContext->getToken()->getUser());
+        }
         $message->setSubject($subject);
         $message->setContent($content);
         $message->setAllowAnswer(!$canNotAnswer);
