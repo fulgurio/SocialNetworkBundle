@@ -22,6 +22,16 @@ use FOS\UserBundle\Model\UserInterface;
  */
 class RegistrationController extends Controller
 {
+    public function registerAction()
+    {
+        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            // We redirect to homepage
+            return new RedirectResponse($this->container->get('router')->generate('fulgurio_social_network_homepage'));
+        }
+        return parent::registerAction();
+    }
+
     /**
      * @see FOS\UserBundle\Controller\RegistrationController::confirmedAction()
      */
