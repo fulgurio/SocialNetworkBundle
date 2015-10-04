@@ -1,0 +1,99 @@
+services:
+    # Twig
+    fulgurio_social_network.twig.messenger_extension:
+        class: Fulgurio\SocialNetworkBundle\Twig\Extension\MessengerExtension
+        arguments:
+            doctrine: "@doctrine"
+            messageClassName: %fulgurio_social_network.messenger.message.class%
+        tags:
+            -  { name: twig.extension }
+
+
+    # Form
+    fulgurio_social_network.messenger.message.new.form:
+        class:           Symfony\Component\Form\Form
+        factory_method:  createNamed
+        factory_service: form.factory
+        arguments:
+            - null
+            - message
+
+    fulgurio_social_network.messenger.message.new.form.handler:
+        class:          Fulgurio\SocialNetworkBundle\Form\Handler\Messenger\NewMessageFormHandler
+        scope:          request
+        arguments:
+            form:       @fulgurio_social_network.messenger.message.new.form
+            request:    @request
+            translator: @translator
+        calls:
+            - [ setMessageTargetClassName, [ %fulgurio_social_network.messenger.message_target.class% ] ]
+
+    fulgurio_social_network.messenger.message.new.form.type:
+        class: Fulgurio\SocialNetworkBundle\Form\Type\Messenger\NewMessageFormType
+        arguments:
+            securityContext:         @security.context
+            doctrine:                @doctrine
+            messageClassName:        %fulgurio_social_network.messenger.message.class%
+            messageTargetClassName:  %fulgurio_social_network.messenger.message_target.class%
+            userClassName:           %fos_user.model.user.class%
+            userFriendshipClassName: %fulgurio_social_network.friendship.class%
+            userGroupClassName:      %fulgurio_social_network.user.group.class%
+        tags:
+        - { name: form.type, alias: message }
+
+    fulgurio_social_network.messenger.message.answer.form:
+        class:           Symfony\Component\Form\Form
+        factory_method:  createNamed
+        factory_service: form.factory
+        arguments:
+            - answer
+            - answer
+
+    fulgurio_social_network.messenger.message.answer.form.handler:
+        class: Fulgurio\SocialNetworkBundle\Form\Handler\Messenger\AnswerMessageFormHandler
+        scope:          request
+        arguments:
+            form:       @fulgurio_social_network.messenger.message.answer.form
+            request:    @request
+            translator: @translator
+        calls:
+            - [ setMessageClassName, [ %fulgurio_social_network.messenger.message.class% ] ]
+            - [ setMessageTargetClassName, [ %fulgurio_social_network.messenger.message_target.class% ] ]
+
+    fulgurio_social_network.messenger.message.answer.form.type:
+        class: Fulgurio\SocialNetworkBundle\Form\Type\Messenger\AnswerMessageFormType
+        arguments:
+            messageClassName:        %fulgurio_social_network.messenger.message.class%
+        tags:
+        - { name: form.type, alias: answer }
+
+
+    # Messenger mailer
+    fulgurio_social_network.messenger_mailer:
+        class: Fulgurio\SocialNetworkBundle\Mailer\MessengerMailer
+        arguments:
+            0: "@mailer"
+            1: "@router"
+            2: "@templating"
+            3:
+                message.from          : %fulgurio_social_network.messenger.message.email.from%
+                message.from_name     : %fulgurio_social_network.messenger.message.email.from_name%
+                message.subject       : %fulgurio_social_network.messenger.message.email.subject%
+                message.template.text : %fulgurio_social_network.messenger.message.email.text%
+                message.template.html : %fulgurio_social_network.messenger.message.email.html%
+                answer.from           : %fulgurio_social_network.messenger.answer.email.from%
+                answer.from_name      : %fulgurio_social_network.messenger.answer.email.from_name%
+                answer.subject        : %fulgurio_social_network.messenger.answer.email.subject%
+                answer.template.text  : %fulgurio_social_network.messenger.answer.email.text%
+                answer.template.html  : %fulgurio_social_network.messenger.answer.email.html%
+        calls:
+            - [ setMessenger, [ "@fulgurio_social_network.messenger.messagebox" ] ]
+
+    # Messenger service
+    fulgurio_social_network.messenger.messagebox:
+        class: Fulgurio\SocialNetworkBundle\Service\Messenger
+        arguments:
+            doctrine: "@doctrine"
+            securityContext: "@security.context"
+            messageClassName: %fulgurio_social_network.messenger.message.class%
+            messageTargetClassName: %fulgurio_social_network.messenger.message_target.class%

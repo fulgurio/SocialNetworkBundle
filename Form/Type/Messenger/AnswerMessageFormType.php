@@ -19,18 +19,37 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class AnswerMessageFormType extends AbstractType
 {
     /**
+     * @var string
+     */
+    protected $messageClassName;
+
+
+    /**
+     * Constructor
+     *
+     * @param User $securityContext
+     * @param Registry $doctrine
+     * @param string $messageClassName
+     */
+    public function __construct($messageClassName)
+    {
+        $this->messageClassName = $messageClassName;
+    }
+
+    /**
      * (non-PHPdoc)
      * @see Symfony\Component\Form\FormTypeInterface::buildForm()
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('content', 'text', array(
-                'constraints' => array(
-                    new NotBlank(array('message' => 'fulgurio.socialnetwork.new_message.content.not_blank'))
-                )
-            ))
-            ->add('file', 'file', array('required' => FALSE))
+                ->add('content', 'text', array(
+                    'constraints' => array(
+                        new NotBlank(array('message' => 'fulgurio.socialnetwork.new_message.content.not_blank'))
+                    )
+                ))
+                ->add('file', 'file', array('required' => FALSE))
+                ->add('submit', 'submit')
         ;
     }
 
@@ -41,7 +60,7 @@ class AnswerMessageFormType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-                'data_class' => 'Fulgurio\SocialNetworkBundle\Entity\Message',
+                'data_class' => $this->messageClassName
         ));
     }
 

@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 
@@ -37,6 +38,16 @@ class NewMessageFormType extends AbstractType
     /**
      * @var string
      */
+    protected $messageClassName;
+
+    /**
+     * @var string
+     */
+    protected $messageTargetClassName;
+
+    /**
+     * @var string
+     */
     protected $userClassName;
 
     /**
@@ -47,31 +58,28 @@ class NewMessageFormType extends AbstractType
     /**
      * @var string
      */
-    protected $messageTargetClassName;
-
-    /**
-     * @var array
-     */
-    protected $groups;
+    protected $userGroupClassName;
 
 
     /**
      * Constructor
      *
-     * @param User $currentUser
+     * @param User $securityContext
      * @param Registry $doctrine
+     * @param string $messageClassName
+     * @param string $messageTargetClassName
      * @param string $userClassName
      * @param string $userFriendshipClassName
-     * @param string $messageTargetClassName
      * @param string $userGroupClassName
      */
-    public function __construct(User $currentUser, Registry $doctrine, $userClassName, $userFriendshipClassName, $messageTargetClassName, $userGroupClassName)
+    public function __construct(SecurityContextInterface $securityContext, Registry $doctrine, $messageClassName, $messageTargetClassName, $userClassName, $userFriendshipClassName, $userGroupClassName)
     {
-        $this->currentUser = $currentUser;
+        $this->currentUser = $securityContext->getToken()->getUser();
         $this->doctrine = $doctrine;
+        $this->messageClassName = $messageClassName;
+        $this->messageTargetClassName = $messageTargetClassName;
         $this->userClassName = $userClassName;
         $this->userFriendshipClassName = $userFriendshipClassName;
-        $this->messageTargetClassName = $messageTargetClassName;
         $this->userGroupClassName = $userGroupClassName;
     }
 
@@ -108,11 +116,14 @@ class NewMessageFormType extends AbstractType
             ))
             ->add('file', 'file', array('required' => FALSE))
             ;
-            if ($this->groups)
+            if ($this->userGroupClassName)
             {
                 $builder->add('group', 'entity', array(
                     'class' => $this->userGroupClassName,
-                    'choices'  => $this->groups,
+                    'choices'  => $this->doctrine
+                        ->getRepository($this->userGroupClassName)
+                        ->getUserMessengerListQuery($this->currentUser)
+                        ->getResult(),
                     'property' => 'name',
                     'required' => FALSE,
                     'mapped'   => FALSE
@@ -198,11 +209,6 @@ class NewMessageFormType extends AbstractType
         return $foundedFriends;
     }
 
-    public function setGroups(array $groups)
-    {
-        $this->groups = $groups;
-    }
-
     /**
      * (non-PHPdoc)
      * @see Symfony\Component\Form.AbstractType::setDefaultOptions()
@@ -210,7 +216,7 @@ class NewMessageFormType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Fulgurio\SocialNetworkBundle\Entity\Message'
+            'data_class' => $this->messageClassName
         ));
     }
 

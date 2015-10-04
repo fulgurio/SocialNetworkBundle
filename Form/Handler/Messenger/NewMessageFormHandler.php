@@ -39,9 +39,8 @@ class NewMessageFormHandler extends AbstractAjaxForm
      * @param string $messageTargetClassName
      * @return boolean
      */
-    public function process(Registry $doctrine, MessengerMailer $mailer, User $user, $messageTargetClassName)
+    public function process(Registry $doctrine, MessengerMailer $mailer, User $user)
     {
-        $this->messageTargetClassName = $messageTargetClassName;
         if ($this->request->getMethod() == 'POST')
         {
             $this->form->handleRequest($this->request);
@@ -118,5 +117,17 @@ class NewMessageFormHandler extends AbstractAjaxForm
     protected function applyFilter($content)
     {
         return nl2br(htmlentities($content));
+    }
+
+    /**
+     * $messageTargetClassName setter
+     * @param string $messageTargetClassName
+     * @return \Fulgurio\SocialNetworkBundle\Form\Handler\Messenger\NewMessageFormHandler
+     */
+    public function setMessageTargetClassName($messageTargetClassName)
+    {
+        $this->messageTargetClassName = $messageTargetClassName;
+
+        return $this;
     }
 }

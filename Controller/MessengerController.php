@@ -10,14 +10,12 @@
 
 namespace Fulgurio\SocialNetworkBundle\Controller;
 
-use Fulgurio\SocialNetworkBundle\Form\Type\Messenger\AnswerMessageFormType;
-use Fulgurio\SocialNetworkBundle\Form\Type\Messenger\NewMessageFormType;
-use Fulgurio\SocialNetworkBundle\Form\Handler\Messenger\AnswerMessageFormHandler;
-use Fulgurio\SocialNetworkBundle\Form\Handler\Messenger\NewMessageFormHandler;
 use Fulgurio\SocialNetworkBundle\Entity\Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class MessengerController extends Controller
 {
@@ -32,7 +30,7 @@ class MessengerController extends Controller
     {
         if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            throw new AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
         $page = $this->getRequest()->query->get('page', 1);
         $query = $this->getMessageRepository()
@@ -60,40 +58,13 @@ class MessengerController extends Controller
     {
         if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            throw new AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
         $request = $this->get('request');
         $currentUser = $this->getUser();
-        $messageClassName = $this->container->getParameter('fulgurio_social_network.messenger.message.class');
-        $message = new $messageClassName();
 
-        $userClassName = $this->container->getParameter('fos_user.model.user.class');
-        $userGroupClassName = $this->container->has('fulgurio_social_network.user.group.class')
-                ? $this->container->getParameter('fulgurio_social_network.user.group.class')
-                : NULL;
-
-        $formType = new NewMessageFormType(
-            $currentUser,
-            $this->getDoctrine(),
-            $userClassName,
-            $this->container->getParameter('fulgurio_social_network.friendship.class'),
-            $this->container->getParameter('fulgurio_social_network.messenger.message_target.class'),
-            $userGroupClassName
-        );
-        if ($userGroupClassName)
-        {
-            $formType->setGroups($this->getDoctrine()
-                    ->getRepository($userGroupClassName)
-                    ->getUserMessengerListQuery($currentUser)
-                    ->getResult()
-            );
-        }
-        $form = $this->createForm($formType, $message);
-        $formHandler = new NewMessageFormHandler(
-                $form,
-                $this->getRequest(),
-                $this->get('translator')
-        );
+        $form = $this->container->get('fulgurio_social_network.messenger.message.new.form');
+        $formHandler = $this->container->get('fulgurio_social_network.messenger.message.new.form.handler');
         if ($formHandler->process(
                 $this->getDoctrine(),
                 $this->container->get('fulgurio_social_network.messenger_mailer'),
@@ -137,50 +108,28 @@ class MessengerController extends Controller
     {
         if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            throw new AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
-        $currentUser = $this->getUser();
         $message = $this->getMessage($msgId, TRUE);
         $data = array('message' => $message);
-        $userClassName = $this->container->getParameter('fos_user.model.user.class');
-        $userRepository = $this->getDoctrine()->getRepository($userClassName);
-        $data['participants'] = $userRepository->findChatParticipants($message);
+        $data['participants'] = $this->getDoctrine()
+                ->getRepository($this->container->getParameter('fos_user.model.user.class'))
+                ->findChatParticipants($message);
         if ($message->getAllowAnswer())
         {
-            $messageClassName = $this->container->getParameter('fulgurio_social_network.messenger.message.class');
-            $answer = new $messageClassName();
-            $answer->setSubject('###RESPONSE###');
-            $form = $this->createForm(new AnswerMessageFormType(), $answer);
-            $formHandler = new AnswerMessageFormHandler(
-                    $form,
-                    $this->getRequest(),
-                    $this->getDoctrine(),
-                    $this->container->get('fulgurio_social_network.messenger_mailer'),
-                    $this->container->getParameter('fulgurio_social_network.messenger.message.class'),
-                    $this->container->getParameter('fulgurio_social_network.messenger.message_target.class')
-            );
-            if ($formHandler->process($message, $currentUser, $data['participants']))
+            $form = $this->getAnswerMessageForm($message, $data['participants']);
+            if ($form instanceof Response)
             {
-                $this->get('session')->getFlashBag()->add(
-                        'success',
-                        $this->get('translator')->trans(
-                                'fulgurio.socialnetwork.answer_message.success_msg',
-                                array(),
-                                'messenger'));
-                return $this->redirect(
-                        $this->generateUrl(
-                                'fulgurio_social_network_messenger_show_message',
-                                array('msgId' => $msgId)) . '#comment-' . $answer->getId()
-                );
+                return $form;
             }
             $data['form'] = $form->createView();
         }
         $userFriendshipClassName = $this->container->getParameter('fulgurio_social_network.friendship.class');
         $tmpFriends = $this->getDoctrine()
                 ->getRepository($userFriendshipClassName)
-                ->findAcceptedFriends($currentUser);
+                ->findAcceptedFriends($this->getUser());
         $data['friends'] = array();
-        foreach ($tmpFriends as &$tmpFriend)
+        foreach ($tmpFriends as $tmpFriend)
         {
             $data['friends'][$tmpFriend['id']] = $tmpFriend;
         }
@@ -188,6 +137,39 @@ class MessengerController extends Controller
                 'FulgurioSocialNetworkBundle:Messenger:show.html.twig',
                 $data
         );
+    }
+
+    /**
+     * Get answer form
+     *
+     * @param Message $message
+     * @param array $participants
+     * @return Form
+     */
+    private function getAnswerMessageForm(Message $message, $participants)
+    {
+        $form = $this->get('fulgurio_social_network.messenger.message.answer.form');
+        $formHandler = $this->get('fulgurio_social_network.messenger.message.answer.form.handler');
+        if ($formHandler->process(
+                $this->getDoctrine(),
+                $this->container->get('fulgurio_social_network.messenger_mailer'),
+                $this->getUser(),
+                $message,
+                $participants))
+        {
+            $this->get('session')->getFlashBag()->add(
+                    'success',
+                    $this->get('translator')->trans(
+                            'fulgurio.socialnetwork.answer_message.success_msg',
+                            array(),
+                            'messenger'));
+            return $this->redirect(
+                    $this->generateUrl(
+                            'fulgurio_social_network_messenger_show_message',
+                            array('msgId' => $message->getId())) . '#comment-' . $form->getData()->getId()
+            );
+        }
+        return $form;
     }
 
     /**
@@ -200,9 +182,9 @@ class MessengerController extends Controller
     {
         if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            throw new AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
-        $request = $this->container->get('request');
+        $request = $this->getRequest();
         $currentUser = $this->getUser();
         $message = $this->getMessage($msgId);
         if ($request->request->get('confirm') === 'yes')
@@ -259,7 +241,7 @@ class MessengerController extends Controller
     {
         if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            throw new AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
         $currentUser = $this->getUser();
         $relation = $this->getMessageTargetRepository()

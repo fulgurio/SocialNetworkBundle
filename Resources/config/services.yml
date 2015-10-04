@@ -22,13 +22,6 @@ services:
             session:       "@session"
             csrf_provider: "@form.csrf_provider"
 
-    fulgurio_social_network.twig.messenger_extension:
-        class: Fulgurio\SocialNetworkBundle\Twig\Extension\MessengerExtension
-        arguments:
-            doctrine: "@doctrine"
-            messageClassName: %fulgurio_social_network.messenger.message.class%
-        tags:
-            -  { name: twig.extension }
 
 # Forms
     fulgurio_social_network.user.admin.form.type:
@@ -149,33 +142,3 @@ services:
                 resetting.subject          : %fulgurio_social_network.resetting.email.subject%
                 resetting.template.text    : %fulgurio_social_network.resetting.email.text%
                 resetting.template.html    : %fulgurio_social_network.resetting.email.html%
-
-    # Messenger mailer
-    fulgurio_social_network.messenger_mailer:
-        class: Fulgurio\SocialNetworkBundle\Mailer\MessengerMailer
-        arguments:
-            0: "@mailer"
-            1: "@router"
-            2: "@templating"
-            3:
-                message.from          : %fulgurio_social_network.messenger.message.email.from%
-                message.from_name     : %fulgurio_social_network.messenger.message.email.from_name%
-                message.subject       : %fulgurio_social_network.messenger.message.email.subject%
-                message.template.text : %fulgurio_social_network.messenger.message.email.text%
-                message.template.html : %fulgurio_social_network.messenger.message.email.html%
-                answer.from           : %fulgurio_social_network.messenger.answer.email.from%
-                answer.from_name      : %fulgurio_social_network.messenger.answer.email.from_name%
-                answer.subject        : %fulgurio_social_network.messenger.answer.email.subject%
-                answer.template.text  : %fulgurio_social_network.messenger.answer.email.text%
-                answer.template.html  : %fulgurio_social_network.messenger.answer.email.html%
-        calls:
-            - [ setMessenger, [ "@fulgurio_social_network.messenger.messagebox" ] ]
-
-    # Messenger service
-    fulgurio_social_network.messenger.messagebox:
-        class: Fulgurio\SocialNetworkBundle\Service\Messenger
-        arguments:
-            doctrine: "@doctrine"
-            securityContext: "@security.context"
-            messageClassName: %fulgurio_social_network.messenger.message.class%
-            messageTargetClassName: %fulgurio_social_network.messenger.message_target.class%
