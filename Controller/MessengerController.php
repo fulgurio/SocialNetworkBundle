@@ -54,7 +54,7 @@ class MessengerController extends Controller
      * @param number $userId
      * @return Response
      */
-    public function newAction($userId = null)
+    public function newAction($userId = NULL)
     {
         if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
         {

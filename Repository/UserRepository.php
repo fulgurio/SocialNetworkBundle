@@ -120,6 +120,11 @@ abstract class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Get accepted friends (so real friends) query
+     * @param User $user
+     * @return type
+     */
     public function getAcceptedFriendsQuery(User $user)
     {
         return $this->createQueryBuilder('u')
