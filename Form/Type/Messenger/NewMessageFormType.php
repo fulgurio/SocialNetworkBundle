@@ -88,7 +88,6 @@ class NewMessageFormType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $currentUser = $this->currentUser;
         $builder
             ->add('username_target', 'text', array(
                 'required' => FALSE,
@@ -98,11 +97,9 @@ class NewMessageFormType extends AbstractType
                 'multiple' => TRUE,
                 'mapped' => FALSE,
                 'class' => $this->userClassName,
-                'query_builder' => function(UserRepository $er) use ($currentUser)
-                {
-                    return $er->getAcceptedFriendsQuery($currentUser);
-                }
+                'choices' => array()
             ))
+            ->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'addUsers'))
             ->addEventListener(FormEvents::POST_SUBMIT, array($this, 'checkTarget'))
            ->add('subject', 'text', array(
                 'constraints' => array(
@@ -132,6 +129,29 @@ class NewMessageFormType extends AbstractType
     }
 
     /**
+     * Ajouter les utilisateurs saisie
+     * On les charge après car ils sont chargé via Ajax, et avec les tests de
+     * données de Symfony, les valeurs doivent être présentes avant le test
+     *
+     * @param FormEvent $event
+     */
+    public function addUsers(FormEvent $event)
+    {
+        $data = $event->getData();
+        $form = $event->getForm();
+        $this->targetUsers = $this->doctrine
+                ->getRepository($this->userClassName)
+                ->findBy(array('id' => $data['id_targets']));
+        $form
+            ->add('id_targets', 'entity', array(
+                'multiple' => TRUE,
+                'mapped' => FALSE,
+                'class' => $this->userClassName,
+                'choices' => $this->targetUsers
+            ));
+    }
+
+    /**
      * Check targets value
      *
      * @param FormEvent $event
@@ -158,55 +178,32 @@ class NewMessageFormType extends AbstractType
         }
         if (!empty($usersId))
         {
-            // Filter to get only friends
-            $friends = $this->getOnlyFriends($usersId);
+            // Filter to get only contact allowed users
             $message = $form->getData();
-            foreach ($friends as $friend)
+            $allowed = FALSE;
+            foreach ($usersId as $userId)
             {
-                $target = new $this->messageTargetClassName();
-                $target->setMessage($message);
-                $target->setTarget($friend);
-                $this->doctrine->getManager()->persist($target);
-                $message->addTarget($target);
+                $allowedUser = $userRepository->find($userId);
+                if ($userRepository->allowContactThemself($this->currentUser, $allowedUser))
+                {
+                    $allowed = TRUE;
+                    $target = new $this->messageTargetClassName();
+                    $target->setMessage($message);
+                    $target->setTarget($allowedUser);
+                    $this->doctrine->getManager()->persist($target);
+                    $message->addTarget($target);
+                }
             }
-            return;
+            if ($allowed)
+            {
+                return;
+            }
         }
         if ($form->has('group') && $form->get('group')->getData() != NULL)
         {
             return;
         }
         $usernameTarget->addError(new FormError('fulgurio.socialnetwork.new_message.no_friend_found'));
-    }
-
-    /**
-     * Get friends from username typed value
-     *
-     * @param array $usersId
-     * @return array
-     */
-    protected function getOnlyFriends($usersId)
-    {
-        $myFriends = $this->doctrine
-                ->getRepository($this->userFriendshipClassName)
-                ->findAcceptedFriends($this->currentUser);
-        $foundedFriends = array();
-        if (!empty($myFriends))
-        {
-            foreach ($myFriends as $myFriend)
-            {
-                foreach ($usersId as $id)
-                {
-                    if ($id == $myFriend['id'])
-                    {
-                        $friend = $this->doctrine
-                                ->getRepository($this->userClassName)
-                                ->findOneById($myFriend['id']);
-                        $foundedFriends[] = $friend;
-                    }
-                }
-            }
-        }
-        return $foundedFriends;
     }
 
     /**

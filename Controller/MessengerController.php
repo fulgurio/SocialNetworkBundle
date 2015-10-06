@@ -62,8 +62,21 @@ class MessengerController extends Controller
         }
         $request = $this->get('request');
         $currentUser = $this->getUser();
+        $targetUser = NULL;
 
         $form = $this->container->get('fulgurio_social_network.messenger.message.new.form');
+        if ($userId != NULL)
+        {
+            $user = $this->getSpecifiedUser($userId);
+            $allowContact = $this->getDoctrine()
+                    ->getRepository($this->container->getParameter('fos_user.model.user.class'))
+                    ->allowContactThemself($currentUser, $user);
+            if ($allowContact)
+            {
+                $form->get('id_targets')->setData(array($user));
+                $targetUser = $this->getSpecifiedUser($userId);
+            }
+        }
         $formHandler = $this->container->get('fulgurio_social_network.messenger.message.new.form.handler');
         if ($formHandler->process(
                 $this->getDoctrine(),
@@ -94,7 +107,10 @@ class MessengerController extends Controller
         }
         return $this->render(
                 'FulgurioSocialNetworkBundle:Messenger:new.html.twig',
-                array('form' => $form->createView())
+                array(
+                    'form' => $form->createView(),
+                    'targetUser' => $targetUser
+                )
         );
     }
 
@@ -285,5 +301,24 @@ class MessengerController extends Controller
         $className = $this->container->getParameter('fulgurio_social_network.messenger.message_target.class');
         return $this->getDoctrine()
                 ->getRepository($className);
+    }
+
+    /**
+     * Get user from given ID, and ckeck if he exists
+     *
+     * @throws NotFoundHttpException
+     * @param number $userId
+     * @return User
+     */
+    protected function getSpecifiedUser($userId)
+    {
+        $userClassName = $this->container->getParameter('fos_user.model.user.class');
+        if (!$user = $this->getDoctrine()->getRepository($userClassName)->find($userId))
+        {
+            throw new NotFoundHttpException(
+                $this->get('translator')->trans('fulgurio.socialnetwork.user_not_found', array(), 'admin_user')
+            );
+        }
+        return $user;
     }
 }

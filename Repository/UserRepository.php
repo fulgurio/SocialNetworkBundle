@@ -154,4 +154,12 @@ abstract class UserRepository extends EntityRepository
         $query->setParameter('message', $message);
         return $query->getResult();
     }
+
+    /**
+     * Check if user1 can send message to the other
+     *
+     * @param User $user1
+     * @param User $user2
+     */
+    abstract function allowContactThemself($user1, $user2);
 }
