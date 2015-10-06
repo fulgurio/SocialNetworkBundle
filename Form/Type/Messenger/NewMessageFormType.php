@@ -139,16 +139,19 @@ class NewMessageFormType extends AbstractType
     {
         $data = $event->getData();
         $form = $event->getForm();
-        $this->targetUsers = $this->doctrine
-                ->getRepository($this->userClassName)
-                ->findBy(array('id' => $data['id_targets']));
-        $form
-            ->add('id_targets', 'entity', array(
-                'multiple' => TRUE,
-                'mapped' => FALSE,
-                'class' => $this->userClassName,
-                'choices' => $this->targetUsers
-            ));
+        if (isset($data['id_targets']))
+        {
+            $this->targetUsers = $this->doctrine
+                    ->getRepository($this->userClassName)
+                    ->findBy(array('id' => $data['id_targets']));
+            $form
+                ->add('id_targets', 'entity', array(
+                    'multiple' => TRUE,
+                    'mapped' => FALSE,
+                    'class' => $this->userClassName,
+                    'choices' => $this->targetUsers
+                ));
+        }
     }
 
     /**
