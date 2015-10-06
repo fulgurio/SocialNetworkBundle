@@ -346,10 +346,7 @@ class FriendshipController extends Controller
             {
                 $friend['avatar'] = $helper->asset($friend, 'avatarFile', $userClassName);
             }
-            $response = new Response(json_encode(
-                    array('friends' => $foundedFriends)));
-            $response->headers->set('Content-Type', 'application/json');
-            return $response;
+            return new JsonResponse($foundedFriends);
         }
         throw new AccessDeniedException();
     }
