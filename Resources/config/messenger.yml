@@ -46,7 +46,7 @@ services:
         factory_method:  createNamed
         factory_service: form.factory
         arguments:
-            - answer
+            - null
             - answer
 
     fulgurio_social_network.messenger.message.answer.form.handler:
@@ -66,7 +66,6 @@ services:
             messageClassName:        %fulgurio_social_network.messenger.message.class%
         tags:
         - { name: form.type, alias: answer }
-
 
     # Messenger mailer
     fulgurio_social_network.messenger_mailer:

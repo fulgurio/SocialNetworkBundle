@@ -13,7 +13,7 @@ namespace Fulgurio\SocialNetworkBundle\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -32,7 +32,7 @@ class FulgurioSocialNetworkExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
         $this->defaultEmailValue = $config['from_email'];
@@ -40,7 +40,7 @@ class FulgurioSocialNetworkExtension extends Extension
         $this->addRegistrationConfig($container, $config['registration']);
         $this->addResettingConfig($container, $config['resetting']);
         $this->addConfirmationConfig($container, $config['confirmation']);
-        $this->addMessengerConfig($container, $config['messenger']);
+        $this->loadMessengerConfig($config['messenger'], $container, $loader);
         $this->addContactConfig($container, $config['contact']);
         $this->addFriendshipConfig($container, $config['friendship']);
         $this->addUserConfig($container, $config['user']);
@@ -99,8 +99,10 @@ class FulgurioSocialNetworkExtension extends Extension
      * @param ContainerBuilder $container
      * @param array $config
      */
-    private function addMessengerConfig(ContainerBuilder $container, array $config)
+    private function loadMessengerConfig(array $config, ContainerBuilder $container, YamlFileLoader $loader)
     {
+        $loader->load('messenger.yml');
+
         $container->setParameter('fulgurio_social_network.messenger.message.class', $config['message_class']);
         $container->setParameter('fulgurio_social_network.messenger.message_target.class', $config['message_target_class']);
         $this->addEmailsConfig($container, 'messenger.message.email', $config['message']['email']);
