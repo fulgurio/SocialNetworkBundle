@@ -85,12 +85,23 @@ abstract class AbstractAjaxForm
             {
                 $this->errors[$eltName] = array();
             }
-            $this->errors[$eltName][] = $this->translator->trans($error->getMessage());
+            $this->errors[$eltName][] = $this->translate($error->getMessage());
         }
         foreach ($elt->all() as $child)
         {
             $this->updateErrors($child, $eltName . '_');
         }
+    }
+
+    /**
+     * Translate message
+     *
+     * @param string $message
+     * @return string
+     */
+    protected function translate($message)
+    {
+        return $this->translator->trans($message);
     }
 
     /**

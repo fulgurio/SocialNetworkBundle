@@ -145,4 +145,15 @@ class AnswerMessageFormHandler
 
         return $this;
     }
+
+    /**
+     * Translate message
+     *
+     * @param string $message
+     * @return string
+     */
+    protected function translate($message)
+    {
+        return $this->translator->trans($message, array(), 'messenger');
+    }
 }

@@ -41,4 +41,15 @@ class NewListFormHandler extends AbstractAjaxForm
         }
         return FALSE;
     }
+
+    /**
+     * Translate message
+     *
+     * @param string $message
+     * @return string
+     */
+    protected function translate($message)
+    {
+        return $this->translator->trans($message, array(), 'messenger-list');
+    }
 }
