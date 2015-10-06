@@ -89,7 +89,7 @@ abstract class AbstractAjaxForm
         }
         foreach ($elt->all() as $child)
         {
-            $this->updateErrors($child, $eltName . '_');
+            $this->updateErrors($child, $eltName != '' ? '_' . $eltName : $eltName);
         }
     }
 
