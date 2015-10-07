@@ -13,7 +13,6 @@ use Fulgurio\SocialNetworkBundle\Entity\User;
 use Fulgurio\SocialNetworkBundle\Entity\UserFriendship;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;

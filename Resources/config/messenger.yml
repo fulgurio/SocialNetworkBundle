@@ -27,6 +27,7 @@ services:
             translator: @translator
         calls:
             - [ setMessageTargetClassName, [ %fulgurio_social_network.messenger.message_target.class% ] ]
+            - [ setUserGroupClassName, [ %fulgurio_social_network.user.group.class% ] ]
 
     fulgurio_social_network.messenger.message.new.form.type:
         class: Fulgurio\SocialNetworkBundle\Form\Type\Messenger\NewMessageFormType

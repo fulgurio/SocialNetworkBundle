@@ -13,7 +13,6 @@ namespace Fulgurio\SocialNetworkBundle\Form\Handler\Messenger;
 use Fulgurio\SocialNetworkBundle\Form\Handler\AbstractAjaxForm;
 use Fulgurio\SocialNetworkBundle\Entity\Message;
 use Fulgurio\SocialNetworkBundle\Entity\User;
-use Fulgurio\SocialNetworkBundle\Entity\UserGroup;
 use Fulgurio\SocialNetworkBundle\Mailer\MessengerMailer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
@@ -22,12 +21,17 @@ class NewMessageFormHandler extends AbstractAjaxForm
     /**
      * @var string
      */
-    private $messageTargetClassName;
+    protected $messageTargetClassName;
+
+    /**
+     * @var string
+     */
+    protected $userGroupClassName;
 
     /**
      * @var Registry
      */
-    private $doctrine;
+    protected $doctrine;
 
 
     /**
@@ -81,10 +85,10 @@ class NewMessageFormHandler extends AbstractAjaxForm
     /**
      * Add target from selected group list
      *
-     * @param UserGroup $group
+     * @param string|number $groupId
      * @param Message $message
      */
-    protected function addTargetFromGroup(UserGroup $group, Message $message)
+    protected function addTargetFromGroup($groupId, Message $message)
     {
         $usersId = array();
         $existingTargets = $message->getTarget();
@@ -92,10 +96,16 @@ class NewMessageFormHandler extends AbstractAjaxForm
         {
             $usersId[$existingTarget->getId()] = $existingTarget->getId();
         }
+        $group = $this->doctrine->getRepository($this->userGroupClassName)->find($groupId);
+        if (!$group)
+        {
+            return ;
+        }
         $users = $group->getUsers();
         foreach ($users as $user)
         {
-            if (isset($usersId[$user->getId()]))
+            if (isset($usersId[$user->getId()])
+                    || $user->isEnabled())
             {
                 continue;
             }
@@ -127,6 +137,18 @@ class NewMessageFormHandler extends AbstractAjaxForm
     public function setMessageTargetClassName($messageTargetClassName)
     {
         $this->messageTargetClassName = $messageTargetClassName;
+
+        return $this;
+    }
+
+    /**
+     * $userGroupClassName setter
+     * @param string $userGroupClassName
+     * @return \Fulgurio\SocialNetworkBundle\Form\Handler\Messenger\NewMessageFormHandler
+     */
+    public function setUserGroupClassName($userGroupClassName)
+    {
+        $this->userGroupClassName = $userGroupClassName;
 
         return $this;
     }

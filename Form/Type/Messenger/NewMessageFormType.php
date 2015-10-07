@@ -12,7 +12,6 @@ namespace Fulgurio\SocialNetworkBundle\Form\Type\Messenger;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Fulgurio\SocialNetworkBundle\Entity\User;
-use Fulgurio\SocialNetworkBundle\Repository\UserRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
@@ -113,19 +112,15 @@ class NewMessageFormType extends AbstractType
             ))
             ->add('file', 'file', array('required' => FALSE))
             ;
-            if ($this->userGroupClassName)
-            {
-                $builder->add('group', 'entity', array(
-                    'class' => $this->userGroupClassName,
-                    'choices'  => $this->doctrine
-                        ->getRepository($this->userGroupClassName)
-                        ->getUserMessengerListQuery($this->currentUser)
-                        ->getResult(),
-                    'property' => 'name',
-                    'required' => FALSE,
-                    'mapped'   => FALSE
-                ));
-            }
+        $groups = $this->getGroups();
+        if ($groups)
+        {
+            $builder->add('group', 'choice', array(
+                'choices'  => $groups,
+                'required' => FALSE,
+                'mapped'   => FALSE
+            ));
+        }
     }
 
     /**
@@ -207,6 +202,32 @@ class NewMessageFormType extends AbstractType
             return;
         }
         $usernameTarget->addError(new FormError('fulgurio.socialnetwork.new_message.no_friend_found'));
+    }
+
+    /**
+     * Get groups for form
+     *
+     * @return array
+     */
+    protected function getGroups()
+    {
+        if ($this->userGroupClassName)
+        {
+            $groups = $this->doctrine
+                    ->getRepository($this->userGroupClassName)
+                    ->getUserMessengerListQuery($this->currentUser)
+                    ->getResult();
+            if (FALSE === empty($groups))
+            {
+                $mappedGroups = array();
+                foreach ($groups as $group)
+                {
+                    $mappedGroups[$group->getId()] = $group->getName();
+                }
+                return $mappedGroups;
+            }
+        }
+        return FALSE;
     }
 
     /**
