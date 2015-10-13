@@ -67,7 +67,6 @@ class NewListFormType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $currentUser = $this->currentUser;
         $builder
             ->add('username_target', 'text', array(
                 'required' => FALSE,
@@ -77,11 +76,9 @@ class NewListFormType extends AbstractType
                 'multiple' => TRUE,
                 'mapped' => FALSE,
                 'class' => $this->userClassName,
-                'query_builder' => function(UserRepository $er) use ($currentUser)
-                {
-                    return $er->getAcceptedFriendsQuery($currentUser);
-                }
+                'choices' => array()
             ))
+            ->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'addUsers'))
             ->addEventListener(FormEvents::POST_SUBMIT, array($this, 'checkTarget'))
             ->add('name', 'text', array(
                 'constraints' => array(
@@ -89,6 +86,32 @@ class NewListFormType extends AbstractType
                 )
             ))
         ;
+    }
+
+    /**
+     * Ajouter les utilisateurs saisie
+     * On les charge après car ils sont chargé via Ajax, et avec les tests de
+     * données de Symfony, les valeurs doivent être présentes avant le test
+     *
+     * @param FormEvent $event
+     */
+    public function addUsers(FormEvent $event)
+    {
+        $data = $event->getData();
+        $form = $event->getForm();
+        if (isset($data['id_targets']))
+        {
+            $this->targetUsers = $this->doctrine
+                    ->getRepository($this->userClassName)
+                    ->findBy(array('id' => $data['id_targets']));
+            $form
+                ->add('id_targets', 'entity', array(
+                    'multiple' => TRUE,
+                    'mapped' => FALSE,
+                    'class' => $this->userClassName,
+                    'choices' => $this->targetUsers
+                ));
+        }
     }
 
     /**
@@ -118,48 +141,27 @@ class NewListFormType extends AbstractType
         }
         if (!empty($usersId))
         {
+
             // Filter to get only friends
-            $friends = $this->getOnlyFriends($usersId);
             $messageGroup = $form->getData();
-            foreach ($friends as $friend)
+            $allowed = FALSE;
+            foreach ($usersId as $userId)
             {
-                $messageGroup->addUser($friend);
+                $allowedUser = $userRepository->find($userId);
+                if ($userRepository->allowContactThemself($this->currentUser, $allowedUser))
+                {
+                    $allowed = TRUE;
+                    $messageGroup->addUser($allowedUser);
+                }
             }
-            return;
+            if ($allowed)
+            {
+                return;
+            }
         }
         $usernameTarget->addError(new FormError('fulgurio.socialnetwork.add.search.no_friend_found'));
     }
 
-    /**
-     * Get friends from username typed value
-     *
-     * @param array $usersId
-     * @return array
-     */
-    private function getOnlyFriends($usersId)
-    {
-        $myFriends = $this->doctrine
-                ->getRepository($this->userFriendshipClassName)
-                ->findAcceptedFriends($this->currentUser);
-        $foundedFriends = array();
-        if (!empty($myFriends))
-        {
-            foreach ($myFriends as $myFriend)
-            {
-                foreach ($usersId as $id)
-                {
-                    if ($id == $myFriend['id'])
-                    {
-                        $friend = $this->doctrine
-                                ->getRepository($this->userClassName)
-                                ->findOneById($myFriend['id']);
-                        $foundedFriends[] = $friend;
-                    }
-                }
-            }
-        }
-        return $foundedFriends;
-    }
 
     /**
      * (non-PHPdoc)
