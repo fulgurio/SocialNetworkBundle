@@ -119,7 +119,14 @@ class AnswerMessageFormHandler
      */
     protected function applyFilter($content)
     {
-        return nl2br(htmlentities($content));
+        if (ini_get('default_charset'))
+        {
+            return nl2br(htmlentities($content));
+        }
+        else
+        {
+            return nl2br(htmlentities($content, ENT_COMPAT | ENT_HTML401, 'UTF-8'));
+        }
     }
 
     /**

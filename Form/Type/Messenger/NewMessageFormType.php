@@ -100,7 +100,7 @@ class NewMessageFormType extends AbstractType
             ))
             ->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'addUsers'))
             ->addEventListener(FormEvents::POST_SUBMIT, array($this, 'checkTarget'))
-           ->add('subject', 'text', array(
+            ->add('subject', 'text', array(
                 'constraints' => array(
                     new NotBlank(array('message' => 'fulgurio.socialnetwork.new_message.subject.not_blank'))
                 )
