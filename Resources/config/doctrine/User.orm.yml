@@ -24,3 +24,11 @@ Fulgurio\SocialNetworkBundle\Entity\User:
       gedmo:
         timestampable:
           on: update
+
+#  oneToMany:
+#    msgSender:
+#      targetEntity: Message
+#      mappedBy: sender
+#    msgTarget:
+#      targetEntity: MessageTarget
+#      mappedBy: target

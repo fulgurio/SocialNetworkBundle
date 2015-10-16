@@ -42,9 +42,7 @@ class MessengerController extends Controller
         );
         return $this->render(
                 'FulgurioSocialNetworkBundle:Messenger:list.html.twig',
-                array(
-                    'messages' => $messages
-                )
+                array('messages' => $messages)
         );
     }
 
@@ -84,13 +82,7 @@ class MessengerController extends Controller
                 $currentUser,
                 $this->container->getParameter('fulgurio_social_network.messenger.message_target.class')))
         {
-            $this->get('session')->getFlashBag()->add(
-                    'success',
-                    $this->get('translator')->trans(
-                            'fulgurio.socialnetwork.new_message.success_msg',
-                            array(),
-                            'messenger')
-            );
+            $this->addTransFlash('success', 'fulgurio.socialnetwork.new_message.success_msg');
             $redirectUrl = $this->generateUrl('fulgurio_social_network_messenger_list');
             if ($request->isXmlHttpRequest())
             {
@@ -173,12 +165,7 @@ class MessengerController extends Controller
                 $message,
                 $participants))
         {
-            $this->get('session')->getFlashBag()->add(
-                    'success',
-                    $this->get('translator')->trans(
-                            'fulgurio.socialnetwork.answer_message.success_msg',
-                            array(),
-                            'messenger'));
+            $this->addTransFlash('success', 'fulgurio.socialnetwork.answer_message.success_msg');
             return $this->redirect(
                     $this->generateUrl(
                             'fulgurio_social_network_messenger_show_message',
@@ -203,32 +190,13 @@ class MessengerController extends Controller
         $request = $this->getRequest();
         $currentUser = $this->getUser();
         $message = $this->getMessage($msgId);
-        if ($request->request->get('confirm') === 'yes')
+        if ($request->request->get('confirm'))
         {
-            if (count($message->getTarget()) == 1)
+            if ($request->request->get('confirm') === 'yes')
             {
-                // If we are the last (or only) user on message conversation,
-                // we remove message user links, and the message with answer
-                $em = $this->getDoctrine()->getManager();
-                $em->remove($message);
-                $em->flush();
+                $this->getMessageRepository()->removeUserMessage($message, $currentUser);
+                $this->addTransFlash('success', 'fulgurio.socialnetwork.remove_message.success_msg');
             }
-            else
-            {
-                // If there s some users who don't remove message, we just remove current user link with message
-                $this->getMessageRepository()->removeUserMessageRelation($msgId, $currentUser);
-            }
-            $this->get('session')->getFlashBag()->add(
-                    'success',
-                    $this->get('translator')->trans(
-                            'fulgurio.socialnetwork.remove_message.success_msg',
-                            array(),
-                            'messenger')
-                    );
-            return $this->redirect($this->generateUrl('fulgurio_social_network_messenger_list'));
-        }
-        else if ($request->request->get('confirm') === 'no')
-        {
             return $this->redirect($this->generateUrl('fulgurio_social_network_messenger_list'));
         }
         $templateName = 'FulgurioSocialNetworkBundle::confirm' . ($request->isXmlHttpRequest() ? 'Ajax' : '') . '.html.twig';
@@ -237,12 +205,9 @@ class MessengerController extends Controller
                     'fulgurio_social_network_messenger_remove_message',
                     array('msgId' => $msgId)
             ),
-            'title' => $this->get('translator')->trans('fulgurio.socialnetwork.remove_message.title', array(), 'messenger'),
-            'confirmationMessage' => $this->get('translator')->trans(
-                    'fulgurio.socialnetwork.remove_message.confirm_msg',
-                    array(),
-                    'messenger')
-        ));
+            'title' => $this->translate('fulgurio.socialnetwork.remove_message.title'),
+            'confirmationMessage' => $this->translate('fulgurio.socialnetwork.remove_message.confirm_msg'))
+        );
     }
 
     /**
@@ -320,5 +285,32 @@ class MessengerController extends Controller
             );
         }
         return $user;
+    }
+
+    /**
+     * Helper to add a translated flash
+     *
+     * @param string $type
+     * @param string $message
+     * @param array $data
+     */
+    private function addTransFlash($type, $message, $data = array())
+    {
+        $this->get('session')->getFlashBag()->add(
+                $type,
+                $this->translate($message, $data)
+        );
+    }
+
+    /**
+     * Translator helper
+     *
+     * @param string $message
+     * @param array $data
+     * @return string
+     */
+    private function translate($message, $data = array())
+    {
+        return $this->get('translator')->trans($message, $data, 'messenger');
     }
 }

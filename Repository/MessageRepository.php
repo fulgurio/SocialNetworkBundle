@@ -12,6 +12,7 @@ namespace Fulgurio\SocialNetworkBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Fulgurio\SocialNetworkBundle\Entity\Message;
+use Fulgurio\SocialNetworkBundle\Entity\User;
 
 /**
  * MessageRepository
@@ -35,22 +36,24 @@ abstract class MessageRepository extends EntityRepository
                 JOIN m.target mt
                 WHERE mt.target=:user
                     AND m.parent IS NULL
+                    AND mt.is_deleted = 0
                 ORDER BY m.updated_at DESC');
         $query->setParameter('user', $user);
         return $query;
     }
 
     /**
-     * Update root message has read flag for specified users
+     * Update root message to set off read flag and deleted flag too,
+     * for specified users
      *
      * @param Message $message
      * @param Collection $users
      */
-    public function markRootAsUnread(Message $message, $users)
+    public function markRootAsUnreadAndUndeleted(Message $message, $users)
     {
         $query = $this->getEntityManager()->createQuery(
                 'UPDATE ' . $this->getEntityName() . 'Target mt
-                SET mt.has_read=0
+                SET mt.has_read = 0, mt.is_deleted = 0
                 WHERE mt.target IN (:users)
                     AND mt.message = :message');
         $query->setParameter('message', $message);
@@ -66,7 +69,14 @@ abstract class MessageRepository extends EntityRepository
      */
     public function countUnreadMessage($user)
     {
-        $query = $this->getEntityManager()->createQuery('SELECT COUNT (mt) FROM ' . $this->getEntityName() . 'Target mt WHERE mt.has_read = 0 AND mt.target = :user');
+        $query = $this->getEntityManager()
+                ->createQuery(
+                        'SELECT COUNT (mt)
+                        FROM ' . $this->getEntityName() . 'Target mt
+                        WHERE mt.has_read = 0
+                          AND mt.target = :user
+                          AND mt.is_deleted = 0'
+                    );
         $query->setParameter('user', $user);
         return $query->getSingleScalarResult();
     }
@@ -74,26 +84,36 @@ abstract class MessageRepository extends EntityRepository
     /**
      * Remove relation between user and message (and message children too)
      *
-     * @param Message | integer $msg
-     * @param User | integer $user
+     * @param Message $message
+     * @param User $user
      */
-    public function removeUserMessageRelation($msg, $user)
+    public function removeUserMessage(Message $message, User $user)
     {
         $em = $this->getEntityManager();
-        $query1 = $em->createQuery(
-                'SELECT m
-                FROM ' . $this->getEntityName() . ' m
-                WHERE m.id=:msg
-                    OR m.parent = :msg');
-        $query1->setParameter('msg', $msg);
-        $msgList = $query1->getResult();
-
-        $query2 = $em->createQuery(
-                'DELETE FROM ' . $this->getEntityName() . 'Target mt
-                WHERE mt.target = :user
-                    AND mt.message IN (:msgs)');
-        $query2->setParameter('user', $user);
-        $query2->setParameter('msgs', $msgList);
-        $query2->getSingleScalarResult();
+        $nbUndeletedMessages = $em->createQueryBuilder()
+                ->select('COUNT(mt)')
+                ->from($this->getEntityName() . 'Target', 'mt')
+                ->where('mt.message = :message')
+                ->setParameter('message', $message)
+                ->andWhere('mt.is_deleted = 0')
+                ->getQuery()
+                ->getSingleScalarResult();
+        if ($nbUndeletedMessages > 1)
+        {
+            $em->createQueryBuilder()
+                    ->update($this->getEntityName() . 'Target', 'mt')
+                    ->set('mt.is_deleted', TRUE)
+                    ->where('mt.message = :message')
+                    ->setParameter('message', $message)
+                    ->andWhere('mt.target = :user')
+                    ->setParameter('user', $user)
+                    ->getQuery()
+                    ->execute();
+        }
+        else
+        {
+            $em->remove($message);
+            $em->flush();
+        }
     }
 }

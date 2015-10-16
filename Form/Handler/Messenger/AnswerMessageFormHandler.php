@@ -104,7 +104,7 @@ class AnswerMessageFormHandler
                 $em->flush();
                 $doctrine
                         ->getRepository($this->messageClassName)
-                        ->markRootAsUnread($message, $unreadMessageUsers);
+                        ->markRootAsUnreadAndUndeleted($message, $unreadMessageUsers);
                 return TRUE;
             }
         }

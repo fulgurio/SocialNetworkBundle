@@ -10,7 +10,11 @@ Fulgurio\SocialNetworkBundle\Entity\MessageTarget:
     has_read:
       type: boolean
       options:
-        default: 0
+        default: false
+    is_deleted:
+      type: boolean
+      options:
+        default: false
     created_at:
       type: datetime
       gedmo:
@@ -21,3 +25,19 @@ Fulgurio\SocialNetworkBundle\Entity\MessageTarget:
       gedmo:
         timestampable:
           on: update
+
+#  manyToOne:
+#    message:
+#      targetEntity: Message
+#      inversedBy: target
+#      joinColumn:
+#        name: message_id
+#        referencedColumnName: id
+#        onDelete: cascade
+#    target:
+#      targetEntity: User
+#      inversedBy: msgTarget
+#      joinColumn:
+#        name: target_id
+#        referencedColumnName: id
+#        onDelete: cascade

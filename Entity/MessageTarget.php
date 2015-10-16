@@ -17,10 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class MessageTarget
 {
-    /**
-     * @var boolean $has_read
-     */
-    private $has_read = FALSE;
 
     /***************************************************************************
      *                             GENERATED CODE                              *
@@ -30,6 +26,16 @@ abstract class MessageTarget
      * @var integer
      */
     private $id;
+
+    /**
+     * @var boolean
+     */
+    private $has_read = false;
+
+    /**
+     * @var boolean
+     */
+    private $is_deleted = false;
 
     /**
      * @var \DateTime
@@ -73,6 +79,29 @@ abstract class MessageTarget
     public function getHasRead()
     {
         return $this->has_read;
+    }
+
+    /**
+     * Set is_deleted
+     *
+     * @param boolean $isDeleted
+     * @return MessageTarget
+     */
+    public function setIsDeleted($isDeleted)
+    {
+        $this->is_deleted = $isDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get is_deleted
+     *
+     * @return boolean 
+     */
+    public function getIsDeleted()
+    {
+        return $this->is_deleted;
     }
 
     /**
