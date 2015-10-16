@@ -278,7 +278,7 @@ class MessengerController extends Controller
     protected function getSpecifiedUser($userId)
     {
         $userClassName = $this->container->getParameter('fos_user.model.user.class');
-        if (!$user = $this->getDoctrine()->getRepository($userClassName)->find($userId))
+        if (!$user = $this->getDoctrine()->getRepository($userClassName)->findOneBy(array('id' => $userId, 'enabled' => TRUE)))
         {
             throw new NotFoundHttpException(
                 $this->get('translator')->trans('fulgurio.socialnetwork.user_not_found', array(), 'admin_user')
@@ -294,7 +294,7 @@ class MessengerController extends Controller
      * @param string $message
      * @param array $data
      */
-    private function addTransFlash($type, $message, $data = array())
+    protected function addTransFlash($type, $message, $data = array())
     {
         $this->get('session')->getFlashBag()->add(
                 $type,
@@ -309,7 +309,7 @@ class MessengerController extends Controller
      * @param array $data
      * @return string
      */
-    private function translate($message, $data = array())
+    protected function translate($message, $data = array())
     {
         return $this->get('translator')->trans($message, $data, 'messenger');
     }

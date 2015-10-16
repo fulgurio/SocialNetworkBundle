@@ -160,6 +160,7 @@ abstract class UserRepository extends EntityRepository
      *
      * @param User $user1
      * @param User $user2
+     * @return boolean
      */
     abstract function allowContactThemself($user1, $user2);
 }

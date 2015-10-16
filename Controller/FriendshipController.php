@@ -360,7 +360,7 @@ class FriendshipController extends Controller
     private function getSpecifiedUser($userId)
     {
         $userClassName = $this->container->getParameter('fos_user.model.user.class');
-        if (!$user = $this->getDoctrine()->getRepository($userClassName)->find($userId))
+        if (!$user = $this->getDoctrine()->getRepository($userClassName)->findOneBy(array('id' => $userId, 'enabled' => TRUE)))
         {
             throw new NotFoundHttpException();
         }
