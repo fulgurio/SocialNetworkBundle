@@ -154,7 +154,7 @@ class MessengerController extends Controller
      * @param array $participants
      * @return Form
      */
-    private function getAnswerMessageForm(Message $message, $participants)
+    protected function getAnswerMessageForm(Message $message, $participants)
     {
         $form = $this->get('fulgurio_social_network.messenger.message.answer.form');
         $formHandler = $this->get('fulgurio_social_network.messenger.message.answer.form.handler');
