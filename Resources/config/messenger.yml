@@ -19,7 +19,7 @@ services:
             - message
 
     fulgurio_social_network.messenger.message.new.form.handler:
-        class:          Fulgurio\SocialNetworkBundle\Form\Handler\Messenger\NewMessageFormHandler
+        class:          %fulgurio_social_network.messenger.new_message.handler_class%
         scope:          request
         arguments:
             form:       @fulgurio_social_network.messenger.message.new.form
@@ -30,7 +30,7 @@ services:
             - [ setUserGroupClassName, [ %fulgurio_social_network.user.group.class% ] ]
 
     fulgurio_social_network.messenger.message.new.form.type:
-        class: Fulgurio\SocialNetworkBundle\Form\Type\Messenger\NewMessageFormType
+        class:                       %fulgurio_social_network.messenger.new_message.type_class%
         arguments:
             securityContext:         @security.context
             doctrine:                @doctrine
@@ -51,7 +51,7 @@ services:
             - answer
 
     fulgurio_social_network.messenger.message.answer.form.handler:
-        class: Fulgurio\SocialNetworkBundle\Form\Handler\Messenger\AnswerMessageFormHandler
+        class:          %fulgurio_social_network.messenger.answer_message.handler_class%
         scope:          request
         arguments:
             form:       @fulgurio_social_network.messenger.message.answer.form
@@ -62,7 +62,7 @@ services:
             - [ setMessageTargetClassName, [ %fulgurio_social_network.messenger.message_target.class% ] ]
 
     fulgurio_social_network.messenger.message.answer.form.type:
-        class: Fulgurio\SocialNetworkBundle\Form\Type\Messenger\AnswerMessageFormType
+        class:                       %fulgurio_social_network.messenger.answer_message.type_class%
         arguments:
             messageClassName:        %fulgurio_social_network.messenger.message.class%
         tags:

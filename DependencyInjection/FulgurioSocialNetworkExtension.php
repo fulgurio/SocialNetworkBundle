@@ -105,6 +105,10 @@ class FulgurioSocialNetworkExtension extends Extension
 
         $container->setParameter('fulgurio_social_network.messenger.message.class', $config['message_class']);
         $container->setParameter('fulgurio_social_network.messenger.message_target.class', $config['message_target_class']);
+        $container->setParameter('fulgurio_social_network.messenger.new_message.type_class', $config['new_message']['type_class']);
+        $container->setParameter('fulgurio_social_network.messenger.new_message.handler_class', $config['new_message']['handler_class']);
+        $container->setParameter('fulgurio_social_network.messenger.answer_message.type_class', $config['answer_message']['type_class']);
+        $container->setParameter('fulgurio_social_network.messenger.answer_message.handler_class', $config['answer_message']['handler_class']);
         $this->addEmailsConfig($container, 'messenger.message.email', $config['message']['email']);
         $this->addEmailsConfig($container, 'messenger.answer.email', $config['answer']['email']);
     }
