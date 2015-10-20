@@ -109,8 +109,8 @@ security:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/friends/, role: IS_AUTHENTICATED_FULLY }
-        - { path: ^/messenger/, role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/friends/, role: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/messenger/, role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/admin/, role: ROLE_ADMIN }
 
     role_hierarchy:

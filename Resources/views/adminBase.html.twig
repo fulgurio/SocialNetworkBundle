@@ -45,7 +45,7 @@
 </div>
 {% block javascriptBottom %}{% endblock %}
 {% include 'FulgurioSocialNetworkBundle:Admin:popup.html.twig' %}<script>
-{% if is_granted("IS_AUTHENTICATED_FULLY") %}
+{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 $('.dropdown-toggle').dropdown();
 $(document).ready(function() {
 	$('#myModal').on('hidden', function () {

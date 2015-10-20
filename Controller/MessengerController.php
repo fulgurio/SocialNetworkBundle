@@ -28,7 +28,7 @@ class MessengerController extends Controller
      */
     public function listAction()
     {
-        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             throw new AccessDeniedHttpException();
         }
@@ -54,7 +54,7 @@ class MessengerController extends Controller
      */
     public function newAction($userId = NULL)
     {
-        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             throw new AccessDeniedHttpException();
         }
@@ -114,7 +114,7 @@ class MessengerController extends Controller
      */
     public function showAction($msgId)
     {
-        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             throw new AccessDeniedHttpException();
         }
@@ -183,7 +183,7 @@ class MessengerController extends Controller
      */
     public function removeAction($msgId)
     {
-        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             throw new AccessDeniedHttpException();
         }
@@ -220,7 +220,7 @@ class MessengerController extends Controller
      */
     protected function getMessage($msgId, $updateHasRead = FALSE)
     {
-        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY'))
+        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             throw new AccessDeniedHttpException();
         }

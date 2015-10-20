@@ -17,7 +17,7 @@
 				<div class="container">
 					<a class="brand" href="{{ path('fulgurio_social_network_homepage') }}">{% trans %}fulgurio.socialnetwork.title{% endtrans %}</a>
 					<div class="nav-collapse">
-{% if is_granted("IS_AUTHENTICATED_FULLY") %}
+{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 {%   set unreadMessageNb = nbOfUnreadMessage(app.user) %}
 						<ul class="nav pull-right">
 							<li{% if app.request.attributes.get('_route')|split(0, 33) == 'fulgurio_social_network_messenger' %} class="active"{% endif %}><a href="{{ path('fulgurio_social_network_messenger_list') }}"><i class="icon-envelope icon-white"></i> {% trans from 'messenger' %}fulgurio.socialnetwork.header_link{% endtrans %}{% if unreadMessageNb %}<span class="label label-info">{{ unreadMessageNb }}</span>{% endif %}</a></li>
@@ -75,7 +75,7 @@
 {% block javascriptBottom %}{% endblock %}
 <script>
 $('.dropdown-toggle').dropdown();
-{% if is_granted("IS_AUTHENTICATED_FULLY") == false %}
+{% if is_granted("IS_AUTHENTICATED_REMEMBERED") == false %}
 $('#connect a').click(function() {
 	$('#connect form').show();
 	return false;
