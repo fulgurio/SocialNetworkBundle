@@ -38,12 +38,12 @@ class AnswerMessageFormHandler
     /**
      * @var string
      */
-    private $messageClassName;
+    protected $messageClassName;
 
     /**
      * @var string
      */
-    private $messageTargetClassName;
+    protected $messageTargetClassName;
 
 
     /**
