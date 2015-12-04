@@ -83,7 +83,7 @@ class MessengerController extends Controller
                 $this->container->getParameter('fulgurio_social_network.messenger.message_target.class')))
         {
             $this->addTransFlash('success', 'fulgurio.socialnetwork.new_message.success_msg');
-            $redirectUrl = $this->generateUrl('fulgurio_social_network_messenger_list');
+            $redirectUrl = $request->get('_redirect') ? $request->get('_redirect') : $this->generateUrl('fulgurio_social_network_messenger_list');
             if ($request->isXmlHttpRequest())
             {
                 return new JsonResponse(array(
@@ -101,7 +101,8 @@ class MessengerController extends Controller
                 'FulgurioSocialNetworkBundle:Messenger:new.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'targetUser' => $targetUser
+                    'targetUser' => $targetUser,
+                    'referer' => $request->headers->get('referer')
                 )
         );
     }

@@ -111,6 +111,7 @@ class NewMessageFormType extends AbstractType
                 )
             ))
             ->add('file', 'file', array('required' => FALSE))
+            ->add('_redirect', 'hidden', array('mapped' => FALSE))
             ;
         $groups = $this->getGroups();
         if ($groups)
