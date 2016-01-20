@@ -235,6 +235,10 @@ class MessengerController extends Controller
         {
             throw new NotFoundHttpException();
         }
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_PREVIOUS_ADMIN'))
+        {
+            $updateHasRead = FALSE;
+        }
         if ($updateHasRead && $relation->getHasRead() == FALSE)
         {
             $relation->setHasRead(TRUE);
