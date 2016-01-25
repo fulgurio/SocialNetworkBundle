@@ -66,7 +66,9 @@ class Messenger
     public function sendMessage($userTgt, $subject, $content, $canNotAnswer = FALSE, $typeOfMessage = NULL)
     {
         $message = new $this->messageClassName();
-        if ($this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED'))
+        if ($this->securityContext &&
+                $this->securityContext->getToken() &&
+                $this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             $message->setSender($this->securityContext->getToken()->getUser());
         }
