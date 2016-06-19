@@ -99,12 +99,28 @@ class ProfileController extends Controller
     }
 
     /**
-     * Get current user
+     * Get a user from the Security Context.
      *
-     * @return type
+     * @return mixed
+     *
+     * @throws \LogicException If SecurityBundle is not available
+     *
+     * @see TokenInterface::getUser()
      */
-    private function getUser()
+    public function getUser()
     {
-        return $this->container->get('security.context')->getToken()->getUser();
+        if (!$this->container->has('security.context')) {
+            throw new \LogicException('The SecurityBundle is not registered in your application.');
+        }
+
+        if (null === $token = $this->container->get('security.context')->getToken()) {
+            return;
+        }
+
+        if (!is_object($user = $token->getUser())) {
+            return;
+        }
+
+        return $user;
     }
 }
