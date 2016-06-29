@@ -5,5 +5,5 @@
 {% endblock %}
 
 {% block content %}
-{{ 'registration.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}, 'FOSUserBundle') }}
+{{ 'registration.email.message'|trans({'%username%': user.username|escape, '%confirmationUrl%': confirmationUrl}, 'FOSUserBundle') }}
 {% endblock %}

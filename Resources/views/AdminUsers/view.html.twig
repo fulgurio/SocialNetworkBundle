@@ -3,7 +3,7 @@
 {% block title %}{{ parent() }} - {% trans with {"%username%": user.username} from 'admin_user' %}fulgurio.socialnetwork.view.title{% endtrans %}{% endblock %}
 
 {% block content %}
-<h1>{% trans with {"%username%": user.username} from 'admin_user' %}fulgurio.socialnetwork.view.title{% endtrans %}</h1>
+<h1>{% trans with {"%username%": user.username|escape} from 'admin_user' %}fulgurio.socialnetwork.view.title{% endtrans %}</h1>
 <img src="{{ avatar(user) }}" class="pull-right" />
 <p class="row">
 	<span class="span2">{% trans from 'admin_user' %}fulgurio.socialnetwork.view.username{% endtrans %}</span>{{ user.username }}<br />

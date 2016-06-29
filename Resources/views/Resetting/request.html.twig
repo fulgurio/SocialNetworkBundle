@@ -7,7 +7,7 @@
 	<fieldset>
 		<legend>{% trans %}fulgurio.socialnetwork.lost_password.legend{% endtrans %}</legend>
 {% if invalid_username is defined %}
-		<div class="alert alert-error">{% trans with {'%username%': invalid_username}%}fulgurio.socialnetwork.lost_password.email_not_found{% endtrans %}</div>
+		<div class="alert alert-error">{% trans with {'%username%': invalid_username|escape} %}fulgurio.socialnetwork.lost_password.email_not_found{% endtrans %}</div>
 {% endif %}
 		<label class="control-label" for="username">{% trans %}fulgurio.socialnetwork.lost_password.email_label{% endtrans %}:</label>
 		<input type="email" id="username" name="username" />

@@ -5,5 +5,5 @@
 {% endblock %}
 
 {% block content %}
-{{ 'resetting.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}, 'FOSUserBundle') }}
+{{ 'resetting.email.message'|trans({'%username%': user.username|escape, '%confirmationUrl%': confirmationUrl}, 'FOSUserBundle') }}
 {% endblock %}
