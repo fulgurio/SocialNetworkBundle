@@ -44,7 +44,7 @@
 										<input type="checkbox" name="_remember_me" value="on" />{% trans %}fulgurio.socialnetwork.login_form.remember_me_link{% endtrans %}
 									</label>
 									<div class="clearfix">
-										<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+										<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
 										<button type="submit" class="btn btn-primary pull-left">{% trans %}fulgurio.socialnetwork.login_form.signin_button{% endtrans %}</button>
 										<a href="{{ path('fos_user_resetting_request') }}" class="pull-right">{% trans %}fulgurio.socialnetwork.login_form.lost_password_link{% endtrans %}</a>
 									</div>

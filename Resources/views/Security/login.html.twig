@@ -27,7 +27,7 @@
 				</div>
 			</div>
 			<div class="form-actions">
-				<input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
 				<button type="submit" name="_submit" class="btn btn-primary">{% trans %}fulgurio.socialnetwork.signin.submit{% endtrans %}</button>
 				{% trans with {'%tag%': '<a href="' ~ path('fos_user_registration_register') ~ '">', '%endtag%' : '</a>'} %}fulgurio.socialnetwork.signin.link_to_register{% endtrans %}
 			</div>

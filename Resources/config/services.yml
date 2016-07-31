@@ -19,8 +19,7 @@ services:
         tags:
             -  { name: twig.extension }
         arguments:
-            session:       "@session"
-            csrf_provider: "@form.csrf_provider"
+            - "@session"
 
 
 # Forms
