@@ -10,7 +10,7 @@
 
 namespace Fulgurio\SocialNetworkBundle\Twig\Extension;
 
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 
@@ -61,7 +61,7 @@ class LoginFormExtension extends \Twig_Extension
      */
     public function getLastUsername()
     {
-        return (null === $this->session) ? '' : $this->session->get(SecurityContext::LAST_USERNAME);
+        return (null === $this->session) ? '' : $this->session->get(Security::LAST_USERNAME);
     }
 
     /**
