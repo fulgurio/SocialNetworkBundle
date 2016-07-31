@@ -3,8 +3,8 @@ services:
     fulgurio_social_network.twig.messenger_extension:
         class: Fulgurio\SocialNetworkBundle\Twig\Extension\MessengerExtension
         arguments:
-            doctrine: "@doctrine"
-            messageClassName: %fulgurio_social_network.messenger.message.class%
+            doctrine:         "@doctrine"
+            messageClassName: "%fulgurio_social_network.messenger.message.class%"
         tags:
             -  { name: twig.extension }
 
@@ -19,18 +19,18 @@ services:
             - message
 
     fulgurio_social_network.messenger.message.new.form.handler:
-        class:          %fulgurio_social_network.messenger.new_message.handler_class%
+        class:          "%fulgurio_social_network.messenger.new_message.handler_class%"
         scope:          request
         arguments:
-            form:       @fulgurio_social_network.messenger.message.new.form
-            request:    @request
-            translator: @translator
+            form:       "@fulgurio_social_network.messenger.message.new.form"
+            request:    "@request"
+            translator: "@translator"
         calls:
-            - [ setMessageTargetClassName, [ %fulgurio_social_network.messenger.message_target.class% ] ]
-            - [ setUserGroupClassName, [ %fulgurio_social_network.user.group.class% ] ]
+            - [ setMessageTargetClassName, [ "%fulgurio_social_network.messenger.message_target.class%" ] ]
+            - [ setUserGroupClassName, [ "%fulgurio_social_network.user.group.class%" ] ]
 
     fulgurio_social_network.messenger.message.new.form.type:
-        class:                       %fulgurio_social_network.messenger.new_message.type_class%
+        class:                       "%fulgurio_social_network.messenger.new_message.type_class%"
         arguments:
             securityTokenStorage:    "@security.token_storage"
             doctrine:                "@doctrine"
@@ -51,20 +51,20 @@ services:
             - answer
 
     fulgurio_social_network.messenger.message.answer.form.handler:
-        class:          %fulgurio_social_network.messenger.answer_message.handler_class%
+        class:          "%fulgurio_social_network.messenger.answer_message.handler_class%"
         scope:          request
         arguments:
-            form:       @fulgurio_social_network.messenger.message.answer.form
-            request:    @request
-            translator: @translator
+            form:       "@fulgurio_social_network.messenger.message.answer.form"
+            request:    "@request"
+            translator: "@translator"
         calls:
-            - [ setMessageClassName, [ %fulgurio_social_network.messenger.message.class% ] ]
-            - [ setMessageTargetClassName, [ %fulgurio_social_network.messenger.message_target.class% ] ]
+            - [ setMessageClassName, [ "%fulgurio_social_network.messenger.message.class%" ] ]
+            - [ setMessageTargetClassName, [ "%fulgurio_social_network.messenger.message_target.class%" ] ]
 
     fulgurio_social_network.messenger.message.answer.form.type:
-        class:                       %fulgurio_social_network.messenger.answer_message.type_class%
+        class:                       "%fulgurio_social_network.messenger.answer_message.type_class%"
         arguments:
-            messageClassName:        %fulgurio_social_network.messenger.message.class%
+            messageClassName:        "%fulgurio_social_network.messenger.message.class%"
         tags:
         - { name: form.type, alias: answer }
 
