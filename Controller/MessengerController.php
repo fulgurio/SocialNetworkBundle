@@ -28,7 +28,7 @@ class MessengerController extends Controller
      */
     public function listAction()
     {
-        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
+        if (FALSE == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             throw new AccessDeniedHttpException();
         }
@@ -54,7 +54,7 @@ class MessengerController extends Controller
      */
     public function newAction($userId = NULL)
     {
-        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
+        if (FALSE == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             throw new AccessDeniedHttpException();
         }
@@ -115,7 +115,7 @@ class MessengerController extends Controller
      */
     public function showAction($msgId)
     {
-        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
+        if (FALSE == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             throw new AccessDeniedHttpException();
         }
@@ -184,7 +184,7 @@ class MessengerController extends Controller
      */
     public function removeAction($msgId)
     {
-        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
+        if (FALSE == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             throw new AccessDeniedHttpException();
         }
@@ -221,7 +221,7 @@ class MessengerController extends Controller
      */
     protected function getMessage($msgId, $updateHasRead = FALSE)
     {
-        if (FALSE == $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
+        if (FALSE == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             throw new AccessDeniedHttpException();
         }
@@ -235,7 +235,7 @@ class MessengerController extends Controller
         {
             throw new NotFoundHttpException();
         }
-        if (TRUE === $this->get('security.context')->isGranted('ROLE_PREVIOUS_ADMIN'))
+        if (TRUE === $this->get('security.authorization_checker')->isGranted('ROLE_PREVIOUS_ADMIN'))
         {
             $updateHasRead = FALSE;
         }

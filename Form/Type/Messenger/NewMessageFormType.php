@@ -11,16 +11,14 @@
 namespace Fulgurio\SocialNetworkBundle\Form\Type\Messenger;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Fulgurio\SocialNetworkBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
-
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class NewMessageFormType extends AbstractType
 {
@@ -63,7 +61,7 @@ class NewMessageFormType extends AbstractType
     /**
      * Constructor
      *
-     * @param User $securityContext
+     * @param TokenStorage $tokenStorage
      * @param Registry $doctrine
      * @param string $messageClassName
      * @param string $messageTargetClassName
@@ -71,9 +69,9 @@ class NewMessageFormType extends AbstractType
      * @param string $userFriendshipClassName
      * @param string $userGroupClassName
      */
-    public function __construct(SecurityContextInterface $securityContext, Registry $doctrine, $messageClassName, $messageTargetClassName, $userClassName, $userFriendshipClassName, $userGroupClassName)
+    public function __construct(TokenStorage $tokenStorage, Registry $doctrine, $messageClassName, $messageTargetClassName, $userClassName, $userFriendshipClassName, $userGroupClassName)
     {
-        $this->currentUser = $securityContext->getToken()->getUser();
+        $this->currentUser = $tokenStorage->getToken()->getUser();
         $this->doctrine = $doctrine;
         $this->messageClassName = $messageClassName;
         $this->messageTargetClassName = $messageTargetClassName;

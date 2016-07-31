@@ -37,7 +37,7 @@ class AdminUserController extends Controller
         $page = $request->get('page', 1);
         $repository = $this->getDoctrine()
                 ->getRepository($userClassName);
-        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN'))
         {
             $users = $repository->findWithPagination(
                     $this->get('knp_paginator'),
@@ -94,7 +94,7 @@ class AdminUserController extends Controller
      */
     public function addAction($userId = null)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN'))
         {
             throw new AccessDeniedHttpException();
         }
@@ -128,7 +128,7 @@ class AdminUserController extends Controller
      */
     public function removeAction($userId)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN'))
         {
             throw new AccessDeniedHttpException();
         }

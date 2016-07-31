@@ -39,7 +39,7 @@ class RegistrationControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isRedirect('/register/confirmed'));
 
         // Authentified
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertTrue($security->isGranted('ROLE_USER'));
     }
 

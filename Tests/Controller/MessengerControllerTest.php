@@ -26,9 +26,9 @@ class MessengerControllerTest extends WebTestCase
     public function testAddMessageAction()
     {
         $client1 = $this->getUserLoggedClient('user1', 'user1');
-        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        $user1 = $client1->getContainer()->get('security.token_storage')->getToken()->getUser();
         $client10 = $this->getUserLoggedClient('user10', 'user10');
-        $user10 = $client10->getContainer()->get('security.context')->getToken()->getUser();
+        $user10 = $client10->getContainer()->get('security.token_storage')->getToken()->getUser();
         $crawler = $client1->request('GET', '/messenger/');
         $messengerExtension = $client1->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
         $this->assertCount(1, $crawler->filter('body:contains("fulgurio.socialnetwork.no_message")'));
@@ -69,9 +69,9 @@ class MessengerControllerTest extends WebTestCase
     public function testAddReplyMessageAction()
     {
         $client1 = $this->getUserLoggedClient('user1', 'user1');
-        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        $user1 = $client1->getContainer()->get('security.token_storage')->getToken()->getUser();
         $client10 = $this->getUserLoggedClient('user10', 'user10');
-        $user10 = $client10->getContainer()->get('security.context')->getToken()->getUser();
+        $user10 = $client10->getContainer()->get('security.token_storage')->getToken()->getUser();
         $messengerExtension = $client10->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
 
         $crawler = $client1->request('GET', '/messenger/new');
@@ -174,10 +174,10 @@ class MessengerControllerTest extends WebTestCase
     public function testRemoveMessageWithChildrenAction()
     {
         $client1 = $this->getUserLoggedClient('user1', 'user1');
-        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        $user1 = $client1->getContainer()->get('security.token_storage')->getToken()->getUser();
         $doctrine = $client1->getContainer()->get('doctrine');
         $client10 = $this->getUserLoggedClient('user10', 'user10');
-        $user10 = $client10->getContainer()->get('security.context')->getToken()->getUser();
+        $user10 = $client10->getContainer()->get('security.token_storage')->getToken()->getUser();
         $messengerExtension = $client10->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
 
         $crawler = $client1->request('GET', '/messenger/new');

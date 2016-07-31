@@ -82,12 +82,12 @@ class FriendshipControllerTest extends WebTestCase
     public function testAddFriendAction()
     {
         $client2 = $this->getUserLoggedClient('user2', 'user2');
-        $user2 = $client2->getContainer()->get('security.context')->getToken()->getUser();
+        $user2 = $client2->getContainer()->get('security.token_storage')->getToken()->getUser();
         $messengerExtension = $client2->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
         $this->assertEquals(0, $messengerExtension->nbOfUnreadMessage($user2));
 
         $client1 = $this->getUserLoggedClient('user1', 'user1');
-        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        $user1 = $client1->getContainer()->get('security.token_storage')->getToken()->getUser();
         $crawler = $client1->request('GET', '/friends/searchToAdd');
         $formSearch = $crawler->filter('form[action$="friends/searchToAdd"] button[name="searchSubmit"]')->form();
         $crawler = $client1->submit($formSearch, array('search' => 'user2'));
@@ -124,13 +124,13 @@ class FriendshipControllerTest extends WebTestCase
     public function testAcceptFriendshipAction()
     {
         $client2 = $this->getUserLoggedClient('user2', 'user2');
-        $user2 = $client2->getContainer()->get('security.context')->getToken()->getUser();
+        $user2 = $client2->getContainer()->get('security.token_storage')->getToken()->getUser();
         $crawler2 = $client2->request('GET', '/friends/');
         $this->assertCount(0, $crawler2->filter('body:contains("fulgurio.socialnetwork.invitation.asking")'));
         $this->assertCount(0, $crawler2->filter('ol.askingFriends li'));
 
         $client1 = $this->getUserLoggedClient('user1', 'user1');
-        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        $user1 = $client1->getContainer()->get('security.token_storage')->getToken()->getUser();
         $messengerExtension = $client1->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
         $crawler1 = $client1->request('GET', '/friends/');
         $this->assertCount(6, $crawler1->filter('ol.myFriends li'));
@@ -190,13 +190,13 @@ class FriendshipControllerTest extends WebTestCase
     public function testRefuseFriendshipAction()
     {
         $client2 = $this->getUserLoggedClient('user2', 'user2');
-        $user2 = $client2->getContainer()->get('security.context')->getToken()->getUser();
+        $user2 = $client2->getContainer()->get('security.token_storage')->getToken()->getUser();
         $crawler2 = $client2->request('GET', '/friends/');
         $this->assertCount(0, $crawler2->filter('body:contains("fulgurio.socialnetwork.invitation.asking")'));
         $this->assertCount(0, $crawler2->filter('ol.askingFriends li'));
 
         $client1 = $this->getUserLoggedClient('user1', 'user1');
-        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        $user1 = $client1->getContainer()->get('security.token_storage')->getToken()->getUser();
         $messengerExtension = $client1->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
         $crawler1 = $client1->request('GET', '/friends/');
         $this->assertCount(6, $crawler1->filter('ol.myFriends li'));
@@ -260,12 +260,12 @@ class FriendshipControllerTest extends WebTestCase
     public function testRemoveFriendshipAction()
     {
         $client3 = $this->getUserLoggedClient('user3', 'user3');
-        $user3 = $client3->getContainer()->get('security.context')->getToken()->getUser();
+        $user3 = $client3->getContainer()->get('security.token_storage')->getToken()->getUser();
         $crawler3 = $client3->request('GET', '/friends/');
         $this->assertCount(1, $crawler3->filter('ol.myFriends li'));
 
         $client1 = $this->getUserLoggedClient('user1', 'user1');
-        $user1 = $client1->getContainer()->get('security.context')->getToken()->getUser();
+        $user1 = $client1->getContainer()->get('security.token_storage')->getToken()->getUser();
         $messengerExtension = $client1->getContainer()->get('fulgurio_social_network.twig.messenger_extension');
         $crawler1 = $client1->request('GET', '/friends/');
 

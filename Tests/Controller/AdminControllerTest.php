@@ -28,7 +28,7 @@ class AdminControllerTest extends WebTestCase
 
         $client->request('GET', '/admin/');
         // Authentified
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertTrue($security->isGranted('ROLE_ADMIN'));
     }
 }

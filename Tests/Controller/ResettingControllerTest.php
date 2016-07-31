@@ -128,7 +128,7 @@ class ResettingControllerTest extends WebTestCase
         $form = $crawler->filter('form[action$="' . $url . '"] button[type="submit"]')->form();
         $crawler = $client->submit($form, $newData);
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fos_user.new_password.blank")'));
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertFalse($security->isGranted('ROLE_USER'));
     }
 
@@ -155,7 +155,7 @@ class ResettingControllerTest extends WebTestCase
         $form = $crawler->filter('form[action$="' . $url . '"] button[type="submit"]')->form();
         $crawler = $client->submit($form, $newData);
         $this->assertCount(1, $crawler->filter('div.alert.alert-error:contains("fulgurio.socialnetwork.lost_password.password_no_match")'));
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertFalse($security->isGranted('ROLE_USER'));
     }
 
@@ -184,7 +184,7 @@ class ResettingControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isRedirect('/'));
         $crawler = $client->followRedirect();
 
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertTrue($security->isGranted('IS_AUTHENTICATED_REMEMBERED'));
     }
 }

@@ -32,13 +32,13 @@ services:
     fulgurio_social_network.messenger.message.new.form.type:
         class:                       %fulgurio_social_network.messenger.new_message.type_class%
         arguments:
-            securityContext:         @security.context
-            doctrine:                @doctrine
-            messageClassName:        %fulgurio_social_network.messenger.message.class%
-            messageTargetClassName:  %fulgurio_social_network.messenger.message_target.class%
-            userClassName:           %fos_user.model.user.class%
-            userFriendshipClassName: %fulgurio_social_network.friendship.class%
-            userGroupClassName:      %fulgurio_social_network.user.group.class%
+            securityTokenStorage:    "@security.token_storage"
+            doctrine:                "@doctrine"
+            messageClassName:        "%fulgurio_social_network.messenger.message.class%"
+            messageTargetClassName:  "%fulgurio_social_network.messenger.message_target.class%"
+            userClassName:           "%fos_user.model.user.class%"
+            userFriendshipClassName: "%fulgurio_social_network.friendship.class%"
+            userGroupClassName:      "%fulgurio_social_network.user.group.class%"
         tags:
         - { name: form.type, alias: message }
 
@@ -76,24 +76,25 @@ services:
             1: "@router"
             2: "@templating"
             3:
-                message.from          : %fulgurio_social_network.messenger.message.email.from%
-                message.from_name     : %fulgurio_social_network.messenger.message.email.from_name%
-                message.subject       : %fulgurio_social_network.messenger.message.email.subject%
-                message.template.text : %fulgurio_social_network.messenger.message.email.text%
-                message.template.html : %fulgurio_social_network.messenger.message.email.html%
-                answer.from           : %fulgurio_social_network.messenger.answer.email.from%
-                answer.from_name      : %fulgurio_social_network.messenger.answer.email.from_name%
-                answer.subject        : %fulgurio_social_network.messenger.answer.email.subject%
-                answer.template.text  : %fulgurio_social_network.messenger.answer.email.text%
-                answer.template.html  : %fulgurio_social_network.messenger.answer.email.html%
+                message.from          : "%fulgurio_social_network.messenger.message.email.from%"
+                message.from_name     : "%fulgurio_social_network.messenger.message.email.from_name%"
+                message.subject       : "%fulgurio_social_network.messenger.message.email.subject%"
+                message.template.text : "%fulgurio_social_network.messenger.message.email.text%"
+                message.template.html : "%fulgurio_social_network.messenger.message.email.html%"
+                answer.from           : "%fulgurio_social_network.messenger.answer.email.from%"
+                answer.from_name      : "%fulgurio_social_network.messenger.answer.email.from_name%"
+                answer.subject        : "%fulgurio_social_network.messenger.answer.email.subject%"
+                answer.template.text  : "%fulgurio_social_network.messenger.answer.email.text%"
+                answer.template.html  : "%fulgurio_social_network.messenger.answer.email.html%"
         calls:
             - [ setMessenger, [ "@fulgurio_social_network.messenger.messagebox" ] ]
 
     # Messenger service
     fulgurio_social_network.messenger.messagebox:
-        class: Fulgurio\SocialNetworkBundle\Service\Messenger
+        class:                      Fulgurio\SocialNetworkBundle\Service\Messenger
         arguments:
-            doctrine: "@doctrine"
-            securityContext: "@security.context"
-            messageClassName: %fulgurio_social_network.messenger.message.class%
-            messageTargetClassName: %fulgurio_social_network.messenger.message_target.class%
+            - "@doctrine"
+            - "@security.authorization_checker"
+            - "@security.token_storage"
+            - "%fulgurio_social_network.messenger.message.class%"
+            - "%fulgurio_social_network.messenger.message_target.class%"

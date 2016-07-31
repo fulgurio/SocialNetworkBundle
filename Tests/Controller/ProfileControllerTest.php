@@ -181,13 +181,13 @@ class ProfileControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
 
         // Authentified
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertTrue($security->isGranted('ROLE_USER'));
 
         $crawler = $client->request('GET', '/unsubscribe');
         $buttonNo = $crawler->filter('a:contains("fulgurio.socialnetwork.no")')->link();
         $crawler = $client->click($buttonNo);
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertTrue($security->isGranted('ROLE_USER'));
 
         $crawler = $client->request('GET', '/unsubscribe');
@@ -200,7 +200,7 @@ class ProfileControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isRedirect('http://localhost/'));
         $crawler = $client->followRedirect();
 
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertFalse($security->isGranted('ROLE_USER'));
 
         // Try to reconnect
@@ -208,7 +208,7 @@ class ProfileControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
         $client->followRedirect();
 
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertFalse($security->isGranted('ROLE_USER'));
     }
 }

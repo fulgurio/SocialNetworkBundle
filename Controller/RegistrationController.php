@@ -24,7 +24,7 @@ class RegistrationController extends Controller
 {
     public function registerAction()
     {
-        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             // We redirect to homepage
             return new RedirectResponse($this->container->get('router')->generate('fulgurio_social_network_homepage'));
@@ -37,7 +37,7 @@ class RegistrationController extends Controller
      */
     public function confirmedAction()
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         if (!is_object($user) || !$user instanceof UserInterface)
         {
             throw new AccessDeniedHttpException('This user does not have access to this section.');

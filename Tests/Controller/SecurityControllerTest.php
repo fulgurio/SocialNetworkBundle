@@ -63,7 +63,7 @@ class SecurityControllerTest extends WebTestCase
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
         $this->assertEquals('Bad credentials', $crawler->filter('div.alert.alert-error')->text());
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertFalse($security->isGranted('ROLE_USER'));
     }
 
@@ -83,7 +83,7 @@ class SecurityControllerTest extends WebTestCase
         $client->submit($form, $data);
         $crawler = $client->followRedirect();
         $this->assertEquals('Bad credentials', $crawler->filter('div.alert.alert-error')->text());
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertFalse($security->isGranted('ROLE_USER'));
     }
 
@@ -120,7 +120,7 @@ class SecurityControllerTest extends WebTestCase
         $form = $crawler->filter('form[action$="login_check"].form-horizontal button[type="submit"]')->form();
         $crawler = $client->submit($form, $data);
         // Authentified
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertTrue($security->isGranted('ROLE_USER'));
     }
 
@@ -138,12 +138,12 @@ class SecurityControllerTest extends WebTestCase
         $form = $crawler->filter('form[action$="login_check"].form-horizontal button[type="submit"]')->form();
         $crawler = $client->submit($form, $data);
         // Authentified
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertTrue($security->isGranted('ROLE_USER'));
 
         $client->request('GET', '/logout');
         $crawler = $client->followRedirect();
-        $security = $client->getContainer()->get('security.context');
+        $security = $client->getContainer()->get('security.authorization_checker');
         $this->assertFalse($security->isGranted('ROLE_USER'));
     }
 }

@@ -11,22 +11,25 @@
 namespace Fulgurio\SocialNetworkBundle\Service;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class Messenger
 {
     /**
-     * Doctrine object
-     *
      * @var Doctrine
      */
     protected $doctrine;
 
     /**
-     * Security contect
-     * @var SecurityContext
+     * @var AuthorizationChecker
      */
-    private $securityContext;
+    private $authorizationChecker;
+
+    /**
+     * @var TokenStorage
+     */
+    private $tokenStorage;
 
     /**
      * @var string
@@ -38,18 +41,21 @@ class Messenger
      */
     private $messageTargetClassName;
 
+
     /**
      * Constructor
      *
      * @param RegistryInterface $doctrine
-     * @param SecurityContext $securityContext
+     * @param AuthorizationChecker $authorizationChecker
+     * @param SecurityContext $tokenStorage
      * @param string $messageClassName
      * @param string $messageTargetClassName
      */
-    public function __construct(RegistryInterface $doctrine, SecurityContext $securityContext, $messageClassName, $messageTargetClassName)
+    public function __construct(RegistryInterface $doctrine, AuthorizationChecker $authorizationChecker, TokenStorage $tokenStorage, $messageClassName, $messageTargetClassName)
     {
         $this->doctrine = $doctrine;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->tokenStorage = $tokenStorage;
         $this->messageClassName = $messageClassName;
         $this->messageTargetClassName = $messageTargetClassName;
     }
@@ -66,11 +72,11 @@ class Messenger
     public function sendMessage($userTgt, $subject, $content, $canNotAnswer = FALSE, $typeOfMessage = NULL)
     {
         $message = new $this->messageClassName();
-        if ($this->securityContext &&
-                $this->securityContext->getToken() &&
-                $this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED'))
+        if ($this->tokenStorage &&
+                $this->tokenStorage->getToken() &&
+                $this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
-            $message->setSender($this->securityContext->getToken()->getUser());
+            $message->setSender($this->tokenStorage->getToken()->getUser());
         }
         $message->setSubject($subject);
         $message->setContent($content);

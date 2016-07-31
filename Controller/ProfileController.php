@@ -28,7 +28,7 @@ class ProfileController extends Controller
      */
     public function showAction($userId = null)
     {
-        if (!$this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
         }
@@ -105,6 +105,6 @@ class ProfileController extends Controller
      */
     private function getUser()
     {
-        return $this->container->get('security.context')->getToken()->getUser();
-    }
+        return $this->container->get('security.token_storage')->getToken()->getUser();
+}
 }
