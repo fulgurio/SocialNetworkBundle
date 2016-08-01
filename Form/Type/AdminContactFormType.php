@@ -37,9 +37,9 @@ class AdminContactFormType extends AbstractType
 
     /**
      * (non-PHPdoc)
-     * @see Symfony\Component\Form\FormTypeInterface::getName()
+     * @see Symfony\Component\Form\AbstractType::getBlockPrefix()
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'contact';
     }

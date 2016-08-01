@@ -37,9 +37,9 @@ class ProfileFormType extends BaseType
 
     /**
      * (non-PHPdoc)
-     * @see Symfony\Component\Form\FormTypeInterface::getName()
+     * @see Symfony\Component\Form\AbstractType::getBlockPrefix()
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'fulgurio_social_network_profile_type';
     }
