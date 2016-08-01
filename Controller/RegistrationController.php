@@ -24,7 +24,7 @@ class RegistrationController extends Controller
 {
     public function registerAction()
     {
-        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
+        if ($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
             // We redirect to homepage
             return new RedirectResponse($this->container->get('router')->generate('fulgurio_social_network_homepage'));
