@@ -65,12 +65,22 @@ class Messenger
      */
     public function sendMessage($userTgt, $subject, $content, $canNotAnswer = FALSE, $typeOfMessage = NULL)
     {
+        $em = $this->doctrine->getEntityManager();
         $message = new $this->messageClassName();
         if ($this->securityContext &&
                 $this->securityContext->getToken() &&
                 $this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
-            $message->setSender($this->securityContext->getToken()->getUser());
+            $currentUser = $this->securityContext->getToken()->getUser();
+            $message->setSender($currentUser);
+
+            // Message from source
+            $messageSource = new $this->messageTargetClassName();
+            $messageSource->setTarget($currentUser);
+            $messageSource->setMessage($message);
+            $messageSource->setHasRead(TRUE);
+            $message->addTarget($messageSource);
+            $em->persist($messageSource);
         }
         $message->setSubject($subject);
         $message->setContent($content);
@@ -79,13 +89,14 @@ class Messenger
         {
             $message->setTypeOfMessage($typeOfMessage);
         }
+        // Message for target
         $messageTarget = new $this->messageTargetClassName();
         $messageTarget->setTarget($userTgt);
         $messageTarget->setMessage($message);
         $messageTarget->setHasRead(FALSE);
         $message->addTarget($messageTarget);
-        $em = $this->doctrine->getEntityManager();
         $em->persist($messageTarget);
+
         $em->persist($message);
         $em->flush();
     }
