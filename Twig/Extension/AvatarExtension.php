@@ -21,11 +21,6 @@ use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 class AvatarExtension extends \Twig_Extension
 {
     /**
-     * @var Twig_Environment
-     */
-    protected $environment;
-
-    /**
      * @var UploaderHelper
      */
     private $vichUploadHelper;
@@ -48,15 +43,6 @@ class AvatarExtension extends \Twig_Extension
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Twig_Extension::initRuntime()
-     */
-    public function initRuntime(\Twig_Environment $environment)
-    {
-        $this->environment = $environment;
-    }
-
-    /**
      * Init Twig functions
      */
     public function getFunctions()
@@ -69,9 +55,11 @@ class AvatarExtension extends \Twig_Extension
     /**
      * Return user avatar
      *
+     * @param \Twig_Environment $env
      * @param User|array $user
+     * @return string
      */
-    public function getAvatar($user)
+    public function getAvatar(\Twig_Environment $env, $user)
     {
         if (is_array($user))
         {
@@ -85,8 +73,7 @@ class AvatarExtension extends \Twig_Extension
         {
             return $this->vichUploadHelper->asset($user, 'avatarFile');
         }
-        return $this->environment
-                ->getExtension('assets')
+        return $env->getExtension('assets')
                 ->getAssetUrl($this->defaultAvatar);
     }
 
